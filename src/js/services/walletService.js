@@ -1144,7 +1144,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         ongoingProcess.set('signingTx', true, customStatusHandler);
         root.signTx(wallet, publishedTxp, password, function(err, signedTxp) {
-          $rootScope.bitloxConnectErrorListener()
+          if($rootScope.bitloxConnectErrorListener) { $rootScope.bitloxConnectErrorListener() }
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();

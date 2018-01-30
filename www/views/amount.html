@@ -3,8 +3,7 @@
     <ion-nav-title>
       {{isRatesCalculator ? 'Rates Calculator' : 'Enter amount' | translate}}
     </ion-nav-title>
-    <ion-nav-back-button>
-    </ion-nav-back-button>
+    <ion-nav-back-button></ion-nav-back-button>
     <ion-nav-buttons side="secondary">
       <button class="button back-button" ng-click="showItemSelectorMenu()" ng-if="showMenu">
         <i class="icon ion-ios-more"></i>
@@ -33,9 +32,11 @@
       </div>
     </div>
 
-    <div ng-class="{'amount-pane-recipient': !customAmount && !nextStep,
-      'amount-pane-no-recipient': customAmount || nextStep}">
-
+    <div ng-class="{
+            'amount-pane-recipient': !customAmount && !nextStep,
+            'amount-pane-no-recipient': customAmount || nextStep,
+            'top0': isRatesCalculator
+         }">
       <div class="amount-bar oh">
         <div class="title">
           <span translate>Amount</span>
@@ -81,7 +82,7 @@
     </div>
 
 
-    <div class="keypad">
+    <div class="keypad" ng-class="{'m50b': isRatesCalculator}">
       <div class="row">
         <div class="col col-25 col-offset-75 operator-send"
              ng-if="!isRatesCalculator"

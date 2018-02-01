@@ -4,6 +4,7 @@ slide-to-accept {
   height: 92px;
   width: 100%;
   background: $v-slide-bg-color;
+  margin-bottom: env(safe-area-inset-bottom);
 
   @mixin center-vertically {
     display: flex;

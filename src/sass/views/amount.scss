@@ -1,8 +1,7 @@
 #view-amount {
-  
-    img.recipient-address {
-      width: 20px;
-    }  
+  img.recipient-address {
+    width: 20px;
+  }
   .recipient-label {
     font-size: 14px;
     padding-bottom: 0;
@@ -212,6 +211,7 @@
     font-size: 24px;
     font-weight: lighter;
     position: absolute;
+    padding-bottom: env(safe-area-inset-bottom);
     bottom: 0;
     width: 100%;
     color: $v-mid-gray;

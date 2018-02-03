@@ -17,14 +17,30 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       },
     ];
 
-    if (fingerprintService.isAvailable()) {
-      $scope.options.push({
-        method: 'fingerprint',
-        label: gettextCatalog.getString('Lock by Fingerprint'),
-        needsBackup: false,
-        disabled: false,
-      });
-    }
+    window.plugins.touchid.isAvailable(
+      function(type) {
+        if (type == 'face') {
+          if (fingerprintService.isAvailable()) {
+            $scope.options.push({
+              method: 'face',
+              label: gettextCatalog.getString('Lock by Face ID'),
+              needsBackup: false,
+              disabled: false,
+            });
+          }
+        } else {
+          if (fingerprintService.isAvailable()) {
+            $scope.options.push({
+              method: 'fingerprint',
+              label: gettextCatalog.getString('Lock by Fingerprint'),
+              needsBackup: false,
+              disabled: false,
+            });
+          }
+        }
+      }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
+      function(msg) {$log.debug('not available, message: ' + msg)} // error handler: no TouchID available
+    );
 
     initMethodSelector();
     processWallets();

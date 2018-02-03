@@ -1564,7 +1564,7 @@ msgstr "Not even BitLox can access it."
 
 #: src/js/controllers/paperWallet.js:47
 msgid "Not funds found"
-msgstr "Not funds found"
+msgstr "No funds found"
 
 #: www/views/feedback/rateApp.html:3
 #: www/views/onboarding/notifications.html:8

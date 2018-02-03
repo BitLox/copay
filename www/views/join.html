@@ -61,7 +61,12 @@
 
         <div ng-show="showAdv">
 
-          <label class="item item-input item-stacked-label">
+          <label class="item item-input item-stacked-label" ng-if="platformInfo.isIOS">
+            <span class="input-label">Custom Wallet Parameter</span>
+            <input type="text" autocomplete="off" autocapitalize="off" ng-model="formData.customParam" placeholder="">
+          </label>
+
+          <label class="item item-input item-stacked-label" ng-hide="formData.customParam">
             <span class="input-label">Wallet Service URL</span>
             <input type="text" id="bwsurl" name="bwsurl" ng-model="formData.bwsurl">
           </label>

@@ -369,25 +369,25 @@
           });
         };
 
-        $scope.directOpenNumber = 0;
+        $scope.formData = { directOpenNumber:  0};
         $scope.directLoad = function() {
             var wallet;
             $scope.wallets.forEach(function(w) {
-                if (w.number === $scope.directOpenNumber) {
+                if (w.number === $scope.formData.directOpenNumber) {
                     wallet = w;
                 }
             });
             if (!wallet) {
-                wallet = new Wallet({
-                    wallet_number: $scope.directOpenNumber,
-                    version: 4,
-                    wallet_name: "HIDDEN",
-                    wallet_uuid: "HIDDEN",
-                });
+              return popupService.showAlert(gettextCatalog.getString('Error'), "Wallet ID Not Found");
             }
             $scope.loadWallet(wallet);
         };
-
+        $scope.openWalletByIdToggle = false;
+        $scope.toggleWalletById = function() {
+          $scope.openWalletByIdToggle = !$scope.openWalletByIdToggle;
+          document.getElementById("directOpenNumber").focus()
+          window.cordova.plugins.Keyboard.show();
+        }
         $scope.prepForFlash = function() {
             $scope.flashing = true;
             api.flash().catch(Toast.errorHandler)
@@ -446,7 +446,6 @@
             
             $scope.timeout = $timeout(function() {
                 $scope.timer = true;
-                $log.log($scope.bitlox);
                 $ionicLoading.hide();
             }, 3000);
 

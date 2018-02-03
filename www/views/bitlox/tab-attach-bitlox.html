@@ -58,15 +58,34 @@
           class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
           type="item-text-wrap" ui-sref="tabs.add.create-bitlox">
             <i class="icon big-icon-svg">
-              <img src="img/icon-wallet.svg" class="bg wallet"/>
+              <img src="img/icon-wallet.svg" class="bg"/>
             </i>
             <span class="add-type" translate>Create/Restore<br />BitLox Wallet</span>
             <i class="icon bp-arrow-right"></i>
           </a>
-          <!-- <div class="item" ng-show="createToggle">
-            <wallet-create available-numbers="availableWalletNumbers"
-                           on-finish="onCreateFinished()"></wallet-create>
-          </div> -->
+          <a
+          style="padding-top: 2rem; padding-bottom: 2rem"
+          class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
+          type="item-text-wrap" ng-click="toggleWalletById()">
+            <i class="icon big-icon-svg">
+              <img src="img/icon-wallet.svg" class="bg"/>
+            </i>
+            <span class="add-type" translate>Link BitLox<br />Wallet by ID #</span>
+            <i class="icon bp-arrow-right"></i>
+          </a>          
+          <div class="item" ng-show="openWalletByIdToggle">
+            <form id="openWalletId">
+            <label class="item item-input item-stacked-label">
+
+              <!-- 
+              <span class="input-label" translate>Wallet #</span> -->
+              <input type="number" id="directOpenNumber"
+              ng-model="formData.directOpenNumber">
+            </label>
+            <button ng-click="directLoad()"
+            class="button button-standard button-primary">Link Wallet #{{formData.directOpenNumber}}</button>
+            <input type="submit" style="display:none"></input></form>
+          </div>
           <!-- <a class="item item-remove-animate item-icon-right item-icon-left item-big-icon-left" type="item-text-wrap" ng-click="ping()">
             <i class="icon big-icon-svg">
               <img src="img/icon-wallet.svg" class="bg"/>

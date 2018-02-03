@@ -27,6 +27,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
               needsBackup: false,
               disabled: false,
             });
+            $log.debug('face pushed');
           }
         } else {
           if (fingerprintService.isAvailable()) {
@@ -36,6 +37,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
               needsBackup: false,
               disabled: false,
             });
+            $log.debug('fingerprint pushed');
           }
         }
       }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
@@ -65,6 +67,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
 
     var savedMethod = getSavedMethod();
 
+    $log.debug('initMethodSelector savedMethod: ' );
+
+
     lodash.each($scope.options, function(o) {
       o.disabled = false;
     });
@@ -74,9 +79,15 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       switch (savedMethod) {
         case 'pin':
           disable('fingerprint');
+          disable('face');
           break;
         case 'fingerprint':
           disable('pin');
+          disable('face');
+          break;
+        case 'face':
+          disable('pin');
+          disable('fingerprint');
           break;
       }
     }
@@ -144,6 +155,11 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           if (err) init();
           else saveConfig('none');
         });
+      case 'face':
+        fingerprintService.check('unlockingApp', function(err) {
+          if (err) init();
+          else saveConfig('none');
+        });
         break;
     }
   };
@@ -155,6 +171,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
         break;
       case 'fingerprint':
         saveConfig('fingerprint');
+        break;
+      case 'face':
+        saveConfig('face');
         break;
     }
   };

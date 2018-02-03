@@ -161,13 +161,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           if (err) init();
           else saveConfig('none');
         });
-        break;
-      case 'face':
-        fingerprintService.check('unlockingApp', function(err) {
-          if (err) init();
-          else saveConfig('none');
-        });
-        break;        
+        break;       
     }
   };
 

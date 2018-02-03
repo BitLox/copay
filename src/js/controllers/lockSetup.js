@@ -19,7 +19,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
 
     window.plugins.touchid.isAvailable(
       function(type) {
-        if (type == 'face') {
+        if (type === 'face') {
           if (fingerprintService.isAvailable()) {
             $scope.options.push({
               method: 'face',
@@ -74,10 +74,16 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       switch (savedMethod) {
         case 'pin':
           disable('fingerprint');
+          disable('face');
           break;
         case 'fingerprint':
           disable('pin');
+          disable('face');
           break;
+        case 'face':
+          disable('fingerprint');
+          disable('pin');
+          break;          
       }
     }
 
@@ -145,6 +151,12 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           else saveConfig('none');
         });
         break;
+      case 'face':
+        fingerprintService.check('unlockingApp', function(err) {
+          if (err) init();
+          else saveConfig('none');
+        });
+        break;        
     }
   };
 
@@ -156,6 +168,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       case 'fingerprint':
         saveConfig('fingerprint');
         break;
+      case 'face':
+        saveConfig('face');
+        break;        
     }
   };
 

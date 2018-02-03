@@ -6,7 +6,7 @@
   </ion-nav-bar>
 
 
-  <ion-content>
+  <ion-content class="has-header">
     <br />
     <br />
 
@@ -48,9 +48,10 @@
           Cancel
         </button>
       </div>
-      <div
-        ng-show="bitlox.connected">
+      <div ng-show="bitlox.connected">
         <!-- <h3 ng-show="readingWallets">Loading wallets</h3> -->
+        <br />
+        <br />
 
         <div class="list card"  ng-show="!readingWallets">
           <a

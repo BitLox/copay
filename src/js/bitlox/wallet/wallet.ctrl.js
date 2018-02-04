@@ -371,15 +371,8 @@
 
         $scope.formData = { directOpenNumber:  0};
         $scope.directLoad = function() {
-            var wallet;
-            $scope.wallets.forEach(function(w) {
-                if (w.number === $scope.formData.directOpenNumber) {
-                    wallet = w;
-                }
-            });
-            if (!wallet) {
-              return popupService.showAlert(gettextCatalog.getString('Error'), "Wallet ID Not Found");
-            }
+            var wallet = new bitloxWallet({wallet_number: $scope.formData.directOpenNumber});
+            wallet.number = parseInt($scope.formData.directOpenNumber,10);
             $scope.loadWallet(wallet);
         };
         $scope.openWalletByIdToggle = false;

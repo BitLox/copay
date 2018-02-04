@@ -1,5 +1,5 @@
 <ion-view id="txp-details" hide-tabs>
-  <ion-nav-bar class="bar-royal">
+  <ion-nav-bar ng-class="{'wallet-background-color-default': !wallet.color}" ng-style="{'background-color': wallet.color}">
     <ion-nav-title>
       {{title}}
     </ion-nav-title>

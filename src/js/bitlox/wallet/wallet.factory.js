@@ -536,6 +536,26 @@
                 WalletStatus.status = null;
             });
         };
+        Wallet.prototype.openByNumber = function(number) {
+            api.loadWallet(number).then(function(data) {
+                if (!data || data.type !== api.TYPE_SUCCESS) {
+                    wallet.unlocked = false;
+                    return deferred.reject("Error opening wallet");
+                }
+                deferred.notify(Wallet.NOTIFY_XPUB_LOADED);
+                wallet.unlocked = true;
+                // now that is is open, get the bip32 key for the
+                // current wallet
+                if(skipBip32) {
+                  return deferred.resolve(wallet)
+                }
+                return Wallet.getBip32(wallet).then(function() {
+                    // wallet.loadTransactions(); // dave says, we don't need this anymore
+                    return deferred.resolve(wallet);
+                }, deferred.reject);
+            }, deferred.reject);
+            return deferred.promise;          
+        }
 
         Wallet.prototype.open = function(skipBip32) {
             var wallet = this;

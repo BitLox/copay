@@ -45,8 +45,7 @@ angular.module('copayApp.controllers').controller('preferencesNotificationsContr
       else
         pushNotificationsService.disable();
     });
-
-
+    TapticEngine.selection();
   };
 
   $scope.confirmedTxsNotificationsChange = function() {
@@ -72,6 +71,7 @@ angular.module('copayApp.controllers').controller('preferencesNotificationsContr
     };
 
     emailService.updateEmail(opts);
+    TapticEngine.selection();
   };
 
   $scope.save = function() {

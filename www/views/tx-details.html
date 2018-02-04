@@ -1,10 +1,7 @@
 <ion-view id="txp-details" hide-tabs>
-  <ion-nav-bar ng-class="{'wallet-background-color-default': !wallet.color}" ng-style="{'background-color': wallet.color}">
-    <ion-nav-title>
-      {{title}}
-    </ion-nav-title>
-    <ion-nav-back-button>
-    </ion-nav-back-button>
+  <ion-nav-bar ng-class="{'wallet-background-color-default': !wallet.color}" ng-style="{'background-color':wallet.color}">
+    <ion-nav-title>{{title}}</ion-nav-title>
+    <ion-nav-back-button></ion-nav-back-button>
   </ion-nav-bar>
 
   <ion-content class="tx-details-content">
@@ -89,7 +86,7 @@
         <div class="item low-fees" ng-if="btx.lowAmount">
           <i class="icon"><img src="img/icon-warning.png" width="20px"></i>
           <span translate ng-if="wallet.credentials.network === 'livenet'">
-This transaction amount is too small compared to current Bitcoin network fees. Spending these funds will need a Bitcoin network fee cost comparable to the funds itself. </span>
+          This transaction amount is too small compared to current Bitcoin network fees. Spending these funds will need a Bitcoin network fee cost comparable to the funds itself. </span>
         </div>
 
         <div class="item single-line">

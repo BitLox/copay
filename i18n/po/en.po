@@ -906,7 +906,7 @@ msgstr "Error scanning funds:"
 
 #: src/js/controllers/paperWallet.js:91
 msgid "Error sweeping wallet:"
-msgstr "Error sweeping wallet:"
+msgstr "This private key is not compatible with the receiving wallet you selected:"
 
 #: src/js/controllers/bitpayCardIntro.js:20
 msgid "Error updating Debit Cards"

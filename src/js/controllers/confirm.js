@@ -538,6 +538,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           if (err === 'cancel') {
             return;
           } else if (err) {
+            walletService.removeTx(wallet, txp, function(){ });          
             return setSendError(err);
           }
 

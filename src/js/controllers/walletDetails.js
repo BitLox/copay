@@ -142,19 +142,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     };
   };
 
-  $scope.rescan = function(cb) {
-
+  $scope.rescan = function() {
     walletService.startScan($scope.wallet, function() {
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
-      $log.log("DONE DONE DONE")
       $scope.updateAll();
       $scope.$apply();
-      cb()
     });    
   }
 
@@ -257,23 +248,19 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     }, 100);
   };
   $scope.throttleRescanTimer = 0;
-
+  $scope.rescanThrottled = lodash.throttle(function() {
+    $scope.rescan()
+  }, 60000)
   $scope.onRefresh = function() {
     $timeout(function() {
       $scope.$broadcast('scroll.refreshComplete');
     }, 300);
     $scope.updateAll(true);
-    lodash.throttle( function() {
       $scope.throttleRescanTimer++;
       if($scope.throttleRescanTimer > 2) {
-        $scope.rescan(function() {
-          $scope.throttleRescanTimer = -3
-        })        
+        $scope.throttleRescanTimer = 0
+        $scope.rescanThrottled()
       }
-      // $timeout(function() { $scope.rescan() }, 15000)
-    }, 300000, {
-      'trailing': true
-    })
   };
 
   $scope.updateAll = function(force, cb)  {

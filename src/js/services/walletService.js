@@ -1152,7 +1152,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
             var msg = err && err.message ?
               err.message :
               gettextCatalog.getString('The payment was canceled or rejected by the user, or the BitLox was disconnected.');
-
+            
             $rootScope.$emit('Local/TxAction', wallet.id);
             return cb(msg);
           }          
@@ -1164,7 +1164,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               
               root.invalidateCache(wallet);
               
-              
+              root.startScan(wallet);
               return root.removeTx(wallet, txp, function() {
                 $ionicLoading.hide();
                 // $rootScope.$emit('Local/TxAction', wallet.id);

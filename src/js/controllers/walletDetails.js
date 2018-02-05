@@ -142,14 +142,27 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     };
   };
 
+  $scope.rescan = function(cb) {
+
+    walletService.startScan($scope.wallet, function() {
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $log.log("DONE DONE DONE")
+      $scope.updateAll();
+      $scope.$apply();
+      cb()
+    });    
+  }
+
   $scope.recreate = function() {
     walletService.recreate($scope.wallet, function(err) {
       if (err) return;
       $timeout(function() {
-        walletService.startScan($scope.wallet, function() {
-          $scope.updateAll();
-          $scope.$apply();
-        });
+        $scope.rescan()
       });
     });
   };
@@ -243,12 +256,24 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }, 100);
   };
+  $scope.throttleRescanTimer = 0;
 
   $scope.onRefresh = function() {
     $timeout(function() {
       $scope.$broadcast('scroll.refreshComplete');
     }, 300);
     $scope.updateAll(true);
+    lodash.throttle( function() {
+      $scope.throttleRescanTimer++;
+      if($scope.throttleRescanTimer > 2) {
+        $scope.rescan(function() {
+          $scope.throttleRescanTimer = -3
+        })        
+      }
+      // $timeout(function() { $scope.rescan() }, 15000)
+    }, 300000, {
+      'trailing': true
+    })
   };
 
   $scope.updateAll = function(force, cb)  {

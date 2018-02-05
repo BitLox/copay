@@ -1164,10 +1164,14 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               
               root.invalidateCache(wallet);
               
-              root.startScan(wallet);
               return root.removeTx(wallet, txp, function() {
                 $ionicLoading.hide();
-                // $rootScope.$emit('Local/TxAction', wallet.id);
+                $timeout(function() {
+                  root.startScan(wallet);
+                  $timeout(function() { 
+                    $rootScope.$emit('Local/TxAction', wallet.id)
+                  },30000);
+                },30000);
                 return cb(null, signedTxp);
               });
             }

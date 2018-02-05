@@ -63,6 +63,7 @@
     "cordova-android": "6.4.0",
     "cordova-custom-config": "^3.0.5",
     "cordova-plugin-qrscanner": "^2.5.0",
+    "cordova.plugins.diagnostic": "~3.9.2",
     "coveralls": "^2.11.9",
     "express": "^4.11.2",
     "fs": "0.0.2",

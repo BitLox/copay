@@ -159,7 +159,12 @@
             opts.hasPassphrase = false;
             opts.name = wallet.name;
             opts.account = 0;
-            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+wallet._uuid.toString("hex");
+
+            var walletIdCode = wallet._uuid
+            if(!walletIdCode) {
+              walletIdCode = wallet.number
+            }
+            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+walletIdCode.toString("hex");
 
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);

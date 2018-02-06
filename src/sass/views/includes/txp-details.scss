@@ -1,18 +1,5 @@
 #txp-details,
 #view-confirm {
-  .bar-header {
-    border: 0;
-    background: inherit !important;
-    .title, .button {
-      color: #fff;
-    }
-    .button {
-      background-color: transparent;
-    }
-  }
-  .nav-bar-block, .bar {
-    background: inherit !important;
-  }  
   $item-lateral-padding: 20px;
   $item-vertical-padding: 10px;
   $item-border-color: #EFEFEF;
@@ -332,5 +319,21 @@
     text-align: center;
     font-size: 12px;
     color: $v-mid-gray;
+  }
+}
+
+#txp-details {
+  .bar-header {
+    border: 0;
+    background: inherit !important;
+    .title, .button {
+      color: #fff;
+    }
+    .button {
+      background-color: transparent;
+    }
+  }
+  .nav-bar-block, .bar {
+    background: inherit !important;
   }
 }

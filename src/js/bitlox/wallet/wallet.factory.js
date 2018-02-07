@@ -275,12 +275,12 @@
 
                 for(var i = 0; i < wallets.length; i++) {
                   var thisWallet = wallets[i]
-                  var walletIdCode = thisWallet._uuid
+                  var walletIdCode = thisWallet._uuid.toString("hex")
                   //hidden wallet
                   if(!walletIdCode) {
                     walletIdCode = thisWallet.number
                   }
-                  if(walletIdCode.toString("hex") === bitloxInfo[2]) {
+                  if(walletIdCode === bitloxInfo[2]) {
                     return thisWallet.open().then(function() {
                         $log.log("WALLET LOADED", thisWallet.xpub)
                         $ionicLoading.show({

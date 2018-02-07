@@ -150,12 +150,11 @@
           });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
-            var walletIdCode = wallet._uuid
-            if(!walletIdCode) {
+            var walletIdCode = wallet._uuid.toString("hex")
               walletIdCode = wallet.number
             }            
             opts.singleAddress = false
-            opts.externalSource = 'bitlox/'+result.payload.device_uuid.toString('hex')+'/'+walletIdCode.toString("hex")
+            opts.externalSource = 'bitlox/'+result.payload.device_uuid.toString('hex')+'/'+walletIdCode
             opts.isPrivKeyExternal = true
             opts.extendedPublicKey = wallet.xpub
             opts.derivationPath = derivationPathHelper.getDefault('livenet')
@@ -165,7 +164,7 @@
             opts.account = 0;
 
 
-            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+walletIdCode.toString("hex");
+            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+walletIdCode
 
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);

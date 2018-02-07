@@ -150,9 +150,11 @@
           });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
-            var walletIdCode = wallet._uuid.toString("hex")
-              walletIdCode = wallet.number
-            }            
+            var walletIdCode = wallet.number
+            //hidden wallet
+            if(wallet._uuid) {
+              walletIdCode = wallet._uuid.toString("hex")
+            }     
             opts.singleAddress = false
             opts.externalSource = 'bitlox/'+result.payload.device_uuid.toString('hex')+'/'+walletIdCode
             opts.isPrivKeyExternal = true

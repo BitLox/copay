@@ -350,8 +350,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       $scope.amountHeight = amountHeight + 'px';
       $scope.contentMargin = contentMargin + 'px';
 
-      //$scope.amountScale = 'translateY(' + t + 'px)';
       $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
+      if(platformInfo.isIOS) {
+        $scope.amountScale = 'translateY(' + t + 'px)';
+      }
       $scope.$digest();
       getScrollPosition();
     });

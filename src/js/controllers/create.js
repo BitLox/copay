@@ -154,9 +154,6 @@ angular.module('copayApp.controllers').controller('createController',
         networkName = $scope.formData.customParam;
       }
 
-      if($scope.formData.customParam) {
-        networkName = $scope.formData.customParam
-      }
       var opts = {
         name: $scope.formData.walletName,
         m: $scope.formData.requiredCopayers,

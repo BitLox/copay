@@ -40,17 +40,6 @@
             <qr-scanner class="qr-icon size-24" on-scan="onQrCodeScannedJoin(data)"></qr-scanner>
           </div>
         </div>
-        <div class="item item-divider"></div>
-        <a class="item" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
-          <span class="input-label" translate>Currency</span>
-          <div class="form-table -compact">
-            <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
-            <div>{{network.alias}}</div>
-          </div>
-          <div class="item-icon-right">
-            <i class="icon bp-arrow-right"></i>
-          </div>
-        </a>
         
         <div class="item item-divider"></div>
 
@@ -60,17 +49,11 @@
         </a>
 
         <div ng-show="showAdv">
-
-          <label class="item item-input item-stacked-label" ng-if="platformInfo.isIOS">
-            <span class="input-label">Custom Wallet Parameter</span>
-            <input type="text" autocomplete="off" autocapitalize="off" ng-model="formData.customParam" placeholder="">
-          </label>
-
-          <label class="item item-input item-stacked-label" ng-hide="formData.customParam">
+<!--           <label class="item item-input item-stacked-label">
             <span class="input-label">Wallet Service URL</span>
             <input type="text" id="bwsurl" name="bwsurl" ng-model="formData.bwsurl">
           </label>
-
+ -->
           <label class="item item-input item-select">
             <div class="input-label" translate>
               Wallet Key

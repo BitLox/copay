@@ -255,17 +255,21 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     $timeout(function() {
       $scope.$broadcast('scroll.refreshComplete');
     }, 300);
-    $scope.updateAll(true);
+    $scope.updateForce();
   };
+
+  $scope.updateForce = function() {
+    $scope.updateAll(true)
+    $scope.throttleRescanTimer++;
+    if($scope.throttleRescanTimer > 2) {
+      $scope.throttleRescanTimer = 0
+      $scope.rescanThrottled()
+    }        
+  }
 
   $scope.updateAll = function(force, cb)  {
     updateStatus(force);
     updateTxHistory(cb);
-      $scope.throttleRescanTimer++;
-      if($scope.throttleRescanTimer > 2) {
-        $scope.throttleRescanTimer = 0
-        $scope.rescanThrottled()
-      }    
   };
 
   $scope.hideToggle = function() {

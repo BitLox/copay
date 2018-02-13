@@ -325,7 +325,7 @@
 #txp-details {
   .bar-header {
     border: 0;
-    background: inherit !important;
+    background: inherit;
     .title, .button {
       color: #fff;
     }
@@ -334,6 +334,6 @@
     }
   }
   .nav-bar-block, .bar {
-    background: inherit !important;
+    background: inherit;
   }
 }

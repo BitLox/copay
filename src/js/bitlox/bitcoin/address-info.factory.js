@@ -12,7 +12,7 @@
 
     function addressInfoFactory($q, $http, hexUtil) {
 
-
+// for the hardware wallet altcoins must be variable
         var baseUrl = 'https://bitlox.io/api';
 //         var baseUrl = '/api';
 

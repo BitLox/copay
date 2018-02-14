@@ -235,7 +235,7 @@ this.getDeviceUUID = function() {
 ////////////////////////////
 this.setChangeAddress = function(changeIndex) {
   currentCommand = 'setChangeAddress'
-  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;  
+  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;
   var msg = new protoDevice.SetChangeAddressIndex({
     "address_handle_index": parseInt(changeIndex,10)
   });
@@ -246,7 +246,7 @@ this.newWallet = function(walletNumber, options) {
   currentCommand = "newWallet"
   // look through the options and fill in the data for the proto
   // buffer
-  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;    
+  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;
   var protoData = {};
   if (options.isSecure) {
       var pass = new ByteBuffer();
@@ -281,7 +281,7 @@ this.newWallet = function(walletNumber, options) {
 
 this.deleteWallet = function(walletNumber) {
     var cmd = this.getWalletCommand('delete', walletNumber);
-    BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;      
+    BleApi.expectedResponseType = BleApi.TYPE_SUCCESS;
     return this.write(cmd);
 };
 
@@ -319,7 +319,7 @@ this.signTransaction = function(opts,signTimer) {
     var addrHandlers = [];
     var inputData = [];
     var deferred = $q.defer()
-    BleApi.expectedResponseType = BleApi.TYPE_SIGNATURE_RETURN;         
+    BleApi.expectedResponseType = BleApi.TYPE_SIGNATURE_RETURN;
     async.eachSeries(opts.bwsInputs, function(input, next) {
         var inputPath = input.path.split('/')
         input.chain = parseInt(inputPath[1],10)
@@ -511,7 +511,7 @@ this.genTransaction = function(txp) {
 }
 this.scanWallet = function() {
   currentCommand = 'scanWallet'
-  BleApi.expectedResponseType = BleApi.TYPE_XPUB  
+  BleApi.expectedResponseType = BleApi.TYPE_XPUB
   return this.write(deviceCommands.scan_wallet);
 }
 this.listWallets = function() {
@@ -522,13 +522,13 @@ this.listWallets = function() {
 
 this.loadWallet = function(num) {
   currentCommand = 'loadWallet'
-  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS    
+  BleApi.expectedResponseType = BleApi.TYPE_SUCCESS
   var cmd = this.getWalletCommand('load', num);
   return this.write(cmd, 300000)
 }
 this.initialize = function(sessionId) {
   currentCommand = 'initialize'
-  BleApi.expectedResponseType = BleApi.TYPE_INITIALIZE 
+  BleApi.expectedResponseType = BleApi.TYPE_INITIALIZE
   var sessionIdHex = BleApi.hexUtil.toPaddedHex(sessionId, 39) + '00';
   this.sessionIdHex = sessionIdHex;
   // console.debug(sessionId, "->", sessionIdHex);
@@ -550,7 +550,7 @@ this.setQrCode = function(index) {
 }
 this.ping = function(args) {
   // currentCommand = 'ping' // DO NOT DO THIS
-  BleApi.expectedResponseType = BleApi.TYPE_PONG   
+  BleApi.expectedResponseType = BleApi.TYPE_PONG
   var msg = new protoDevice.Ping(args);
   var tempTXstring = BleApi.makeCommand(deviceCommands.ping,msg)
   return this.write(tempTXstring, 5000)
@@ -564,7 +564,7 @@ this.ping = function(args) {
 */
 this.getEntropy = function(entropy_amount) {
   currentCommand = 'getEntropy'
-  BleApi.expectedResponseType = BleApi.TYPE_ENTROPY_RETURN  
+  BleApi.expectedResponseType = BleApi.TYPE_ENTROPY_RETURN
   var entropyToGet = Number(entropy_amount);
   var msg = new protoDevice.GetEntropy({
 	     "number_of_bytes": entropyToGet
@@ -605,10 +605,10 @@ this.initializeBle = function() {
       // if we've already initialized don't do it again
       if(bleReady) {
         $log.debug("BLE PREVIOUSLY INITIALISED, STARTING NEW SESSION", status)
-        
+
         // $rootScope.$applyAsync(function() {
         //   status = BleApi.STATUS_DISCONNECTED
-        // })        
+        // })
         return true;
       }
       platform = window.device.platform.toLowerCase()
@@ -856,15 +856,15 @@ this.connect = function(address)	{
   }
   $rootScope.$applyAsync(function() {
     status = BleApi.STATUS_CONNECTING
-  });  
+  });
   this.timeout = $timeout(function() {
-    
-    if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) {
-      $log.debug('connection timeout')     
-      BleApi.disconnect(true);
-      $rootScope.$broadcast('bitloxConnectError'); 
 
-    }    
+    if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) {
+      $log.debug('connection timeout')
+      BleApi.disconnect(true);
+      $rootScope.$broadcast('bitloxConnectError');
+
+    }
   },20000)
 
   this.currentPromise = $q.defer()
@@ -897,7 +897,7 @@ this.connect = function(address)	{
     if(parseInt(errorCode,10) === 133) {
 
       $log.debug("BitLox Disconnected from BLE: 133")
-    
+
     } else if(parseInt(errorCode,10) === 8) {
       $log.debug("BitLox Disconnected from BLE: 8")
       $rootScope.$digest()
@@ -906,7 +906,7 @@ this.connect = function(address)	{
   }, function(errorCode) {
     $log.debug("BLE CONNECT ERROR:" + errorCode)
     BleApi.disconnect();
-  });    
+  });
 
 
   return this.currentPromise.promise
@@ -924,11 +924,11 @@ this.disconnect = function(skipNotify) {
   $rootScope.$applyAsync(function() {
     status = BleApi.STATUS_DISCONNECTED;
   })
-  if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) { 
+  if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) {
     // $log.debug("broadcasting disconnection notice")
     if(!skipNotify) { $rootScope.$broadcast('bitloxConnectError'); }
   }
-  
+
   BleApi.startScanNew();
 }
 // old sliceAndWrite64, 'data' is a command constant
@@ -947,8 +947,8 @@ this.write = function(data, timer, noPromise, forcePing) {
   });
 
 
-  if(!forcePing && !this.sessionIdMatch 
-    && data.indexOf(deviceCommands.ping) != 0 
+  if(!forcePing && !this.sessionIdMatch
+    && data.indexOf(deviceCommands.ping) != 0
     && data.indexOf(deviceCommands.initPrefix) != 0
     && data.indexOf(deviceCommands.scan_wallet) != 0) {
         // $log.debug('checking session, for command: '+data)
@@ -1149,7 +1149,7 @@ this.sendData = function(data,type,retainCommand) {
       status = BleApi.STATUS_CONNECTED;
     } else {
       status = BleApi.STATUS_IDLE;
-    }    
+    }
   })
   // $log.debug(type)
   // $log.debug(BleApi.expectedResponseType)
@@ -1159,7 +1159,7 @@ this.sendData = function(data,type,retainCommand) {
     BleApi.disconnect(true)
   }
   if(!retainCommand) { currentCommand = null; BleApi.expectedResponseType = null; }
-  
+
 }
 
 this.processResults = function(command, length, payload) {
@@ -2822,7 +2822,7 @@ $log.debug("address_handle_index " + address_handle_index);
 	var addressToNextDisplay = '';
 	var indexToNextDisplay = 0;
 // ROLLING
-    var GAP = 3; // how many extra addresses to generate
+    var GAP = 20; // how many extra addresses to generate
 
     var key = null;
     var network = null;

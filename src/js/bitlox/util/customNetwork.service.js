@@ -7,7 +7,7 @@ angular.module('app.util')
 
 function Bitlox($q, $http, appConfigService, storageService, bitcore, $log) {
 
-this.customNetworks = {          
+this.customNetworks = {
   livenet: {
     network: 'livenet',
     name: 'livenet',
@@ -73,9 +73,31 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "bwsUrl": "https://aurs.dlc.net/bws/api",
     "port": "9697",
     "networkMagic": 0x6ee58c2a,
-    "explorer": "https://explorer.aureus.cc/"        
+    "explorer": "https://explorer.aureus.cc/"
   }
   bitcore.Networks.add(this.customNetworks.aureus)
+}
+// if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus'|| appConfigService.packageName === 'deuscoin') {
+if(appConfigService.packageName === 'bitlox' || appConfigService.packageName === 'aureus'|| appConfigService.packageName === 'deuscoin') {
+  this.customNetworks.litecoin = {
+    "network": "litecoin",
+    "name": "litecoin",
+    "alias": "Litecoin",
+    "code": "ltc",
+    "symbol": "LTC",
+    "derivationCoinPath": 0,
+    "ratesUrl": "https://seed.aureus.cc/rates",
+    "pubkeyhash": 0x30,
+    "privatekey": 0xb0,
+    "scripthash": 0x50,
+    "xpubkey": 0x019da462,
+    "xprivkey": 0x019d9cfe,
+    "bwsUrl": "https://ltc.dlc.net/bws/api",
+    "port": "9333",
+    "networkMagic": 0xfbc0b6db,
+    "explorer": "https://insight.litecore.io/"
+  }
+  bitcore.Networks.add(this.customNetworks.litecoin)
 }
 this.getStatic = function() {
   return this.customNetworks;
@@ -97,7 +119,7 @@ this.getAll = function() {
         if(!bitcore.Networks.get(networkList[n].name)) {
           bitcore.Networks.add(networkList[n])
         }
-      }      
+      }
     } else {
       // $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
@@ -105,7 +127,7 @@ this.getAll = function() {
     resourcePromise.resolve(self.customNetworks)
   })
 
-  return resourcePromise.promise    
+  return resourcePromise.promise
 }
 this.getCustomNetwork = function(customParam) {
   var def = $q.defer();
@@ -149,9 +171,9 @@ this.getCustomNetwork = function(customParam) {
         }, function(err) {
           // $log.warn('server network error', err)
           def.reject();
-        })              
+        })
       }
-    })        
+    })
   } else {
     return $q.resolve();
   }

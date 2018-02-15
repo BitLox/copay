@@ -91,7 +91,13 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           $scope.sending = false;
           if (err) {
             $log.error(err);
-            popupService.showAlert(gettextCatalog.getString('Error sweeping wallet:'), err || err.toString());
+            var _title = 'Error sweeping wallet:';
+
+            if (err.toString().indexOf('Insufficient funds') !== -1) {
+              _title = 'Error scanning funds:';
+            }
+
+            popupService.showAlert(gettextCatalog.getString(_title), err || err.toString());
           } else {
             $scope.sendStatus = 'success';
           }

@@ -901,10 +901,11 @@ msgid "Error pairing BitLox Account"
 msgstr "Error pairing BitLox Account"
 
 #: src/js/controllers/paperWallet.js:41
+#: src/js/controllers/paperWallet.js:100
 msgid "Error scanning funds:"
 msgstr "Error scanning funds:"
 
-#: src/js/controllers/paperWallet.js:91
+#: src/js/controllers/paperWallet.js:100
 msgid "Error sweeping wallet:"
 msgstr "Incompatible private key with the receiving wallet you selected:"
 

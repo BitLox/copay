@@ -390,12 +390,21 @@
             wallet.number = parseInt($scope.formData.directOpenNumber,10);
             $scope.loadWallet(wallet);
         };
-        $scope.openWalletByIdToggle = false;
-        $scope.toggleWalletById = function() {
-          $scope.openWalletByIdToggle = !$scope.openWalletByIdToggle;
-          document.getElementById("directOpenNumber").focus()
-          window.cordova.plugins.Keyboard.show();
-        }
+
+        $scope.showLinkWalletModal = function() {
+          $ionicModal.fromTemplateUrl('views/modals/link-wallet.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.linkWalletByIdModal = modal;
+            $scope.linkWalletByIdModal.show();
+          });
+        };
+
+        $scope.hideLinkWalletModal = function() {
+          $scope.linkWalletByIdModal.hide();
+        };
+
         $scope.prepForFlash = function() {
             $scope.flashing = true;
             api.flash().catch(Toast.errorHandler)
@@ -484,7 +493,11 @@
         $scope.$on('destroy', function() {
           $scope.timer = true;
           $timeout.cancel($scope.timeout);
-        })
+        });
+
+        $scope.$on('$destroy', function() {
+          $scope.linkWalletByIdModal.remove();
+        });
 
         $scope.reset();
     }

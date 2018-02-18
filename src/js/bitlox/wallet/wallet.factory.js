@@ -280,20 +280,18 @@
                   }
                 }
                 if(!thisWallet) {
-                  thisWallet = new bitloxWallet({wallet_number: bitloxInfo[2]});
-                  $log.log("I AM OPENING A WALLET. IT IS THIS JSON HERE:")
-                  $log.log(thisWallet)
+                  $log.log("HIDDEN WALLET?"+bitloxInfo[2])
                 }
 
-                return thisWallet.open().then(function() {
-                    $log.log("WALLET LOADED", thisWallet.xpub)
+                return wallet.open().then(function() {
+                    $log.log("WALLET LOADED", wallet.xpub)
                     $ionicLoading.show({
                       template: 'Preparing Transaction. Please Wait...'
                     });
-                    if(thisWallet.xpub !== xPubKeys[0]) {
-                      $log.log('pubkeys do not match')
-                      return cb(new Error('pubkeys do not match'))
-                    }
+                    // if(wallet.xpub !== xPubKeys[0]) {
+                    //   $log.log('pubkeys do not match')
+                    //   return cb(new Error('pubkeys do not match'))
+                    // }
                     var changeIndex = txp.changeAddress.path.split('/')[2]
                     $log.log('changeIndex', changeIndex)
                     return api.setChangeAddress(changeIndex).then(function() {

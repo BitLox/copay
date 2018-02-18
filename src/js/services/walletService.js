@@ -701,7 +701,11 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
         //   });
         //   $rootScope.bitloxConnectErrorListener()
         // });
-        return bitlox.wallet.signTransaction(wallet, txp, cb)
+        var externalSource = wallet.getPrivKeyExternalSourceName();
+        var bitloxInfo = externalSource.split('/');
+        var walletNumber = parseInt(bitloxInfo[1],10)        
+        var bitloxWallet = new bitlox.wallet({wallet_number:walletNumber})
+        return bitloxWallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
         case root.externalSource.ledger.id:

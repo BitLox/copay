@@ -150,13 +150,8 @@
           });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
-            var walletIdCode = wallet.number
-            //hidden wallet
-            if(wallet._uuid) {
-              walletIdCode = wallet._uuid.toString("hex")
-            }     
             opts.singleAddress = false
-            opts.externalSource = 'bitlox/'+result.payload.device_uuid.toString('hex')+'/'+walletIdCode
+            opts.externalSource = 'bitlox/'+wallet.number
             opts.isPrivKeyExternal = true
             opts.extendedPublicKey = wallet.xpub
             opts.derivationPath = derivationPathHelper.getDefault('livenet')
@@ -386,8 +381,7 @@
 
         $scope.formData = { directOpenNumber:  0};
         $scope.directLoad = function() {
-            var wallet = new bitloxWallet({wallet_number: $scope.formData.directOpenNumber});
-            wallet.number = parseInt($scope.formData.directOpenNumber,10);
+            var wallet = new bitloxWallet({wallet_number: parseInt( $scope.formData.directOpenNumber, 10)});
             $scope.loadWallet(wallet);
         };
 

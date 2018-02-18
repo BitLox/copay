@@ -69,6 +69,7 @@
     </plugin>
     <plugin name="cordova-custom-config" spec="4.0.2" />
     <plugin name="cordova-plugin-queries-schemes" spec="~0.1.5" />
+    <plugin name="cordova.plugins.diagnostic" spec="3.2.0" />
     <!-- <plugin name="cordova-plugin-fcm" spec="https://github.com/cmgustavo/cordova-plugin-fcm.git" /> -->
     <plugin name="cordova-plugin-ble" spec="2.0.1" />
     <!-- Supported Platforms -->

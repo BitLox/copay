@@ -276,91 +276,92 @@
                 for(var i = 0; i < wallets.length; i++) {
                   var thisWallet = wallets[i]
                   var walletIdCode = thisWallet.number
-                  //hidden wallet
-                  if(thisWallet._uuid) {
-                    walletIdCode = thisWallet._uuid.toString("hex")
+                  if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
+                    break;
                   }
-                  if(walletIdCode === bitloxInfo[2]) {
-                    return thisWallet.open().then(function() {
-                        $log.log("WALLET LOADED", thisWallet.xpub)
-                        $ionicLoading.show({
-                          template: 'Preparing Transaction. Please Wait...'
-                        });
-                        if(thisWallet.xpub !== xPubKeys[0]) {
-                          $log.log('pubkeys do not match')
-                          return cb(new Error('pubkeys do not match'))
+                }
+                if(!thisWallet) {
+                  thisWallet = new bitloxWallet({wallet_number: bitloxInfo[2]});
+                }
+
+                return thisWallet.open().then(function() {
+                    $log.log("WALLET LOADED", thisWallet.xpub)
+                    $ionicLoading.show({
+                      template: 'Preparing Transaction. Please Wait...'
+                    });
+                    if(thisWallet.xpub !== xPubKeys[0]) {
+                      $log.log('pubkeys do not match')
+                      return cb(new Error('pubkeys do not match'))
+                    }
+                    var changeIndex = txp.changeAddress.path.split('/')[2]
+                    $log.log('changeIndex', changeIndex)
+                    return api.setChangeAddress(changeIndex).then(function() {
+                      $log.log('Done setting change address')
+                      $ionicLoading.show({
+                        template: 'Signing Transaction. Check Your BitLox...'
+                      });
+
+                      return api.signTransaction(tx, signTimer).then(function(result) {
+                        $log.log('Bitlox response', result);
+                        if(!result) {
+                          return cb(new Error('Unable to get signatures from BitLox. Try reconnecting the BitLox'))
                         }
-                        var changeIndex = txp.changeAddress.path.split('/')[2]
-                        $log.log('changeIndex', changeIndex)
-                        return api.setChangeAddress(changeIndex).then(function() {
-                          $log.log('Done setting change address')
+
+                        if(result.type === api.TYPE_SIGNATURE_RETURN) {
+                          
+                          api.disconnect(true)
+                          txp.signatures = result.payload.signedScripts;
+                          tx.replaceScripts(txp.signatures);
+
                           $ionicLoading.show({
-                            template: 'Signing Transaction. Check Your BitLox...'
+                            template: 'Broadcasting Transaction. Please Wait...'
                           });
 
-                          return api.signTransaction(tx, signTimer).then(function(result) {
-                            $log.log('Bitlox response', result);
-                            if(!result) {
-                              return cb(new Error('Unable to get signatures from BitLox. Try reconnecting the BitLox'))
+                          wallet.getMainAddresses({ reverse: true }, function(err, addresses) {
+                            if(addresses.length > 0) {
+                              var sp = addresses[0].path.split('/');
+                              var p = parseInt(sp.pop(), 10);
+                                
+                              api.setQrCode(p + 1);
                             }
-
-                            if(result.type === api.TYPE_SIGNATURE_RETURN) {
-                              
-                              api.disconnect(true)
-                              txp.signatures = result.payload.signedScripts;
-                              tx.replaceScripts(txp.signatures);
-
-                              $ionicLoading.show({
-                                template: 'Broadcasting Transaction. Please Wait...'
-                              });
-
-                              wallet.getMainAddresses({ reverse: true }, function(err, addresses) {
-                                if(addresses.length > 0) {
-                                  var sp = addresses[0].path.split('/');
-                                  var p = parseInt(sp.pop(), 10);
-                                    
-                                  api.setQrCode(p + 1);
-                                }
-                              });
+                          });
 
 
-                              // comment out these lines and send `return cb(null,txp) to skip broadcast`
-                              return txUtil.submit(tx.signedHex).then(function() {
-                                return cb(null, txp);
-                              }, function(err) {
-                                return cb(err);
-                              })
-                              // this does not work, always gives BAD_SIGNATURES from BWS
-                              // wallet.signTxProposal(txp, function(signedTxp) {
-                              //   return cb(null,signedTxp)
-                              // })
-                              // return cb(null,txp)
-                            } else {
-                              $log.log('TX signing error')
-                              if(platformInfo.isMobile) {
-                                return cb(new Error(result.type.error_message));
-                              } else {
-                                return cb(new Error(result));
-                              }
-                            }
+                          // comment out these lines and send `return cb(null,txp) to skip broadcast`
+                          return txUtil.submit(tx.signedHex).then(function() {
+                            return cb(null, txp);
                           }, function(err) {
-                            $log.log("TX sign error");
-                            $log.log(err);
                             return cb(err);
                           })
-                        }, function(err) {
-                          $log.log("setChangeAddress error");
-                          $log.log(err);
-                          return cb(err);
-                        })
+                          // this does not work, always gives BAD_SIGNATURES from BWS
+                          // wallet.signTxProposal(txp, function(signedTxp) {
+                          //   return cb(null,signedTxp)
+                          // })
+                          // return cb(null,txp)
+                        } else {
+                          $log.log('TX signing error')
+                          if(platformInfo.isMobile) {
+                            return cb(new Error(result.type.error_message));
+                          } else {
+                            return cb(new Error(result));
+                          }
+                        }
+                      }, function(err) {
+                        $log.log("TX sign error");
+                        $log.log(err);
+                        return cb(err);
+                      })
                     }, function(err) {
-                      $log.log('load wallet error');
+                      $log.log("setChangeAddress error");
                       $log.log(err);
                       return cb(err);
                     })
-                  }
-                }
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
+                }, function(err) {
+                  $log.log('load wallet error');
+                  $log.log(err);
+                  return cb(err);
+                })
+                
 
               }, function(e) {
                 $log.log('Bitlox wallet list error');

@@ -251,9 +251,9 @@
                 return cb(new Error('Unable to get BitLox device information. Try reconnecting the BitLox'));
               }
 
-              if(bitloxInfo[1] !== results.payload.device_uuid.toString('hex')) {
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'));
-              }
+              // if(bitloxInfo[1] !== results.payload.device_uuid.toString('hex')) {
+              //   return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'));
+              // }
 
               $ionicLoading.show({
                 template: 'Opening Wallet. Check Your BitLox...'

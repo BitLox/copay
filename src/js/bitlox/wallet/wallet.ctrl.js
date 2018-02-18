@@ -161,7 +161,7 @@
             opts.account = 0;
 
 
-            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+walletIdCode
+            opts.hwInfo = wallet.number
 
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);

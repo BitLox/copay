@@ -63,7 +63,7 @@
 
         $scope.refreshBitlox = function($event) {
           if(platformInfo.isMobile) {
-            if (platformInfo.isIOS) {
+            if (platformInfo.isIOS && window.cordova.plugins.diagnostic) {
               window.cordova.plugins.diagnostic.isBluetoothAvailable(function(available) {
                 if (!available) {
                   $ionicLoading.show({ template: "Turn on Bluetooth to connect to BitLox", duration: 2000 })

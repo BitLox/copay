@@ -272,16 +272,17 @@
                 res.payload.wallets.forEach(function(data) {
                     wallets.push(new Wallet(data));
                 });
-
+                var thisWallet;
                 for(var i = 0; i < wallets.length; i++) {
-                  var thisWallet = wallets[i]
-                  var walletIdCode = thisWallet.number
-                  if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
+                  if(wallets[i]._uuid.toString("hex") === bitloxInfo[2]) {
+                    thisWallet = wallets[i]
                     break;
                   }
                 }
                 if(!thisWallet) {
                   thisWallet = new bitloxWallet({wallet_number: bitloxInfo[2]});
+                  $log.log("I AM OPENING A WALLET. IT IS THIS JSON HERE:")
+                  $log.log(thisWallet)
                 }
 
                 return thisWallet.open().then(function() {

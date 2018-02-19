@@ -9,6 +9,10 @@
 /* background-color and color defaults should be the same */
 $default-wallet-color: map-get( map-get($v-wallet-color-map, $v-default-wallet-color-index) , color);
 
+.wallet-bg-color-default {
+  background-color: $default-wallet-color;
+}
+
 .wallet-background-color-default {
   background-color: $default-wallet-color !important;
 }

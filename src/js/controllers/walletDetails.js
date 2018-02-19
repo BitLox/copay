@@ -169,10 +169,11 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     var progressFn = function(txs, newTxs) {
       $scope.updatingTxHistoryProgress = newTxs;
       $scope.completeTxHistory = txs;
-      $scope.showHistory();
-      $timeout(function() {
-        $scope.$apply();
-      });
+      // ARE YOU HIGH? JUST WAIT UNTIL IT IS DONE TO DISPLAY
+      // $scope.showHistory();
+      // $timeout(function() {
+      //   $scope.$apply();
+      // });
     };
 
     feeService.getFeeLevels($scope.wallet.credentials.network, function(err, levels) {
@@ -188,9 +189,9 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
         }
         $scope.completeTxHistory = txHistory;
         $scope.showHistory();
-        $timeout(function() {
-          $scope.$apply();
-        });
+        // $timeout(function() {
+        //   $scope.$apply();
+        // });
         return cb();
       });
     });

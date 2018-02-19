@@ -187,8 +187,11 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
           $scope.updateTxHistoryError = true;
           return;
         }
-        $scope.completeTxHistory = txHistory;
-        $scope.showHistory();
+        
+        $scope.$apply(function() {
+          $scope.completeTxHistory = txHistory;
+          $scope.showHistory();
+        })
         // $timeout(function() {
         //   $scope.$apply();
         // });

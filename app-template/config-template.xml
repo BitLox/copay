@@ -40,6 +40,7 @@
     <preference name="android-minSdkVersion" value="19" />
 
     <!-- Plugins -->
+    <plugin name="cordova-plugin-privacyscreen" spec="0.3.1" />
     <plugin name="cordova-plugin-device" spec="1.1.7"/>
     <plugin name="cordova-plugin-globalization" spec="1.0.8" />
     <plugin name="cordova-plugin-splashscreen" spec="4.1.0" />

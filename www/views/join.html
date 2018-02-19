@@ -33,6 +33,7 @@
                    type="text"
                    placeholder="{{'Paste invitation here'|translate}}"
                    name="secret"
+                   autocapitalize="none" autocorrect="off" autocomplete="off" 
                    ng-model="formData.secret"
                    wallet-secret required>
           </label>
@@ -77,6 +78,7 @@
                    placeholder="{{'Enter the recovery phrase (BIP39)'|translate}}"
                    autocapitalize="off"
                    type="text"
+                   autocapitalize="none" autocorrect="off" autocomplete="off" 
                    name="privateKey"
                    ng-model="formData.privateKey">
           </label>
@@ -139,6 +141,7 @@
             <span class="input-label" translate>Derivation Path</span>
             <input type="text"
                    placeholder="{{'BIP32 path for address derivation'|translate}}"
+                   autocapitalize="none" autocorrect="off" autocomplete="off" 
                    name="derivationPath"
                    ng-model="formData.derivationPath">
           </label>

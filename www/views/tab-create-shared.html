@@ -82,7 +82,7 @@
 
           <label ng-hide="formData.customParam" class="item item-input item-stacked-label">
             <span class="input-label">Wallet Service URL</span>
-            <input type="text" ng-model="formData.bwsurl">
+            <input autocapitalize="none" autocorrect="off" autocomplete="off"  type="text" ng-model="formData.bwsurl">
           </label>
 
           <label class="item item-input item-select">
@@ -102,6 +102,7 @@
             <input placeholder="{{'Enter the recovery phrase (BIP39)'|translate}}"
             autocapitalize="off"
             type="text"
+            autocapitalize="none" autocorrect="off" autocomplete="off" 
             ng-model="formData.privateKey">
           </label>
 

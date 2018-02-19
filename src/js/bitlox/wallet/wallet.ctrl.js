@@ -160,7 +160,6 @@
             opts.name = wallet.name;
             opts.account = 0;
 
-
             opts.hwInfo = wallet.number
 
             var b = bwcService.getBitcore();
@@ -379,10 +378,14 @@
           });
         };
 
-        $scope.formData = { directOpenNumber:  0};
+        $scope.formData = { directOpenNumber:  0, directOpenName: '' };
         $scope.directLoad = function() {
-            var wallet = new bitloxWallet({wallet_number: parseInt( $scope.formData.directOpenNumber, 10)});
-            $scope.loadWallet(wallet);
+          var wallet = new bitloxWallet({
+            wallet_name: $scope.formData.directOpenName,
+            wallet_number: parseInt($scope.formData.directOpenNumber, 10)
+          });
+
+          $scope.loadWallet(wallet);
         };
 
         $scope.showLinkWalletModal = function() {

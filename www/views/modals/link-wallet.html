@@ -13,14 +13,24 @@
         </div>
 
         <div class="item">
-          <input
-            id="directOpenNumber"
-            type="number"
-            class="item"
-            pattern="[0-9]*" 
-            ng-model="formData.directOpenNumber"
-            placeholder="Enter Wallet #"
-            style="padding: 24px 14px; width: 100%; background-color: #f2f2f2;">
+          <div>
+            <label class="size-14">Wallet name</label>
+            <input
+              id="directOpenName"
+              type="text"
+              ng-model="formData.directOpenName"
+              placeholder="Enter Wallet name">
+          </div>
+
+          <div class="m20t">
+            <label class="size-14">Wallet ID number</label>
+            <input
+              id="directOpenNumber"
+              type="number"
+              pattern="[0-9]*"
+              ng-model="formData.directOpenNumber"
+              placeholder="Enter Wallet #">
+          </div>
         </div>
       </form>
     </div>
@@ -31,7 +41,7 @@
     <button
       class="button button-standard button-primary"
       ng-click="directLoad()"
-      ng-disabled="formData.directOpenNumber == null">
+      ng-disabled="formData.directOpenNumber == null || !formData.directOpenName">
       Link Wallet #{{formData.directOpenNumber}}
     </button>
   </ion-content>

@@ -16,13 +16,8 @@ angular.module('copayApp.directives')
     return directive;
 
     function link(scope) {
-      scope.$watch("wallet", function() {
-        updateScope();
-      });
-
-      scope.$watch("network", function() {
-        updateScope();
-      });
+      scope.$watch("wallet", updateScope);
+      scope.$watch("network", updateScope);
 
       updateScope();
 
@@ -37,7 +32,7 @@ angular.module('copayApp.directives')
         } else if (scope.wallet
           && scope.wallet.isPrivKeyExternalString
           && scope.wallet.getPrivKeyExternalSourceNameString.indexOf('bitlox') > -1) {
-          scope.bitlox = true
+          scope.bitlox = true;
         }
 
         if (!scope.wallet && scope.network) {

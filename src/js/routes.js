@@ -305,7 +305,8 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
           }
         },
         params: {
-          paypro: null
+          paypro: null,
+          toWallet: null
         }
       })
       .state('tabs.send.addressbook', {

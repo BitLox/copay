@@ -149,6 +149,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       toName: data.stateParams.toName,
       toEmail: data.stateParams.toEmail,
       toColor: data.stateParams.toColor,
+      toWallet: data.stateParams.toWallet,
       network: $scope.network,
       txp: {},
     };

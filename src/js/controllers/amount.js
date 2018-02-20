@@ -293,6 +293,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
         toName: $scope.toName,
         toEmail: $scope.toEmail,
         toColor: $scope.toColor,
+        toWallet: $scope.wallet,
         useSendMax: $scope.useSendMax
       });
     }

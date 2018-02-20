@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state) {
+angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state, customNetworks) {
   var isGlidera = $scope.isGlidera;
   var GLIDERA_LOCK_TIME = 6 * 60 * 60;
   var now = Math.floor(Date.now() / 1000);
@@ -24,12 +24,15 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
   };
 
   function displayFeeValues() {
-    txFormatService.formatAlternativeStr($scope.tx.fee, function(v) {
-      $scope.tx.feeFiatStr = v;
+    customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+      var network = CUSTOMNETWORKS[$scope.network];
+      txFormatService.formatAlternativeStr($scope.tx.fee, network, function(v) {
+        $scope.tx.feeFiatStr = v;
+      });
     });
     $scope.tx.feeRateStr = ($scope.tx.fee / ($scope.tx.amount + $scope.tx.fee) * 100).toFixed(2) + '%';
     $scope.tx.feeLevelStr = feeService.feeOpts[$scope.tx.feeLevel];
-  };
+  }
 
   function applyButtonText() {
     $scope.buttonText = $scope.isCordova && !$scope.isWindowsPhoneApp ? gettextCatalog.getString('Slide') + ' ' : gettextCatalog.getString('Click') + ' ';

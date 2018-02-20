@@ -30,7 +30,14 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
         $scope.tx.feeFiatStr = v;
       });
     });
-    $scope.tx.feeRateStr = ($scope.tx.fee / ($scope.tx.amount + $scope.tx.fee) * 100).toFixed(2) + '%';
+
+    var _feeRate = ($scope.tx.fee / $scope.tx.amount) * 100;
+
+    if (_feeRate > 0.00 && _feeRate < 0.01) {
+      _feeRate = 0.01;
+    }
+
+    $scope.tx.feeRateStr = _feeRate.toFixed(2) + '%';
     $scope.tx.feeLevelStr = feeService.feeOpts[$scope.tx.feeLevel];
   }
 

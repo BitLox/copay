@@ -1,20 +1,14 @@
 'use strict';
 
-//var util = require('util');
-//var _ = require('lodash');
-//var log = require('../util/log');
-//var preconditions = require('preconditions').singleton();
-//var request = require('request');
-
 /*
-  This class lets interfaces with BitPay's exchange rate API.
-*/
+ * This class lets interfaces with BitPay's exchange rate API.
+ */
 
 var RateService = function(opts) {
   var self = this;
 
   opts = opts || {};
-  self.httprequest = opts.httprequest; // || request;
+  self.httprequest = opts.httprequest;
   self.lodash = opts.lodash;
   self.storageService = opts.storageService;
   self.customNetworks = opts.customNetworks;
@@ -50,9 +44,9 @@ RateService.prototype._fetchCurrencies = function(fetchCallback) {
   var backoffSeconds = 5;
   var updateFrequencySeconds = 5 * 60;
 
+  retrieve();
 
-  var retrieveOne = function(network, cb) {
-    // console.info('Fetching exchange rates', network);
+  function retrieveOne(network, cb) {
     self.httprequest.get(network.ratesUrl).success(function(res) {
       self.lodash.each(res, function(currency) {
         self._rates[network.name][currency.code] = currency.rate;
@@ -63,19 +57,13 @@ RateService.prototype._fetchCurrencies = function(fetchCallback) {
         });
       });
       cb()
-    }).error(function(err) {
-      //log.debug('Error fetching exchange rates', err);
+    }).error(function() {
       return cb(new Error("error retrieving at least one rate table"))
     });
-  };
-  var retrieve = function() {
+  }
 
+  function retrieve() {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-      // for(var i in self.wallets) {
-      //   if(CUSTOMNETWORKS[self.wallets[i].network]) {
-      //     self.networks[self.wallets[i].network] = CUSTOMNETWORKS[self.wallets[i].network]
-      //   }
-      // }
       for (var c in CUSTOMNETWORKS) {
         self.networks[CUSTOMNETWORKS[c].name] = CUSTOMNETWORKS[c]
       }
@@ -84,9 +72,9 @@ RateService.prototype._fetchCurrencies = function(fetchCallback) {
           self._rates[self.networks[i].name] = []
           self._alternatives[self.networks[i].name] = []
         }
-      }      
+      }
       var length = Object.keys(self.networks).length;
-      var done = 0
+      var done = 0;
       for(var i in self.networks) {
         retrieveOne(self.networks[i], function(err) {
           done++
@@ -107,10 +95,6 @@ RateService.prototype._fetchCurrencies = function(fetchCallback) {
       }
     })
   }
-
-
-
-  retrieve();
 };
 
 RateService.prototype.getRate = function(code, network) {
@@ -119,7 +103,7 @@ RateService.prototype.getRate = function(code, network) {
   }
 
   if(!this._rates[network.name]) {
-    return console.error("rate service unavailable as yet.",network.name)
+    return console.error("rate service unavailable as yet.", network.name);
   }
   return this._rates[network.name][code];
 };
@@ -129,7 +113,7 @@ RateService.prototype.getAlternatives = function(network) {
     network = this.networks['livenet']
   }  
   if(!this._alternatives[network.name]) {
-    return console.error("rate service unavailable as yet.",network.name)
+    return console.error("rate service unavailable as yet.", network.name);
   }
   return this._alternatives[network.name];
 };
@@ -183,12 +167,11 @@ RateService.prototype.listAlternatives = function(sort, network) {
   return self.lodash.uniq(alternatives, 'isoCode');
 };
 
-angular.module('copayApp.services').factory('rateService', function($http, lodash, configService, profileService, customNetworks, storageService) {
-  // var cfg = _.extend(config.rates, {
-  //   httprequest: $http
-  // });
-  var wallets = profileService.getWallets();
-  var defaults = configService.getDefaults()
+angular
+  .module('copayApp.services')
+  .factory('rateService', function($http, lodash, configService, profileService, customNetworks, storageService) {
+    var wallets = profileService.getWallets();
+    var defaults = configService.getDefaults();
 
     var cfg = {
       httprequest: $http,
@@ -198,5 +181,6 @@ angular.module('copayApp.services').factory('rateService', function($http, lodas
       defaults: defaults,
       wallets: wallets
     };
+
     return RateService.singleton(cfg);    
   });

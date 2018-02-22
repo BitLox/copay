@@ -64,9 +64,10 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
 
   function retrieve() {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-      for (var c in CUSTOMNETWORKS) {
-        self.networks[CUSTOMNETWORKS[c].name] = CUSTOMNETWORKS[c]
+      for (var c in networks) {
+        self.networks[CUSTOMNETWORKS[c].name] = CUSTOMNETWORKS[c];
       }
+
       for (var i in self.networks) {
         if(!self._rates[self.networks[i].name]) {
           self._rates[self.networks[i].name] = []

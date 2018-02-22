@@ -38,7 +38,7 @@ RateService.singleton = function(opts) {
   return _instance;
 };
 
-RateService.prototype._fetchCurrencies = function(fetchCallback) {
+RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   var self = this;
 
   var backoffSeconds = 5;

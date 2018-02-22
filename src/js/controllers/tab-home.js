@@ -48,8 +48,13 @@ angular.module('copayApp.controllers').controller('tabHomeController',
 
       $scope.defaults = configService.getDefaults();
       $scope.wallets = profileService.getWallets();
+      var availableNetworks = $scope.wallets.map(function(wallet) {
+        return wallet.network;
+      }).filter(function(value, index, self) {
+        return self.indexOf(value) === index;
+      });
 
-      $scope.setRates();
+      $scope.setRates({ networks: availableNetworks });
 
       profileService.getOrderedWallets(function(orderedWallets) {
         $scope.orderedWallets = orderedWallets;
@@ -152,10 +157,10 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       });
     });
 
-    $scope.setRates = function(showLoading) {
+    $scope.setRates = function(opts) {
       var unitToSatoshi = $scope.defaults.wallet.settings.unitToSatoshi;
 
-      if (showLoading) {
+      if (opts.showLoading) {
         $ionicLoading.show({
           duration: 1800,
           template: '<ion-spinner></ion-spinner> <br/> Fetching rates...'
@@ -165,7 +170,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
         var defer = $q.defer();
 
-        rateService._fetchCurrencies(function() {
+        rateService._fetchCurrencies(opts.networks, function() {
           txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
             defer.resolve({
               symbol: network.symbol,

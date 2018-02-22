@@ -44,6 +44,10 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   var backoffSeconds = 5;
   var updateFrequencySeconds = 5 * 60;
 
+  if (!networks) {
+    return;
+  }
+
   retrieve();
 
   function retrieve() {

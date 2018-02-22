@@ -46,22 +46,6 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
 
   retrieve();
 
-  function retrieveOne(network, cb) {
-    self.httprequest.get(network.ratesUrl).success(function(res) {
-      self.lodash.each(res, function(currency) {
-        self._rates[network.name][currency.code] = currency.rate;
-        self._alternatives[network.name].push({
-          name: currency.name,
-          isoCode: currency.code,
-          rate: currency.rate
-        });
-      });
-      cb()
-    }).error(function() {
-      return cb(new Error("error retrieving at least one rate table"))
-    });
-  }
-
   function retrieve() {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       for (var c in networks) {
@@ -95,6 +79,22 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
         })
       }
     })
+  }
+
+  function retrieveOne(network, cb) {
+    self.httprequest.get(network.ratesUrl).success(function(res) {
+      self.lodash.each(res, function(currency) {
+        self._rates[network.name][currency.code] = currency.rate;
+        self._alternatives[network.name].push({
+          name: currency.name,
+          isoCode: currency.code,
+          rate: currency.rate
+        });
+      });
+      cb()
+    }).error(function() {
+      return cb(new Error("error retrieving at least one rate table"))
+    });
   }
 };
 

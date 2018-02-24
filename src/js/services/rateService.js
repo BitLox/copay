@@ -10,10 +10,8 @@ var RateService = function(opts) {
   opts = opts || {};
   self.httprequest = opts.httprequest;
   self.lodash = opts.lodash;
-  self.storageService = opts.storageService;
   self.customNetworks = opts.customNetworks;
   self.defaults = opts.defaults;
-  self.wallets = opts.wallets;
 
   self.SAT_TO_BTC = 1 / 1e8;
   self.BTC_TO_SAT = 1e8;
@@ -174,17 +172,14 @@ RateService.prototype.listAlternatives = function(sort, network) {
 
 angular
   .module('copayApp.services')
-  .factory('rateService', function($http, lodash, configService, profileService, customNetworks, storageService) {
-    var wallets = profileService.getWallets();
+  .factory('rateService', function($http, lodash, configService, customNetworks) {
     var defaults = configService.getDefaults();
 
     var cfg = {
       httprequest: $http,
       lodash: lodash,
       customNetworks: customNetworks,
-      storageService: storageService,
       defaults: defaults,
-      wallets: wallets
     };
 
     return RateService.singleton(cfg);    

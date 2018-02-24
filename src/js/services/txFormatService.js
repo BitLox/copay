@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('txFormatService', function($filter, profileService, bwcService, rateService, configService, lodash, customNetworks) {
+angular.module('copayApp.services').factory('txFormatService', function($filter, bwcService, rateService, configService, lodash, customNetworks) {
   var root = {};
 
   root.Utils = bwcService.getUtils();
@@ -210,15 +210,16 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
 
     lodash.each(txps, function(tx) {
 
-      var walletObj = profileService.getWallet(tx.walletId);
+      // var walletObj = profileService.getWallet(tx.walletId);
 
-      tx = txFormatService.processTx(tx, walletObj.credentials.network);
+      tx = root.processTx(tx, walletObj.credentials.network);
 
       // no future transactions...
       if (tx.createdOn > now)
         tx.createdOn = now;
 
-      tx.wallet = walletObj
+      // tx.wallet = walletObj;
+      //
       if (!tx.wallet) {
         $log.error("no wallet at txp?");
         return;

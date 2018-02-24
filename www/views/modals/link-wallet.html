@@ -14,15 +14,6 @@
 
         <div class="item">
           <div>
-            <label class="size-14">Wallet name</label>
-            <input
-              id="directOpenName"
-              type="text"
-              ng-model="formData.directOpenName"
-              placeholder="Enter Wallet name">
-          </div>
-
-          <div class="m20t">
             <label class="size-14">Wallet ID number</label>
             <input
               id="directOpenNumber"
@@ -36,12 +27,11 @@
     </div>
 
     <br/>
-    <br/>
 
     <button
       class="button button-standard button-primary"
       ng-click="directLoad()"
-      ng-disabled="formData.directOpenNumber == null || !formData.directOpenName">
+      ng-disabled="formData.directOpenNumber == null">
       Link Wallet #{{formData.directOpenNumber}}
     </button>
   </ion-content>

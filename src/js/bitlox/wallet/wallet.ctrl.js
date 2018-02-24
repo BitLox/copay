@@ -378,10 +378,9 @@
           });
         };
 
-        $scope.formData = { directOpenNumber:  0, directOpenName: '' };
+        $scope.formData = { directOpenNumber:  0 };
         $scope.directLoad = function() {
           var wallet = new bitloxWallet({
-            wallet_name: $scope.formData.directOpenName,
             wallet_number: parseInt($scope.formData.directOpenNumber, 10)
           });
 

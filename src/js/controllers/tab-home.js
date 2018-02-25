@@ -171,23 +171,32 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       }
 
-      var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
-        var defer = $q.defer();
+      var _networks = Object.keys(customNetworks.getStatic()).filter(function(networkName) {
+        return $scope.usedNetworks.indexOf(networkName) !== -1;
+      }).reduce(function(networkList, networkName) {
+        var network = {};
+        network[networkName] = customNetworks.getStatic()[networkName];
+        return Object.assign(networkList, network);
+      }, {});
+
+
+      var fetchNetworks = lodash.map(_networks, function(network) {
+        var deferred = $q.defer();
 
         rateService._fetchCurrencies($scope.usedNetworks, function() {
           txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
-            defer.resolve({
+            deferred.resolve({
               symbol: network.symbol,
               altStr: altStr,
               network: network.name
             });
-          });          
+          });
         });
 
-        return defer.promise;
+        return deferred.promise;
       });
 
-      $q.all(networkPromise).then(function(rates) {
+      $q.all(fetchNetworks).then(function(rates) {
         $scope.rates = rates;
       });
     };

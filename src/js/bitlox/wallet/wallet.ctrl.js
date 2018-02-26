@@ -4,11 +4,9 @@
     angular.module('app.wallet')
         .controller('WalletCtrl', WalletCtrl);
 
-    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService'];
+    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService', 'customNetworks'];
 
-    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService) {
-        $scope.showBitLoxBuyLink = configService.getSync().showBitLoxBuyLink;
-
+    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService, customNetworks) {
         var api = hidweb;
         if (platformInfo.isChromeApp) {
           api = hidchrome;
@@ -17,8 +15,7 @@
           api.initializeBle();
         }
 
-        $scope.api = api;
-
+        
         $scope.openBitlox = function() {
           var url = 'https://bitlox.com';
           var optIn = true;
@@ -29,18 +26,39 @@
           externalLinkService.open(url, optIn, title, message, okText, cancelText);
         }
 
-        $scope.bitlox = {
-          isMobile: platformInfo.isMobile,
-          connectAttempted: false,
-          connected: false,
-          statusString: "No Bitlox",
-          alertClass: "danger"
-        }
 
-        $scope.wallet = {
-          status: null,
-          alertClass: "warning"
+        $scope.$on("$ionicView.beforeEnter", function(event, data) {   
+         $scope.showBitLoxBuyLink = configService.getSync().showBitLoxBuyLink;
+          $scope.api = api;
+          var defaults = configService.getDefaults();
+          $scope.bitlox = {
+            isMobile: platformInfo.isMobile,
+            connectAttempted: false,
+            connected: false,
+            statusString: "No Bitlox",
+            alertClass: "danger"
+          }
+
+          $scope.wallet = {
+            status: null,
+            alertClass: "warning"
+          };
+
+          customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+            $scope.networks = CUSTOMNETWORKS;
+            $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+          })
+        });
+        $scope.showNetworkSelector = function() {
+          $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
+          $scope.showNetworks = true;
         };
+        $scope.onNetworkSelect = function(network) {
+          $scope.network = network
+          $scope.formData.derivationPath = derivationPathHelper.getDefault(network.name);
+          $scope.formData.bwsurl = network.bwsUrl;
+          $scope.showNetworks = false;
+        }
 
         $scope.getEntropy = function(data) {
           api.getEntropy(1024).then(function(data) {
@@ -94,23 +112,43 @@
         }
 
         $scope.createWallet = function() {
-            $ionicLoading.show({template: "Creating Wallet, Check Your BitLox"})
-            $scope.creatingWallet = true;
+          $ionicLoading.show({template: "Creating Wallet, Check Your BitLox"})
+          $scope.creatingWallet = true;
+          var networkName = $scope.network.name
+          if($scope.formData.customParam) {
+            networkName = $scope.formData.customParam;
+          }
+          customNetworks.getCustomNetwork(networkName).then(function(customNet) {
+            if(customNet) {
+              $scope.newWallet.PUBKEY_ADDRESS = customNet.pubkeyhash;
+              $scope.newWallet.SCRIPT_ADDRESS = customNet.scripthash;
+              $scope.newWallet.SECRET_KEY = customNet.privatekey;
+              $scope.newWallet.EXT_PUBLIC_KEY = customNet.xpubkey;
+              $scope.newWallet.EXT_SECRET_KEY = customNet.xprivkey;
+              $scope.newWallet.MAGIC = customNet.networkMagic;
+              $scope.newWallet.LABEL = customNet.alias;                
+            } else {
+              popupService.showAlert(gettextCatalog.getString('Error'));
+              return false;              
+            }
             bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) { 
               $ionicLoading.hide();
               if(res.type === api.TYPE_ERROR) {
                 popupService.showAlert(gettextCatalog.getString('Error'));
                 return false;
               }
-              $scope.resetNewWallet()     
               $ionicHistory.goBack(-1)
             }, function(err) {
               popupService.showAlert(gettextCatalog.getString('Error'), err);
               $ionicLoading.hide()
             }).finally(function(res) {
-                // reset();
                 $scope.creatingWallet = false;
             });
+          }, function(err) {
+            if($scope.formData.customParam) {
+              popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Invalid') + ": " + networkName);
+            }
+          })           
         };
 
         $scope.updateWordNumbers = function() {

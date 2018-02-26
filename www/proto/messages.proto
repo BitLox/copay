@@ -172,6 +172,13 @@ message NewWallet
 	optional bytes password = 2;
 	optional bytes wallet_name = 3;
 	optional bool is_hidden = 4 ;
+	optional bytes PUBKEY_ADDRESS = 5;
+    optional bytes SCRIPT_ADDRESS = 6;
+    optional bytes SECRET_KEY = 7;
+    optional bytes EXT_PUBLIC_KEY = 8;
+    optional bytes EXT_SECRET_KEY = 9;
+    optional bytes MAGIC = 10;
+    optional bytes LABEL = 11;	
 }
 
 // Responses: Address or Failure

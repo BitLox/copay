@@ -56,7 +56,7 @@
 .has-header[id*='onboard'],[id*='backup-warning'] .has-header{
   background-color: $v-onboarding-pane-bg !important;
 }
-#tab-scan, #tab-attach-bitlox {
+#tab-scan, #tab-attach-bitlox, #view-create-bitlox-wallet {
   .has-header {
     background-color: transparent !important;
   }

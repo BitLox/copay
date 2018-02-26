@@ -455,7 +455,9 @@
             $scope.refreshingBalance = false;
             $scope.openWallet = null;
             $scope.timer = false;
-            api.disconnect();
+            if($state.current.url === '/attach-bitlox') {
+              api.disconnect();
+            }
             
             $scope.timeout = $timeout(function() {
                 $scope.timer = true;

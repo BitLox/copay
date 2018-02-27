@@ -267,35 +267,12 @@ this.newWallet = function(walletNumber, options) {
   nameBuf.flip();
   protoData.wallet_name = nameBuf;
 
-  var pubkey_address = options.PUBKEY_ADDRESS.toString(16);
-  var pubkey_address_buf = BleApi.hexUtil.hexToByteBuffer(pubkey_address);
-  pubkey_address_buf.flip()
-  protoData.PUBKEY_ADDRESS = pubkey_address_buf;
-
-  var script_address = options.SCRIPT_ADDRESS.toString(16);
-  var script_address_buf = BleApi.hexUtil.hexToByteBuffer(script_address);
-  script_address_buf.flip()
-  protoData.SCRIPT_ADDRESS = script_address_buf;
-
-  var secret_key = options.SECRET_KEY.toString(16);
-  var secret_key_buf = BleApi.hexUtil.hexToByteBuffer(secret_key)
-  secret_key_buf.flip()
-  protoData.SECRET_KEY = secret_key_buf
-
-  var ext_public_key = options.EXT_PUBLIC_KEY.toString(16);
-  var ext_public_key_buf = BleApi.hexUtil.hexToByteBuffer(ext_public_key)
-  ext_public_key_buf.flip()
-  protoData.EXT_PUBLIC_KEY = ext_public_key_buf
-
-  var ext_secret_key = options.EXT_SECRET_KEY.toString(16);
-  var ext_secret_key_buf = BleApi.hexUtil.hexToByteBuffer(ext_secret_key)
-  ext_secret_key_buf.flip()
-  protoData.EXT_SECRET_KEY = ext_secret_key_buf
-
-  var magic = options.MAGIC.toString(16);
-  var magic_buf = BleApi.hexUtil.hexToByteBuffer(magic)
-  magic_buf.flip()
-  protoData.MAGIC = magic_buf
+  protoData.PUBKEY_ADDRESS = options.PUBKEY_ADDRESS
+  protoData.SCRIPT_ADDRESS = options.SCRIPT_ADDRESS
+  protoData.SECRET_KEY = options.SECRET_KEY
+  protoData.EXT_PUBLIC_KEY = options.EXT_PUBLIC_KEY
+  protoData.EXT_SECRET_KEY = options.EXT_SECRET_KEY
+  protoData.MAGIC = options.MAGIC
   
   var labelHex = BleApi.hexUtil.toPaddedHex(options.LABEL, 39) + '00';
   var labelBuf = BleApi.hexUtil.hexToByteBuffer(labelHex);

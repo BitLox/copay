@@ -94,15 +94,15 @@
         }
 
         $scope.createWallet = function() {
-            $ionicLoading.show({template: "Creating Wallet, Check Your BitLox"})
+            $ionicLoading.show({ template: "Creating Wallet, Check Your BitLox" });
             $scope.creatingWallet = true;
-            bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) { 
+            bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) {
               $ionicLoading.hide();
               if(res.type === api.TYPE_ERROR) {
                 popupService.showAlert(gettextCatalog.getString('Error'));
                 return false;
               }
-              $scope.resetNewWallet()     
+              $scope.resetNewWallet()
               $ionicHistory.goBack(-1)
             }, function(err) {
               popupService.showAlert(gettextCatalog.getString('Error'), err);
@@ -110,6 +110,7 @@
             }).finally(function(res) {
                 // reset();
                 $scope.creatingWallet = false;
+                $scope.newWallet.isRestore = false;
             });
         };
 
@@ -226,8 +227,8 @@
             // if(addresses.length > 0) {
             //   var sp = addresses[0].path.split('/')
             //   var p = parseInt(sp.pop(),10);
-                
-            //   api.setQrCode(p+1);              
+
+            //   api.setQrCode(p+1);
             // }
             // cb();
           });
@@ -252,8 +253,8 @@
                     $rootScope.$broadcast('bitloxConnectSuccess')
                     // only read wallets if we are on the add bitlox screen
                     if($state.current.url === '/attach-bitlox') {
-                        $scope.readWallets(); 
-                    }             
+                        $scope.readWallets();
+                    }
                   break;
               case api.STATUS_IDLE:
                   $scope.bitlox.connectAttempted = true;
@@ -275,8 +276,8 @@
                   $scope.bitlox.statusString = "Bitlox initializing";
                   $scope.bitlox.alertClass = "success";
                   $scope.bitlox.glyph = "glyphicon-refresh";
-                    $scope.initializeDevice();              
-                  break;          
+                    $scope.initializeDevice();
+                  break;
               case api.STATUS_DISCONNECTED:
                   $scope.bitlox.statusString = "Bitlox disconnected!";
                   $scope.bitlox.alertClass = "danger";
@@ -298,7 +299,7 @@
                             );
                         }
                     }
-                  }                              
+                  }
                   break;
               case api.STATUS_WRITING:
                   $scope.bitlox.connectAttempted = true;
@@ -401,6 +402,43 @@
           $scope.linkWalletByIdModal.hide();
         };
 
+        $scope.showMnemonicModal = function() {
+          $ionicModal.fromTemplateUrl('views/modals/mnemonic.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.mnemonicModal = modal;
+            $scope.mnemonicModal.show();
+          });
+        };
+
+        $scope.hideMnemonicModal = function() {
+          $scope.mnemonicModal.hide();
+        };
+
+        $scope.confirmMnemonicPhrase = function(userWords) {
+          var subTitle = '<ul>';
+          var _userPhrases = userWords.split(/\s+/);
+          _userPhrases.forEach(function(phrase, index) {
+            subTitle += '<li>'+ (Number(index) + 1) + '. ' + phrase +'</li>';
+          });
+          subTitle += '</ul>';
+
+          $ionicPopup.confirm({
+            title: "Confirm Mnemonic Phrase",
+            subTitle: subTitle,
+            cancelText: "Cancel",
+            okText: "Yes",
+            okType: 'button-clear button-positive',
+            cssClass: 'confirmMnemonicPopup'
+          }).then(function(res) {
+            if(!res) return false;
+
+            $scope.newWallet.isRestore = true;
+            $scope.createWallet();
+          });
+        };
+
         $scope.prepForFlash = function() {
             $scope.flashing = true;
             api.flash().catch(Toast.errorHandler)
@@ -437,14 +475,14 @@
             var session = new Date().getTime(true);
 
             $scope.timer = true;
-            $timeout.cancel($scope.timeout) 
-            api.initialize(session).then(function(res) {                
+            $timeout.cancel($scope.timeout)
+            api.initialize(session).then(function(res) {
                 if(!res || res.type === api.TYPE_ERROR) {
                     $ionicLoading.hide();
                     popupService.showAlert(gettextCatalog.getString('Error'), "BitLox Initialization Error.");
                     api.disconnect();
                 }
-            });            
+            });
         }
         $scope.reset = function() {
             // status variables
@@ -458,7 +496,7 @@
             if($state.current.url === '/attach-bitlox') {
               api.disconnect();
             }
-            
+
             $scope.timeout = $timeout(function() {
                 $scope.timer = true;
                 $ionicLoading.hide();
@@ -481,7 +519,7 @@
                         })
                     },1000);
                 // })
-            } else {            
+            } else {
                 if(api.getStatus() === api.STATUS_IDLE) {
                     $scope.readWallets();
                 }

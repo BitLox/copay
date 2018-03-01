@@ -1,0 +1,55 @@
+<ion-modal-view>
+  <ion-header-bar align-title="center" class="bar-royal">
+    <button class="button button-clear" ng-click="hideMnemonicModal()">
+      Close
+    </button>
+    <div class="title">{{'Restore from Mnemonic' | translate}}</div>
+  </ion-header-bar>
+  <ion-content class="has-header">
+    <form ng-submit="confirmMnemonicPhrase(userWords)">
+      <div class="card" style="padding: 1rem;">
+        <p>
+            To quickly restore the wallet, type the words of your
+            mnemonic into the text box below, and you will get a list
+            of index numbers for the words.
+        </p>
+        <p>
+            You can use the "Index restore" option to quickly restore
+            the wallet, rather than typing each word individually. Do
+            this before executing the operation, as the browser will
+            become locked while the BitLox is restoring the wallet.
+        </p>
+        <p>
+            This word list is <b>not</b> transmittied to either the
+            device, nor sent over the internet.
+        </p>
+
+        <br />
+
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            placeholder="Enter your Mnemonic here"
+            ng-model="userWords"
+            ng-change="updateWordNumbers()"
+            ng-keyup="updateWordNumbers()"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            style="width: 100%; background-color: #f2f2f2; padding: 6px 12px; height: 78px; resize: none;"></textarea>
+        </div>
+        <!-- <div>
+          <span ng-repeat="(index, wordNum) in wordIndexes" style="padding-right: 8px">
+            {{index + 1}}:{{wordNum}}
+          </span>
+        </div> -->
+      </div>
+
+      <button
+        type="submit"
+        class="button button-standard button-primary"
+        ng-disabled="!userWords">Set</button>
+    </form>
+  </ion-content>
+</ion-modal-view>

@@ -435,6 +435,10 @@ input[type=number] {
   font-style: italic;
 }
 
+.strike {
+  text-decoration: line-through;
+}
+
 .no-border {
   border-style: none;
   background-color: transparent !important;

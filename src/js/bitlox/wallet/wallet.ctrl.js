@@ -4,9 +4,9 @@
     angular.module('app.wallet')
         .controller('WalletCtrl', WalletCtrl);
 
-    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService'];
+    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService', 'BIP39WordList'];
 
-    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService) {
+    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService, BIP39WordList) {
         $scope.showBitLoxBuyLink = configService.getSync().showBitLoxBuyLink;
 
         var api = hidweb;
@@ -419,8 +419,18 @@
         $scope.confirmMnemonicPhrase = function(userWords) {
           var subTitle = '<ul>';
           var _userPhrases = userWords.split(/\s+/);
-          _userPhrases.forEach(function(phrase, index) {
-            subTitle += '<li>'+ (Number(index) + 1) + '. ' + phrase +'</li>';
+          _userPhrases.forEach(function(phrase) {
+            var phraseIndex = BIP39WordList.indexOf(phrase);
+            var li = '<li>';
+
+            if (phraseIndex === -1) {
+              phraseIndex = '';
+              li = '<li class="invalid strike">';
+            } else {
+              phraseIndex += '.';
+            }
+
+            subTitle += li + phraseIndex + ' ' + phrase +'</li>';
           });
           subTitle += '</ul>';
 

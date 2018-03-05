@@ -73,11 +73,20 @@
     background-color: #fafafa;
   }
 
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+
   ul > li {
-    float: left;
     font-size: 16px;
-    padding: 4px 12px 4px 2px;
-    margin: 4px 4px 0 0;
+    padding: 4px;
+    margin: 4px 18px 0 0;
+  }
+
+  .invalid {
+    color: #ff0000;
   }
 }
 

@@ -418,6 +418,7 @@
 
         $scope.confirmMnemonicPhrase = function(userWords) {
           var subTitle = '<ul>';
+          var invalidMnemonic = false;
           var _userPhrases = userWords.split(/\s+/);
           _userPhrases.forEach(function(phrase) {
             var phraseIndex = BIP39WordList.indexOf(phrase);
@@ -426,6 +427,7 @@
             if (phraseIndex === -1) {
               phraseIndex = '';
               li = '<li class="invalid strike">';
+              invalidMnemonic = true;
             } else {
               phraseIndex += '.';
             }
@@ -434,18 +436,34 @@
           });
           subTitle += '</ul>';
 
-          $ionicPopup.confirm({
-            title: "Confirm Mnemonic Phrase",
-            subTitle: subTitle,
-            cancelText: "Cancel",
-            okText: "Yes",
-            okType: 'button-clear button-positive',
-            cssClass: 'confirmMnemonicPopup'
-          }).then(function(res) {
-            if(!res) return false;
+          var buttons = [{
+            text: 'Cancel',
+            onTap: function(e) {
+              e.preventDefault();
+              popup.close();
+            }
+          }];
 
-            $scope.newWallet.isRestore = true;
-            $scope.createWallet();
+          if (!invalidMnemonic) {
+            var okBtn = {
+             text: 'Yes',
+              type: 'button-clear button-positive',
+              onTap: function(e) {
+                e.preventDefault();
+
+                $scope.newWallet.isRestore = true;
+                $scope.createWallet();
+                popup.close();
+              }
+            };
+            buttons.push(okBtn);
+          }
+
+          var popup = $ionicPopup.show({
+            title: "Confirm Mnemonic Phrase",
+            cssClass: 'confirmMnemonicPopup',
+            subTitle: subTitle,
+            buttons: buttons
           });
         };
 

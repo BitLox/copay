@@ -34,7 +34,7 @@ angular.module('copayApp.controllers').controller('createController',
       resetPasswordFields();
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         $scope.networks = CUSTOMNETWORKS;
-        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]
       })
     });
 
@@ -163,6 +163,7 @@ angular.module('copayApp.controllers').controller('createController',
         bwsurl: $scope.formData.bwsurl,
         singleAddress: $scope.formData.singleAddressEnabled,
         walletPrivKey: $scope.formData._walletPrivKey, // Only for testing
+        coin: $scope.formData.coin
       };
 
       var setSeed = $scope.formData.seedSource.id == 'set';
@@ -256,7 +257,7 @@ angular.module('copayApp.controllers').controller('createController',
           // user did not ask for custom network, do nothing
           _create(opts)
         }
-      })      
+      })
     }
 
     function _create(opts) {

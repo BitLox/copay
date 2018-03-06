@@ -17,32 +17,55 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       },
     ];
 
+
     window.plugins.touchid.isAvailable(
       function(type) {
         if (type === 'face') {
-          if (fingerprintService.isAvailable()) {
-            $scope.options.push({
-              method: 'face',
-              label: gettextCatalog.getString('Lock by Face ID'),
-              needsBackup: false,
-              disabled: false,
-            });
-            $log.debug('face pushed');
-          }
-        } else {
+          $log.debug('FAAAAAACE');
+        }
+        if (type === 'touch') {
+          $log.debug('FINGERZ');
+        };
+      }
+    );
+
+
+//     window.plugins.touchid.isAvailable(
+//       function(type) {
+//         if (type === 'face') {
+//           if (fingerprintService.isAvailable()) {
+//             $scope.options.push({
+//               method: 'fingerprint',
+//               label: gettextCatalog.getString('Lock by Face ID'),
+//               needsBackup: false,
+//               disabled: false,
+//             });
+//             $log.debug('face pushed');
+//           }
+//         } else {
           if (fingerprintService.isAvailable()) {
             $scope.options.push({
               method: 'fingerprint',
-              label: gettextCatalog.getString('Lock by Fingerprint'),
+              label: gettextCatalog.getString('Lock by Buttprint'),
               needsBackup: false,
               disabled: false,
             });
             $log.debug('fingerprint pushed');
-          }
-        }
-      }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
-      function(msg) {$log.debug('not available, message: ' + msg)} // error handler: no TouchID available
-    );
+          };
+//         }
+//       }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
+//       function(msg) {$log.debug('not available, message: ' + msg)} // error handler: no TouchID available
+//     );
+
+
+//     if (fingerprintService.isAvailable()) {
+//       $scope.options.push({
+//         method: 'fingerprint',
+//         label: gettextCatalog.getString('Lock by Fingerprint'),
+//         needsBackup: false,
+//         disabled: false,
+//       });
+//     }
 
     initMethodSelector();
     processWallets();
@@ -67,9 +90,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
 
     var savedMethod = getSavedMethod();
 
-    $log.debug('initMethodSelector savedMethod: ' );
-
-
     lodash.each($scope.options, function(o) {
       o.disabled = false;
     });
@@ -79,15 +99,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       switch (savedMethod) {
         case 'pin':
           disable('fingerprint');
-          disable('face');
           break;
         case 'fingerprint':
           disable('pin');
-          disable('face');
-          break;
-        case 'face':
-          disable('pin');
-          disable('fingerprint');
           break;
       }
     }
@@ -156,12 +170,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           else saveConfig('none');
         });
         break;
-      case 'face':
-        fingerprintService.check('unlockingApp', function(err) {
-          if (err) init();
-          else saveConfig('none');
-        });
-        break;       
     }
   };
 
@@ -172,9 +180,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
         break;
       case 'fingerprint':
         saveConfig('fingerprint');
-        break;
-      case 'face':
-        saveConfig('face');
         break;
     }
   };

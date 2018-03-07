@@ -6,6 +6,7 @@ angular.module('copayApp.controllers').controller('preferencesAbout',
     $scope.title = gettextCatalog.getString('About') + ' ' + appConfigService.nameCase;
     $scope.version = $window.version;
     $scope.commitHash = $window.commitHash;
+    $scope.build = $window.build;
 
     $scope.openExternalLink = function() {
       var url = 'https://github.com/' + appConfigService.gitHubRepoName + '/tree/' + $window.commitHash + '';

@@ -79,25 +79,25 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
 }
 // if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus'|| appConfigService.packageName === 'deuscoin') {
 if(appConfigService.packageName === 'bitlox' || appConfigService.packageName === 'aureus'|| appConfigService.packageName === 'deuscoin') {
-  this.customNetworks.litecoin = {
-    "network": "litecoin",
-    "name": "litecoin",
-    "alias": "Litecoin",
-    "code": "ltc",
-    "symbol": "LTC",
+  this.customNetworks.dash = {
+    "network": "dash",
+    "name": "dash",
+    "alias": "Dash",
+    "code": "dash",
+    "symbol": "DASH",
     "derivationCoinPath": 0,
     "ratesUrl": "https://seed.aureus.cc/rates",
-    "pubkeyhash": 0x30,
-    "privatekey": 0xb0,
-    "scripthash": 0x50,
-    "xpubkey": 0x019da462,
-    "xprivkey": 0x019d9cfe,
-    "bwsUrl": "https://ltc.dlc.net/bws/api",
-    "port": "9333",
-    "networkMagic": 0xfbc0b6db,
-    "explorer": "https://insight.litecore.io/"
+    "pubkeyhash": 0x4C,
+    "privatekey": 0xCC,
+    "scripthash": 0x10,
+    "xpubkey": 0x0488B21E,
+    "xprivkey": 0x0488ade4,
+    "bwsUrl": "https://bws.dash.dlc.net/bws/api",
+    "port": "9999",
+    "networkMagic": 0xBF0C6BBD,
+    "explorer": "https://explorer.dash.dlc.net/"
   }
-  bitcore.Networks.add(this.customNetworks.litecoin)
+  bitcore.Networks.add(this.customNetworks.dash)
 }
 this.getStatic = function() {
   return this.customNetworks;

@@ -419,11 +419,16 @@
         $scope.confirmMnemonicPhrase = function(userWords) {
           var subTitle = '<ul>';
           var _userPhrases = userWords.split(/\s+/);
+          var isValid = true
+          if(_userPhrases.length !== 12 && _userPhrases.length !== 18 && _userPhrases.length !== 24) {
+            isValid = false
+          }
           _userPhrases.forEach(function(phrase) {
             var phraseIndex = BIP39WordList.indexOf(phrase);
             var li = '<li>';
 
             if (phraseIndex === -1) {
+              isValid = false;
               phraseIndex = '';
               li = '<li class="invalid strike">';
             } else {
@@ -434,22 +439,37 @@
           });
           subTitle += '</ul>';
 
-          $ionicPopup.confirm({
-            title: "Confirm Mnemonic Phrase",
-            subTitle: subTitle,
-            cancelText: "Cancel",
-            okText: "Yes",
-            okType: 'button-clear button-positive',
-            cssClass: 'confirmMnemonicPopup'
-          }).then(function(res) {
-            if(!res) {
-              return false;
-            }
+          if(!isValid) {
+            $ionicPopup.show({
+              template: 'Invalid Mnemonic Phrase',
+              cssClass: 'no-header',
+              buttons: [{
+                text: 'OK',
+                type: 'button-primary',
+                onTap: function() {
+                  return false;
+                }
+              }]
+            });    
+          } else {
+            $ionicPopup.confirm({
+              title: "Confirm Mnemonic Phrase",
+              subTitle: subTitle,
+              cancelText: "Cancel",
+              okText: "Yes",
+              okType: 'button-clear button-positive',
+              cssClass: 'confirmMnemonicPopup'
+            }).then(function(res) {
+              if(!res) {
+                return false;
+              }
 
-            $scope.newWallet.isRestore = true;
-            $scope.hideMnemonicModal();
-            $scope.createWallet();
-          });
+              $scope.newWallet.isRestore = true;
+              $scope.hideMnemonicModal();
+              $scope.createWallet();
+            });            
+          }
+
         };
 
         $scope.prepForFlash = function() {

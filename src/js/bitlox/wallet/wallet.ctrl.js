@@ -442,9 +442,12 @@
             okType: 'button-clear button-positive',
             cssClass: 'confirmMnemonicPopup'
           }).then(function(res) {
-            if(!res) return false;
+            if(!res) {
+              return false;
+            }
 
             $scope.newWallet.isRestore = true;
+            $scope.hideMnemonicModal();
             $scope.createWallet();
           });
         };

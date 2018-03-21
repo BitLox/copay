@@ -122,7 +122,7 @@
             var numbers = [];
             for (var i = 0; i < words.length; i++) {
                 var word = words[i];
-                var wordIndex = wordlist.indexOf(word);
+                var wordIndex = BIP39WordList.indexOf(word);
                 if (wordIndex < 0) {
                     numbers[i] = "INVALID WORD";
                 } else {

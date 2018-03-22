@@ -42,18 +42,21 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   var backoffSeconds = 5;
   var updateFrequencySeconds = 5 * 60;
 
-  if (!networks) {
-    return;
-  }
+  // if (!networks) {
+  //   return;
+  // }
 
   retrieve();
 
   function retrieve() {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-      networks.forEach(function(n) {
-        self.networks[CUSTOMNETWORKS[n].name] = CUSTOMNETWORKS[n];
-      });
-
+      if(networks) {
+        networks.forEach(function(n) {
+         self.networks[CUSTOMNETWORKS[n].name] = CUSTOMNETWORKS[n];
+        });
+      } else {
+        self.networks = CUSTOMNETWORKS
+      }
       for (var i in self.networks) {
         if(!self._rates[self.networks[i].name]) {
           self._rates[self.networks[i].name] = []

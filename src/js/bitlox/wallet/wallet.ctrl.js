@@ -94,8 +94,12 @@
         }
 
         $scope.createWallet = function() {
+            if($scope.newWallet.isRestore && $scope.BIP39Words.length < 1) {
+              return $scope.showMnemonicModal()
+            }
             $ionicLoading.show({ template: "Creating Wallet, Check Your BitLox" });
             $scope.creatingWallet = true;
+
             bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) {
               $ionicLoading.hide();
               if(res.type === api.TYPE_ERROR) {
@@ -416,30 +420,26 @@
           $scope.mnemonicModal.hide();
         };
 
+        $scope.showWordIndexes = false;
+        $scope.BIP39Words = []
+
         $scope.confirmMnemonicPhrase = function(userWords) {
-          var subTitle = '<ul>';
           var _userPhrases = userWords.split(/\s+/);
+          $scope.BIP39Words = []
           var isValid = true
           if(_userPhrases.length !== 12 && _userPhrases.length !== 18 && _userPhrases.length !== 24) {
             isValid = false
           }
           _userPhrases.forEach(function(phrase) {
             var phraseIndex = BIP39WordList.indexOf(phrase);
-            var li = '<li>';
-
-            if (phraseIndex === -1) {
+            if(phraseIndex === -1) {
               isValid = false;
-              phraseIndex = '';
-              li = '<li class="invalid strike">';
-            } else {
-              phraseIndex += '.';
             }
-
-            subTitle += li + phraseIndex + ' ' + phrase +'</li>';
+            $scope.BIP39Words.push({phrase: phrase, index: phraseIndex})
           });
-          subTitle += '</ul>';
 
           if(!isValid) {
+            $scope.BIP39Words = []
             $ionicPopup.show({
               template: 'Invalid Mnemonic Phrase',
               cssClass: 'no-header',
@@ -452,24 +452,11 @@
               }]
             });    
           } else {
-            $ionicPopup.confirm({
-              title: "Confirm Mnemonic Phrase",
-              subTitle: subTitle,
-              cancelText: "Cancel",
-              okText: "Yes",
-              okType: 'button-clear button-positive',
-              cssClass: 'confirmMnemonicPopup'
-            }).then(function(res) {
-              if(!res) {
-                return false;
-              }
-
+              $scope.showWordIndexes = true
               $scope.newWallet.isRestore = true;
               $scope.hideMnemonicModal();
-              $scope.createWallet();
-            });            
+              $scope.createWallet();       
           }
-
         };
 
         $scope.prepForFlash = function() {

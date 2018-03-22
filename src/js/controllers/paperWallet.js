@@ -15,8 +15,10 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       function checkPrivateKey(privateKey) {
         try {
           var networkName = $scope.wallet.network;
+          console.log(privateKey, networkName)
           new bitcore.PrivateKey(privateKey, networkName);
         } catch (err) {
+          console.error(err)
           return false;
         }
         return true;
@@ -112,6 +114,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
 
     $scope.onWalletSelect = function(wallet) {
       $scope.wallet = wallet;
+      $scope.init()
     };
 
     $scope.showWalletSelector = function() {
@@ -139,7 +142,11 @@ angular.module('copayApp.controllers').controller('paperWalletController',
     });
 
     $scope.$on("$ionicView.enter", function(event, data) {
-      $scope.wallet = $scope.wallets[0];
+      // $scope.wallet = $scope.wallets[0];
+      $scope.showWalletSelector()
+      $scope.init()
+    });
+    $scope.init = function() {
       if (!$scope.wallet) return;
       if (!$scope.isPkEncrypted) $scope.scanFunds();
       else {
@@ -148,7 +155,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           $scope.passphrase = res;
           $scope.scanFunds();
         });
-      }
-    });
+      }      
+    }
 
   });

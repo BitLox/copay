@@ -43,9 +43,13 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       } catch (err) {
         return false;
       }
-      if(bitcore.PrivateKey.isValid(privateKey, defaults.defaultNetwork.name) && data.length >= 26) {
-        return true
-      }
+
+      for(var i in CUSTOMNETWORKS) {
+        if(bitcore.PrivateKey.isValid(privateKey, defaults.defaultNetwork.name) && data.length >= 26) {
+          $log.log('found private key for network', CUSTOMNETWORKS[i].name)
+          return true
+        }
+      }      
       return false;
     }
 

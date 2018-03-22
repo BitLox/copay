@@ -11,6 +11,18 @@
     line-height: 3.1em
   }
 }
+.flex-bip39-indexes {
+  display: flex;
+  flex-direction: row;
+  span {
+    flex-grow: 0;
+    flex-basis: 1em;
+  }
+  span.flex-bip39-indexes-sep {
+    flex-shrink: 1;
+    flex-grow: 0;
+  }
+}
 .confirmed-check {
   width: 20px;
   margin: -4px 0px;

@@ -97,7 +97,11 @@
             if($scope.newWallet.isRestore && $scope.BIP39Words.length < 1) {
               return $scope.showMnemonicModal()
             }
-            $ionicLoading.show({ template: "Creating Wallet, Check Your BitLox" });
+            if($scope.newWallet.isRestore) {
+              $ionicLoading.show({ template: "Restoring..." });
+            } else {
+              $ionicLoading.show({ template: "Creating Wallet, Check Your BitLox" });
+            }
             $scope.creatingWallet = true;
 
             bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) {

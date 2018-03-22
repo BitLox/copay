@@ -31,8 +31,16 @@
         </div>
         <div class="list settings-list settings-input-group" ng-show="showWordIndexes">
           <div class="item item-sub">
-            <div ng-repeat="bipphrase in BIP39Words">
-              {{bipphrase.index}} : {{bipphrase.phrase}}
+            <div class="flex-bip39-indexes" >
+              <span>
+                <div ng-repeat="bipphrase in BIP39Words">{{bipphrase.index}}</div>
+              </span>
+              <span class="flex-bip39-indexes-sep">
+                <div ng-repeat="bipphrase in BIP39Words">:</div>
+              </span>
+              <span>
+                <div ng-repeat="bipphrase in BIP39Words">{{bipphrase.phrase}}</div>
+              </span>
             </div>
           </div>          
         </div>

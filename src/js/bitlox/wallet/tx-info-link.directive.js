@@ -6,6 +6,7 @@
 
     txInfoLink.$inject = [];
 
+// hardware wallet CHANGE
 	var baseUrlroot = 'https://bitlox.io';
 // 	var baseUrlroot = '';
 

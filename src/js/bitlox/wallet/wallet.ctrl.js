@@ -159,6 +159,7 @@
           });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
+
             opts.singleAddress = false
             opts.externalSource = 'bitlox/'+wallet.number
             opts.isPrivKeyExternal = true
@@ -171,6 +172,7 @@
 
             opts.hwInfo = wallet.number
 
+// hardware wallet CHANGE
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);
             opts.entropySource = x.publicKey.toString(); //"40c13cfdbafeccc47b4685d6e7f6a27c";

@@ -9,6 +9,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       }
 
       function getBalance(privateKey, cb) {
+        console.log(privateKey)
         $scope.wallet.getBalanceFromPrivateKey(privateKey, cb);
       }
 

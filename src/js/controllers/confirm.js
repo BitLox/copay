@@ -310,29 +310,27 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           if (err) return cb(err);
 
           txp.feeStr = txFormatService.formatAmountStr(txp.fee);
+          var CUSTOMNETWORKS = customNetworks.getStatic()
+          var network = CUSTOMNETWORKS[wallet.credentials.network];
 
-          customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-            var network = CUSTOMNETWORKS[wallet.credentials.network];
-
-            txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
-              txp.alternativeFeeStr = fee;
-            });
-
-            var per = (txp.fee / txp.amount) * 100;
-
-            if (per > 0.00 && per < 0.01) {
-              per = 0.01;
-            }
-
-            txp.feeRatePerStr = per.toFixed(2) + '%';
-            txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
-
-            tx.txp[wallet.id] = txp;
-            $log.debug('Confirm. TX Fully Updated for wallet:' + wallet.id, tx);
-            refresh();
-
-            return cb();
+          txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
+            txp.alternativeFeeStr = fee;
           });
+
+          var per = (txp.fee / txp.amount) * 100;
+
+          if (per > 0.00 && per < 0.01) {
+            per = 0.01;
+          }
+
+          txp.feeRatePerStr = per.toFixed(2) + '%';
+          txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
+
+          tx.txp[wallet.id] = txp;
+          $log.debug('Confirm. TX Fully Updated for wallet:' + wallet.id, tx);
+          refresh();
+
+          return cb();
         });
       });
     });

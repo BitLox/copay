@@ -9,14 +9,12 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       }
 
       function getBalance(privateKey, cb) {
-        console.log(privateKey)
-        $scope.wallet.getBalanceFromPrivateKey(privateKey, cb);
+        $scope.wallet.getBalanceFromPrivateKey(privateKey, $scope.wallet.network, cb);
       }
 
       function checkPrivateKey(privateKey) {
         try {
           var networkName = $scope.wallet.network;
-          console.log(privateKey, networkName)
           new bitcore.PrivateKey(privateKey, networkName);
         } catch (err) {
           console.error(err)
@@ -28,9 +26,9 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       getPrivateKey($scope.scannedKey, $scope.isPkEncrypted, $scope.passphrase, function(err, privateKey) {
         if (err) return cb(err);
         if (!checkPrivateKey(privateKey)) return cb(new Error('Invalid private key'));
-
         getBalance(privateKey, function(err, balance) {
           if (err) return cb(err);
+          console.log(balance)
           return cb(null, privateKey, balance);
         });
       });
@@ -62,14 +60,14 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       walletService.getAddress($scope.wallet, true, function(err, destinationAddress) {
         if (err) return cb(err);
 
-        $scope.wallet.buildTxFromPrivateKey($scope.privateKey, destinationAddress, null, function(err, testTx) {
+        $scope.wallet.buildTxFromPrivateKey($scope.privateKey, $scope.wallet.network, destinationAddress, null, function(err, testTx) {
           if (err) return cb(err);
           var rawTxLength = testTx.serialize().length;
           feeService.getCurrentFeeRate($scope.wallet.network, function(err, feePerKB) {
 
             var opts = {};
             opts.fee = Math.round((feePerKB * rawTxLength) / 2000);
-            $scope.wallet.buildTxFromPrivateKey($scope.privateKey, destinationAddress, opts, function(err, tx) {
+            $scope.wallet.buildTxFromPrivateKey($scope.privateKey, $scope.wallet.network, destinationAddress, opts, function(err, tx) {
               if (err) return cb(err);
               $scope.wallet.broadcastRawTx({
                 rawTx: tx.serialize(),

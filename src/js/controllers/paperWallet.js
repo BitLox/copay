@@ -28,7 +28,6 @@ angular.module('copayApp.controllers').controller('paperWalletController',
         if (!checkPrivateKey(privateKey)) return cb(new Error('Invalid private key'));
         getBalance(privateKey, function(err, balance) {
           if (err) return cb(err);
-          console.log(balance)
           return cb(null, privateKey, balance);
         });
       });
@@ -48,8 +47,8 @@ angular.module('copayApp.controllers').controller('paperWalletController',
             $scope.balanceSat = balance;
             if ($scope.balanceSat <= 0)
               popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Not funds found'));
-            var config = configService.getSync().wallet.settings;
-            $scope.balance = txFormatService.formatAmount(balance) + ' ' + config.unitName;
+            var CUSTOMNETWORKS = customNetworks.getStatic();
+            $scope.balance = txFormatService.formatAmount(balance) + ' ' + CUSTOMNETWORKS[$scope.wallet.network].symbol;
           }
           $scope.$apply();
         });

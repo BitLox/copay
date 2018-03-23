@@ -86,7 +86,7 @@ if(appConfigService.packageName === 'bitlox' || appConfigService.packageName ===
     "code": "dash",
     "symbol": "DASH",
     "derivationCoinPath": 0,
-    "ratesUrl": "https://seed.aureus.cc/rates",
+    "ratesUrl": "https://bws.bitlox.com:8443/rates",
     "pubkeyhash": 0x4C,
     "privatekey": 0xCC,
     "scripthash": 0x10,

@@ -79,10 +79,12 @@ angular.module('copayApp.controllers').controller('addressesController', functio
         if (err) return;
 
         if (resp.allUtxos && resp.allUtxos.length) {
-
-
           var allSum = lodash.sum(resp.allUtxos || 0, 'satoshis');
           var per = (resp.minFee / allSum) * 100;
+
+          if (per > 0.00 && per < 0.01) {
+            per = 0.01;
+          }
 
           $scope.lowWarning = resp.warning;
           $scope.lowUtxosNb = resp.lowUtxos.length;
@@ -91,8 +93,6 @@ angular.module('copayApp.controllers').controller('addressesController', functio
           $scope.allUtxosSum = txFormatService.formatAmountStr(allSum);
           $scope.minFee = txFormatService.formatAmountStr(resp.minFee || 0);
           $scope.minFeePer = per.toFixed(2) + '%';
-
-
         }
       });
     });

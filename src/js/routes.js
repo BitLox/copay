@@ -1325,11 +1325,11 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       }, 101);
 
       $ionicPlatform.on('pause', function() {
-        // Nothing to do
+        applicationService.appLockModal('check');
       });
 
       $ionicPlatform.on('resume', function() {
-        applicationService.appLockModal('check');
+        // applicationService.appLockModal('check');
       });
 
       $ionicPlatform.on('menubutton', function() {

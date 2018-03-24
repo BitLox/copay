@@ -429,7 +429,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     };
 
     getSavedTxs(walletId, function(err, txsFromLocal) {
-      if (err) return cb(err);
+      if (err) {
+        console.error("fetch saved txs err", err)
+        return cb(err);
+      }
 
       fixTxsUnit(txsFromLocal);
 
@@ -439,6 +442,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
       // First update
       progressFn(txsFromLocal, 0);
+      console.log('here')
       wallet.completeHistory = txsFromLocal;
 
       function getNewTxs(newTxs, skip, next) {
@@ -489,7 +493,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       };
 
       getNewTxs([], 0, function(err, txs) {
-        if (err) return cb(err);
+        if (err) {
+          console.error('get new txs error',err)
+          return cb(err);
+        }
 
         var newHistory = lodash.uniq(lodash.compact(txs.concat(confirmedTxs)), function(x) {
           return x.txid;
@@ -549,10 +556,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
           // Final update
           if (walletId == wallet.credentials.walletId) {
+            console.warn("THERE THER ETHERE")
             wallet.completeHistory = newHistory;
           }
 
           return storageService.setTxHistory(historyToSave, walletId, function() {
+            console.log('tx history saved and cb running now')
             $log.debug('Tx History saved.');
 
             return cb();
@@ -596,8 +605,14 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     };
 
     if (wallet.completeHistory && wallet.completeHistory.isValid) {
+      console.log('tx history is complete')
+      console.log('tx history is complete')
+      console.log('tx history is complete')
+      console.log('tx history is complete')
+      console.log('tx history is complete')
       finish(wallet.completeHistory);
     } else {
+      console.log('geting tx shistory')
       root.getTxHistory(wallet, {
         limitTx: txid
       }, function(err, txHistory) {
@@ -637,14 +652,18 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     // if (isHistoryCached() && !opts.force) return cb(null, wallet.completeHistory);
 
     $log.debug('Updating Transaction History');
+    console.warn("updating TX HISTORY HOSTOISHDF:OIHWERIUHSDFLHSDFLKHSDFLJKHSDFLKJHSDF")
 
     updateLocalTxHistory(wallet, opts, function(err, txs) {
-      if (err) return cb(err);
+      if (err) {
+        console.error("update local tx history error", err)
+        return cb(err);
+      }
 
       if (opts.limitTx) {
         return cb(err, txs);
       }
-
+      console.warn("CALL BACK TO THE GETTXHISTORY CALLBACK")
       wallet.completeHistory.isValid = true;
       return cb(err, wallet.completeHistory);
     });

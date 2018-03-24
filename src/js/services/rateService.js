@@ -67,10 +67,10 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
       var done = 0;
       for(var i in self.networks) {
         retrieveOne(self.networks[i], function(err) {
-          done++
+          done++;
           if(err) {
             setTimeout(function() {
-              backoffSeconds *= 1.2
+              backoffSeconds *= 1.2;
               retrieve();
             }, backoffSeconds * 1000);
           } else if(done === length) {

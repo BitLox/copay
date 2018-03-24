@@ -65,7 +65,8 @@
           <div class="amount__result" ng-show="globalResult">{{globalResult}} {{unitName}}</div>
           <div class="amount__result-equiv">
             <span ng-bind-html='amountSign'></span>
-            {{amountResult || '0.00'}} {{alternativeIsoCode}}
+            <span ng-show="amountResult">{{amountResult}} {{alternativeIsoCode}}</span>
+            <span ng-hide="amountResult">...</span>
           </div>
         </div>
         <div class="nowrap"
@@ -85,7 +86,7 @@
     <div class="keypad">
       <div class="row">
         <div class="col col-25 col-offset-75 operator-send"
-             ng-if="!isRatesCalculator"
+             ng-if="!isRatesCalculator && amountResult"
              ng-show="allowSend"
              ng-click="finish()">
           <i class="icon ion-ios-arrow-thin-right"></i>

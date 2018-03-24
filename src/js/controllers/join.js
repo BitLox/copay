@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('joinController',
-  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService, bwcService, customNetworks) {
+  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService, bwcService, customNetworks, walletColorService) {
     $scope.formData = {};
     
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
@@ -213,6 +213,7 @@ angular.module('copayApp.controllers').controller('joinController',
           }
 
           walletService.updateRemotePreferences(client);
+          walletColorService.setWalletColor(client.credentials.walletId, client.network);
           $ionicHistory.removeBackView();
 
           if (!client.isComplete()) {

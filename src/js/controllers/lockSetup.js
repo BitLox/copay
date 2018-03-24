@@ -26,7 +26,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
               needsBackup: false,
               disabled: false,
             });
-            $log.debug('face pushed');
+            $log.debug('pushed face')
           }
         } else {
           if (fingerprintService.isAvailable()) {
@@ -36,7 +36,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
               needsBackup: false,
               disabled: false,
             });
-            $log.debug('fingerprint pushed');
           }
         }
       }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
@@ -49,7 +48,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
     processWallets();
   };
 
-  $scope.$on("$ionicView.beforeEnter", function(event) {
+  $scope.$on("$ionicView.enter", function(event) {
     init();
   });
 
@@ -71,7 +70,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
 
     var savedMethod = getSavedMethod();
 
-    $log.debug('initMethodSelector savedMethod: ' );
+    $log.debug('initMethodSelector savedMethod: ' , savedMethod);
 
 
     lodash.each($scope.options, function(o) {
@@ -96,12 +95,15 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       }
     }
 
-    $scope.$applyAsync(function() {
-      $scope.currentOption = lodash.find($scope.options, {
-        method: savedMethod
-      });
-      // console.log(JSON.stringify($scope.currentOption))
+    $scope.currentOption = lodash.find($scope.options, {
+      method: savedMethod
     });
+    if(!$scope.currentOption) {
+      $scope.currentOption = $scope.options[0]
+    }
+    $scope.$applyAsync()
+    // console.log(JSON.stringify($scope.currentOption))
+
 
   };
 

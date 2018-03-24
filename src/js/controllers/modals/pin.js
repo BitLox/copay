@@ -61,9 +61,6 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
       $scope.expires = $scope.error = $scope.disableButtons = null;
       currentPin = $scope.confirmPin = '';
       $interval.cancel(countDown);
-      $timeout(function() {
-        $scope.$apply();
-      });
       return;
     };
   };
@@ -91,9 +88,6 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
     $scope.error = false;
     if (value && !$scope.isComplete()) {
       currentPin = currentPin + value;
-      $timeout(function() {
-        $scope.$apply();
-      });
     }
     $scope.save();
   };
@@ -135,10 +129,6 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
       $scope.confirmPin = currentPin = '';
       $scope.error = true;
     }, 200);
-
-    $timeout(function() {
-      $scope.$apply();
-    });
   };
 
   function applyAndCheckPin() {
@@ -155,9 +145,6 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
         $scope.error = true;
       }
     }
-    $timeout(function() {
-      $scope.$apply();
-    });
   };
 
   function deletePin() {
@@ -179,13 +166,13 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
     var opts = {
       lock: {
         method: 'pin',
-        value: value,
-        bannedUntil: null,
+        value: value
       }
     };
 
     configService.set(opts, function(err) {
       if (err) $log.debug(err);
+      console.log("PIN SAVED")
       $scope.hideModal();
     });
   };

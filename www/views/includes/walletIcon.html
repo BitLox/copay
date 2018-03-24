@@ -3,34 +3,52 @@
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet"
-  ng-show="bitlox" />
+  ng-if="bitlox" />
 <img
   src="img/dashcoin.svg"
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet dash"
-  ng-show="wallet.network === 'dash'" />
+  ng-if="wallet.network === 'dash'" />
+<img
+  src="img/icon-bitcoin.svg"
+  ng-class="{'wallet-bg-color-default': !wallet.color}"
+  ng-style="{'background-color': bgcolor || wallet.color}"
+  class="bg wallet litecoin"
+  ng-if="wallet.network === 'litecoin'" />
+<img
+  src="img/icon-bitcoin.svg"
+  ng-class="{'wallet-bg-color-default': !wallet.color}"
+  ng-style="{'background-color': bgcolor || wallet.color}"
+  class="bg wallet zcash"
+  ng-if="wallet.network === 'zcash'" />
 <img
   src="img/aureus.svg"
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet aureus"
-  ng-show="wallet.network === 'aureus'" />
+  ng-if="wallet.network === 'aureus'" />
 <img
   src="img/deuscoin.svg"
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet deuscoin"
-  ng-show="wallet.network === 'deuscoin'" />
+  ng-if="wallet.network === 'deuscoin'" />
+<img
+  src="img/icon-bitcoin.svg"
+  ng-class="{'wallet-bg-color-default': !wallet.color}"
+  ng-style="{'background-color': bgcolor || wallet.color}"
+  class="bg wallet dogecoin"
+  ng-if="wallet.network === 'dogecoin'" />
 <img
   src="img/icon-bitcoin.svg"
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet"
-  ng-show="wallet.network === 'livenet' && !bitlox" />
+  ng-if="wallet.network === 'livenet' && !bitlox" />
 <img
   src="img/icon-wallet.svg"
   ng-class="{'wallet-bg-color-default': !wallet.color}"
   ng-style="{'background-color': bgcolor || wallet.color}"
   class="bg wallet"
-  ng-show="wallet.network === 'testnet'" />
+  ng-if="wallet.network === 'testnet'" />

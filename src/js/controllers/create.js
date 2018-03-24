@@ -270,19 +270,7 @@ angular.module('copayApp.controllers').controller('createController',
           }
 
           walletService.updateRemotePreferences(client);
-
-          var hexColor = '#bb1a1a';
-
-          if (client.network === 'dash') {
-            hexColor = '#1d71b8'
-          } else if (client.network === 'deuscoin') {
-            hexColor = '#0000AA';
-          } else if (client.network === 'aureus') {
-            hexColor = '#ec9f3e';
-          }
-
-          walletColorService.setWalletColor(client.credentials.walletId, hexColor);
-
+          walletColorService.setWalletColor(client.credentials.walletId, client.network);
           pushNotificationsService.updateSubscription(client);
 
           if ($scope.formData.seedSource.id == 'set') {

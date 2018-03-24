@@ -12,7 +12,9 @@ $default-wallet-color: map-get( map-get($v-wallet-color-map, $v-default-wallet-c
 $dash-color: #1d71b8;
 $aureus-color: #ec9f3e;
 $deuscoin-color: #0000AA;
-
+$zcash-color: #FBD35B;
+$litecoin-color: #c5c7c8;
+$dogecoin-color: #FF599E;
 
 .wallet-bg-color-default {
   background-color: $default-wallet-color;
@@ -28,6 +30,18 @@ $deuscoin-color: #0000AA;
 
 .wallet-bg-color-default.deuscoin {
   background-color: $deuscoin-color;
+}
+
+.wallet-bg-color-default.litecoin {
+  background-color: $litecoin-color;
+}
+
+.wallet-bg-color-default.zcash {
+  background-color: $zcash-color;
+}
+
+.wallet-bg-color-default.dogecoin {
+  background-color: $dogecoin-color;
 }
 
 .wallet-background-color-default {

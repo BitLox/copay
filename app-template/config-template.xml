@@ -61,7 +61,7 @@
     <plugin name="cordova-plugin-screen-orientation" spec="https://github.com/Exilz/cordova-plugin-screen-orientation" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="2.0.5" />
     <plugin name="cordova-plugin-whitelist" spec="1.3.3" />
-    <plugin name="cordova-plugin-ionic-webview" spec="1.1.16" />a
+    <plugin name="cordova-plugin-ionic-webview" spec="1.1.16" />
     <plugin name="cordova-plugin-qrscanner" spec="2.5.0" />
     <plugin name="cordova-plugin-customurlscheme" spec="https://github.com/cmgustavo/Custom-URL-scheme.git">
       <variable name="URL_SCHEME" value="bitcoin" />

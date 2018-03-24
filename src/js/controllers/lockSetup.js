@@ -96,11 +96,11 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       }
     }
 
-    $scope.$apply(function() {
+    $scope.$applyAsync(function() {
       $scope.currentOption = lodash.find($scope.options, {
         method: savedMethod
       });
-      console.log(JSON.stringify($scope.currentOption))
+      // console.log(JSON.stringify($scope.currentOption))
     });
 
   };
@@ -134,9 +134,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       if ($scope.options[2]) $scope.options[2].needsBackup = true;
     };
 
-    $timeout(function() {
-      $scope.$apply();
-    });
+
   };
 
   $scope.select = function(selectedMethod) {

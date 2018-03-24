@@ -39,7 +39,7 @@ RateService.singleton = function(opts) {
 RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   var self = this;
 
-  var backoffSeconds = 5;
+  var backoffSeconds = 10;
   var updateFrequencySeconds = 5 * 60;
 
   // if (!networks) {
@@ -73,7 +73,10 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
               backoffSeconds *= 1.2;
               retrieve();
             }, backoffSeconds * 1000);
-          } else if(done === length) {
+
+          }
+          // even if there are errors, if we have done all the calls, we want to return what we do have 
+          if(done === length) {
             self._isAvailable = true;
             self.lodash.each(self._queued, function(callback) {
               setTimeout(callback, 1);

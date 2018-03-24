@@ -96,7 +96,7 @@ angular.module('copayApp.services')
         var lockMethod = config.lock && config.lock.method;
         if (!lockMethod || lockMethod == 'none') return;
 
-        if (lockMethod == 'fingerprint' && fingerprintService.isAvailable()) root.fingerprintModal();
+        if ((lockMethod == 'fingerprint' || lockMethod === 'face') && fingerprintService.isAvailable()) root.fingerprintModal();
         if (lockMethod == 'pin') root.pinModal(action);
 
       });

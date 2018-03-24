@@ -16,7 +16,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
         disabled: false,
       },
     ];
-
     window.plugins.touchid.isAvailable(
       function(type) {
         if (type === 'face') {
@@ -41,7 +40,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           }
         }
       }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
-      function(msg) {$log.debug('not available, message: ' + msg)} // error handler: no TouchID available
+      function(msg) {
+        $log.debug('not available, message: ' + msg)
+      } // error handler: no TouchID available
     );
 
     initMethodSelector();
@@ -60,9 +61,12 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
 
   function initMethodSelector() {
     function disable(method) {
-      lodash.find($scope.options, {
+      var found = lodash.find($scope.options, {
         method: method
-      }).disabled = true;
+      })
+      if(found) {
+        found.disabled = true;
+      }
     };
 
     var savedMethod = getSavedMethod();
@@ -92,12 +96,13 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       }
     }
 
-    $scope.currentOption = lodash.find($scope.options, {
-      method: savedMethod
+    $scope.$apply(function() {
+      $scope.currentOption = lodash.find($scope.options, {
+        method: savedMethod
+      });
+      console.log(JSON.stringify($scope.currentOption))
     });
-    $timeout(function() {
-      $scope.$apply();
-    });
+
   };
 
   function processWallets() {

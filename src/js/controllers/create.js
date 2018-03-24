@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('createController',
-  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo) {
+  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo, walletColorService) {
 
     /* For compressed keys, m*73 + n*34 <= 496 */
     var COPAYER_PAIR_LIMITS = {
@@ -270,6 +270,19 @@ angular.module('copayApp.controllers').controller('createController',
           }
 
           walletService.updateRemotePreferences(client);
+
+          var hexColor = '#bb1a1a';
+
+          if (client.network === 'dash') {
+            hexColor = '#1d71b8'
+          } else if (client.network === 'deuscoin') {
+            hexColor = '#0000AA';
+          } else if (client.network === 'aureus') {
+            hexColor = '#ec9f3e';
+          }
+
+          walletColorService.setWalletColor(client.credentials.walletId, hexColor);
+
           pushNotificationsService.updateSubscription(client);
 
           if ($scope.formData.seedSource.id == 'set') {

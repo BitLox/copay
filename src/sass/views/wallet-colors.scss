@@ -9,8 +9,25 @@
 /* background-color and color defaults should be the same */
 $default-wallet-color: map-get( map-get($v-wallet-color-map, $v-default-wallet-color-index) , color);
 
+$dash-color: #1d71b8;
+$aureus-color: #ec9f3e;
+$deuscoin-color: #0000AA;
+
+
 .wallet-bg-color-default {
   background-color: $default-wallet-color;
+}
+
+.wallet-bg-color-default.dash {
+  background-color: $dash-color;
+}
+
+.wallet-bg-color-default.aureus {
+  background-color: $aureus-color;
+}
+
+.wallet-bg-color-default.deuscoin {
+  background-color: $deuscoin-color;
 }
 
 .wallet-background-color-default {

@@ -95,6 +95,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           break;
       }
     }
+    $rootScope.$applyAsync()
   };
 
   function processWallets() {
@@ -146,13 +147,13 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
         applicationService.pinModal('disable');
         break;
       case 'fingerprint':
-        fingerprintService.check('unlockingApp', function(err, result) {
+        fingerprintService.check('unlockingApp', function(err) {
           if (err) init();
           else saveConfig('none');
         });
         break;
       case 'face':
-        fingerprintService.check('unlockingApp', function(err, result) {
+        fingerprintService.check('unlockingApp', function(err) {
           if (err) init();
           else saveConfig('none');
         });

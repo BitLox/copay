@@ -38,14 +38,16 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
             });
           }
         }
+        initMethodSelector();
       }, // type returned to success callback: 'face' on iPhone X, 'touch' on other devices
       function(msg) {
         $log.debug('not available, message: ' + msg)
+        initMethodSelector();
+
       } // error handler: no TouchID available
     );
 
-    initMethodSelector();
-    processWallets();
+
   };
 
   $scope.$on("$ionicView.enter", function(event) {
@@ -95,7 +97,8 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           break;
       }
     }
-    $rootScope.$applyAsync()
+    processWallets()
+
   };
 
   function processWallets() {
@@ -127,7 +130,9 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
       if ($scope.options[2]) $scope.options[2].needsBackup = true;
     };
 
-
+    $timeout(function() {
+      $scope.$apply();
+    });
   };
 
   $scope.select = function(selectedMethod) {

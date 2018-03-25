@@ -1329,7 +1329,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       });
 
       $ionicPlatform.on('resume', function() {
-        applicationService.appLockModal('check');
+        applicationService.appLockModal('check', true);
       });
 
       $ionicPlatform.on('menubutton', function() {
@@ -1376,7 +1376,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
               // Clear history
               $ionicHistory.clearHistory();
             });
-            applicationService.appLockModal('check');
+            applicationService.appLockModal('check', true);
           });
         };
         // After everything have been loaded

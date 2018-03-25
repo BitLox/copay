@@ -81,7 +81,11 @@ angular.module('copayApp.controllers').controller('preferencesController',
 
       window.plugins.touchid.isAvailable(
         function(type) {
-          $scope.touchIdType = type
+          if(type === 'face') {
+            $scope.touchIdType = type
+          } else {
+            $scope.touchIdType = 'fingerprint'
+          }
           $timeout(function() {
             $scope.apply()
           })

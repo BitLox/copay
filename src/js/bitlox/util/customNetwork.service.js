@@ -115,7 +115,7 @@ this.customNetworks.litecoin = {
   "networkMagic": 0xfbc0b6db,
   "bwsUrl": "https://bws.ltc.dlc.net/bws/api",
   "port": "9333",
-  "explorer": "https://explorer.dash.dlc.net/"
+  "explorer": "https://explorer.ltc.dlc.net/"
 }
 bitcore.Networks.add(this.customNetworks.litecoin)
 

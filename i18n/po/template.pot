@@ -2308,6 +2308,10 @@ msgstr ""
 msgid "Request Fingerprint"
 msgstr ""
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr ""
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr ""

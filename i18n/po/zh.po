@@ -2313,6 +2313,10 @@ msgstr "重复密码"
 msgid "Request Fingerprint"
 msgstr "请求指纹"
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr "请求指纹"
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr "请求特定量"

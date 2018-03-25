@@ -1986,6 +1986,10 @@ msgstr "Repeat the password"
 msgid "Request Fingerprint"
 msgstr "Request Fingerprint"
 
+#: www/views/preferences.html:60
+msgid "Request Face ID"
+msgstr "Request Face ID"
+
 #: www/views/addresses.html:38
 msgid "Request Specific amount"
 msgstr "Request Specific amount"

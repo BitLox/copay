@@ -2313,6 +2313,10 @@ msgstr "Repita a nova senha"
 msgid "Request Fingerprint"
 msgstr "Solicitação de impressão digital"
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr "Solicitação de impressão digital"
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr "Solicitar quantia exata"

@@ -79,6 +79,13 @@ angular.module('copayApp.controllers').controller('preferencesController',
       $scope.isWindowsPhoneApp = platformInfo.isCordova && platformInfo.isWP;
       $scope.externalSource = null;
 
+      window.plugins.touchid.isAvailable(
+        function(type) {
+          $scope.touchIdType = type
+          $timeout(function() {
+            $scope.apply()
+          })
+      })
       if (!wallet)
         return $ionicHistory.goBack();
 

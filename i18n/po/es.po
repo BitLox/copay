@@ -2317,6 +2317,10 @@ msgstr "Repetir la contraseña"
 msgid "Request Fingerprint"
 msgstr "Solicitar Huella Digital"
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr "Solicitar Huella Digital"
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr "Solicitar importe Especifico"

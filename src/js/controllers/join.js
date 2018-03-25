@@ -10,6 +10,10 @@ angular.module('copayApp.controllers').controller('joinController',
       $scope.formData.derivationPath = derivationPathHelper.default;
       $scope.formData.account = 1;
       $scope.formData.secret = null;
+      if ($stateParams.url) {
+        var data = $stateParams.url;
+        $scope.formData.secret = data;
+      }      
       resetPasswordFields();
       updateSeedSourceSelect();
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
@@ -56,16 +60,8 @@ angular.module('copayApp.controllers').controller('joinController',
       });
     };
 
-    $scope.onQrCodeScannedJoin = function(data) {
-      $scope.formData.secret = data;
-      $scope.$applyAsync();
-    };
 
-    if ($stateParams.url) {
-      var data = $stateParams.url;
-      data = data.replace('copay:', '');
-      $scope.onQrCodeScannedJoin(data);
-    }
+
 
     function updateSeedSourceSelect() {
       $scope.seedOptions = [{

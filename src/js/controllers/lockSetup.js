@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('lockSetupController', function($state, $rootScope, $scope, $timeout, $log, configService, gettextCatalog, fingerprintService, profileService, lodash, applicationService) {
-
+  $scope.options = [] 
   function init() {
     $scope.options = [
       {
@@ -69,6 +69,7 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
     };
 
     var savedMethod = getSavedMethod();
+    $scope.savedMethod = savedMethod;
 
     $log.debug('initMethodSelector savedMethod: ' , savedMethod);
 
@@ -94,17 +95,6 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
           break;
       }
     }
-
-    $scope.currentOption = lodash.find($scope.options, {
-      method: savedMethod
-    });
-    if(!$scope.currentOption) {
-      $scope.currentOption = $scope.options[0]
-    }
-    $scope.$applyAsync()
-    // console.log(JSON.stringify($scope.currentOption))
-
-
   };
 
   function processWallets() {
@@ -156,13 +146,13 @@ angular.module('copayApp.controllers').controller('lockSetupController', functio
         applicationService.pinModal('disable');
         break;
       case 'fingerprint':
-        fingerprintService.check('unlockingApp', function(err) {
+        fingerprintService.check('unlockingApp', function(err, result) {
           if (err) init();
           else saveConfig('none');
         });
         break;
       case 'face':
-        fingerprintService.check('unlockingApp', function(err) {
+        fingerprintService.check('unlockingApp', function(err, result) {
           if (err) init();
           else saveConfig('none');
         });

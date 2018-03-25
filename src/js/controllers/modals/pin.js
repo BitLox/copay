@@ -172,7 +172,6 @@ angular.module('copayApp.controllers').controller('pinController', function($sta
 
     configService.set(opts, function(err) {
       if (err) $log.debug(err);
-      console.log("PIN SAVED")
       $scope.hideModal();
     });
   };

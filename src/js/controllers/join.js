@@ -12,7 +12,7 @@ angular.module('copayApp.controllers').controller('joinController',
       $scope.formData.secret = null;
       if ($stateParams.url) {
         var data = $stateParams.url;
-        $scope.formData.secret = data;
+        $scope.onQrCodeScannedJoin(data);
       }      
       resetPasswordFields();
       updateSeedSourceSelect();
@@ -60,6 +60,12 @@ angular.module('copayApp.controllers').controller('joinController',
       });
     };
 
+    $scope.onQrCodeScannedJoin = function(data) {
+      data = data.replace('bitlox-shared:', '');
+      data = data.replace('copay:', '');      
+      $scope.formData.secret = data;
+      $scope.$applyAsync();
+    };
 
 
 

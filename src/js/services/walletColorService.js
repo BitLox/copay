@@ -15,8 +15,8 @@ angular.module('copayApp.services').factory('walletColorService', function(confi
     switch(network) {
       case 'dash':      hexColor = '#1d71b8'; break;
       case 'deuscoin':  hexColor = '#0000AA'; break;
-      case 'aureus':    hexColor = '#ec9f3e'; break;
-      case 'litecoin':  hexColor = '#c5c7c8'; break;
+      case 'aureus':    hexColor = '#e4992e'; break;
+      case 'litecoin':  hexColor = '#91caf4'; break;
       case 'dogecoin':  hexColor = '#FF599E'; break;
       case 'zcash':     hexColor = '#FBD35B'; break;
       default:          hexColor = '#bb1a1a';

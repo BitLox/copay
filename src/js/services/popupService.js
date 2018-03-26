@@ -22,7 +22,7 @@ angular.module('copayApp.services').service('popupService', function($log, $ioni
       title: title,
       subTitle: message,
       cancelText: cancelText,
-      cancelType: 'button-clear button-positive',
+      cancelType: 'button-clear button-dark',
       okText: okText,
       okType: 'button-clear button-positive'
     }).then(function(res) {

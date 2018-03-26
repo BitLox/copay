@@ -366,6 +366,7 @@ msgid "Calculating fee"
 msgstr "Calculating fee"
 
 #: src/js/controllers/confirm.js:494
+#: src/js/controllers/confirm.js:523
 #: src/js/controllers/lockSetup.js:102
 #: src/js/services/popupService.js:59
 #: www/views/addressbook.add.html:10
@@ -440,7 +441,7 @@ msgstr "Commit hash"
 msgid "Complete the backup process to use this option"
 msgstr "Complete the backup process to use this option"
 
-#: src/js/controllers/confirm.js:493
+#: src/js/controllers/confirm.js:521
 #: src/js/controllers/copayers.js:41
 #: www/views/backup.html:53
 #: www/views/backup.html:72
@@ -1595,6 +1596,7 @@ msgstr "Now is a perfect time to assess your surroundings. Nearby windows? Hidde
 
 #: src/js/services/popupService.js:15
 #: src/js/services/popupService.js:58
+#: src/js/controllers/confirm.js:525
 msgid "OK"
 msgstr "OK"
 

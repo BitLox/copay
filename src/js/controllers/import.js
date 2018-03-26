@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('importController',
-  function($scope, $timeout, $log, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, profileService, configService, sjcl, ledger, trezor, derivationPathHelper, platformInfo, bwcService, ongoingProcess, walletService, popupService, gettextCatalog, appConfigService, hwWallet, customNetworks) {
+  function($scope, $timeout, $log, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, profileService, configService, sjcl, ledger, trezor, derivationPathHelper, platformInfo, bwcService, ongoingProcess, walletService, popupService, gettextCatalog, appConfigService, hwWallet, customNetworks, walletColorService) {
     var reader = new FileReader();
     var defaults = configService.getDefaults();
     var errors = bwcService.getErrors();
@@ -399,6 +399,7 @@ angular.module('copayApp.controllers').controller('importController',
 
     var finish = function(wallet) {
       walletService.updateRemotePreferences(wallet);
+      walletColorService.setWalletColor(wallet.credentials.walletId, wallet.network);
 
       profileService.setBackupFlag(wallet.credentials.walletId);
       if ($stateParams.fromOnboarding) {
@@ -429,5 +430,4 @@ angular.module('copayApp.controllers').controller('importController',
       $scope.showAdv = false;
       $scope.init();
     });
-
   });

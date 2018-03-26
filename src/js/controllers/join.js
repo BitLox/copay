@@ -25,6 +25,11 @@ angular.module('copayApp.controllers').controller('joinController',
     $scope.$on('$ionicView.enter', function(event,data) {
 
     })
+    $scope.secretChange = function() {
+      $scope.formData.secret = $scope.formData.secret.replace('bitlox-shared:', '');
+      $scope.formData.secret = $scope.formData.secret.replace('copay:', '');      
+      $scope.$applyAsync()   
+    }
 
     $scope.showAdvChange = function() {
       $scope.showAdv = !$scope.showAdv;

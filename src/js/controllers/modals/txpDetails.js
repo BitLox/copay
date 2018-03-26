@@ -233,7 +233,7 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
         copayerId: $scope.wallet.credentials.copayerId
       });
 
-      $scope.tx = txFormatService.processTx(tx);
+      $scope.tx = txFormatService.processTx(tx, $scope.wallet.credentials.network);
 
       if (!action && tx.status == 'pending')
         $scope.tx.pendingForUs = true;

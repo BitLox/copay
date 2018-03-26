@@ -20,7 +20,7 @@ angular.module('copayApp.services').service('popupService', function($log, $ioni
   var _ionicConfirm = function(title, message, okText, cancelText, cb) {
     $ionicPopup.confirm({
       title: title,
-      subTitle: message,
+      template: message,
       cancelText: cancelText,
       cancelType: 'button-clear button-dark',
       okText: okText,

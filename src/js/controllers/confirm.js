@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError, txConfirmNotification, customNetworks) {
+angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError, txConfirmNotification, customNetworks, $ionicPopup) {
 
   var countDown = null;
   var CONFIRM_LIMIT_USD = 20;
@@ -512,14 +512,20 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         // if (amountUsd <= CONFIRM_LIMIT_USD)
         //   return cb();
 
-        var message = gettextCatalog.getString('Sending {{amountStr}} from\n{{name}}', {
+        var message = gettextCatalog.getString('Sending {{amountStr}} from\n {{name}}', {
           amountStr: tx.amountStr,
-          name: wallet.name.trim()
+          name: '<strong>' + wallet.name.trim() + '</strong>'
         });
-        var okText = gettextCatalog.getString('Confirm');
-        var cancelText = gettextCatalog.getString('Cancel');
-        popupService.showConfirm(null, message, okText, cancelText, function(ok) {
-          return cb(!ok);
+
+        $ionicPopup.confirm({
+          title: gettextCatalog.getString('Confirm'),
+          template: message,
+          cancelText: gettextCatalog.getString('Cancel'),
+          cancelType: 'button-clear button-dark',
+          okText: gettextCatalog.getString('OK'),
+          okType: 'button-clear button-positive'
+        }).then(function(ok) {
+          return cb(!ok); // yeah that's right `!ok` to confirm
         });
       }
 

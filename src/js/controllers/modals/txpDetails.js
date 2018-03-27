@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state, customNetworks) {
+angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state, $ionicPopup, customNetworks) {
   var isGlidera = $scope.isGlidera;
   var GLIDERA_LOCK_TIME = 6 * 60 * 60;
   var now = Math.floor(Date.now() / 1000);
@@ -289,15 +289,21 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
   $scope.onConfirm = function() {
     // confirm txs for more that 20usd, if not spending/touchid is enabled
     function confirmTx(cb) {
-      var message = gettextCatalog.getString('Sending {{amountStr}} from {{name}}', {
+      var message = gettextCatalog.getString('Sending {{amountStr}} from\n {{name}}', {
         amountStr: $scope.tx.amountStr,
-        name: $scope.wallet.name.trim()
+        name: '<br><strong>' + $scope.wallet.name.trim() + '</strong>'
       });
-      var okText = gettextCatalog.getString('Confirm');
-      var cancelText = gettextCatalog.getString('Cancel');
-      popupService.showConfirm(null, message, okText, cancelText, function(ok) {
-        return cb(!ok);
-      });
+
+      $ionicPopup.confirm({
+        title: gettextCatalog.getString('Confirm'),
+        template: message,
+        cancelText: gettextCatalog.getString('Cancel'),
+        cancelType: 'button-clear button-dark',
+        okText: gettextCatalog.getString('OK'),
+        okType: 'button-clear button-positive'
+      }).then(function(ok) {
+        return cb(!ok); // yeah that's right `!ok` to confirm
+      });      
     }    
     confirmTx(function(nok) {
       if (nok) {

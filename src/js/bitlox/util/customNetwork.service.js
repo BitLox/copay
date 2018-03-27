@@ -119,6 +119,27 @@ this.customNetworks.litecoin = {
 }
 bitcore.Networks.add(this.customNetworks.litecoin)
 
+
+this.customNetworks.zcash = {
+  "network": "zcash",
+  "name": "zcash",
+  "alias": "zcash",
+  "code": "zec",
+  "symbol": "ZEC",
+  "derivationCoinPath": 0,
+  "ratesUrl": "https://bws.bitlox.com:8443/rates/zcash",
+  "pubkeyhash": 0x1cb8,
+  "privatekey": 0x80,
+  "scripthash": 0x1cbd,
+  "xpubkey": 0x0488b21e,
+  "xprivkey": 0x0488ade4,
+  "networkMagic": 0x24e92764,
+  "bwsUrl": "https://bws.zcash.dlc.net/bws/api",
+  "port": "8233",
+  "explorer": "https://explorer.zcash.dlc.net/"
+}
+bitcore.Networks.add(this.customNetworks.zcash)
+
 this.getStatic = function() {
   return this.customNetworks;
 }

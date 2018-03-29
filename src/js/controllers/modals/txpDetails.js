@@ -307,6 +307,7 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
     }    
     confirmTx(function(nok) {
       if (nok) {
+        $scope.sendStatus = '';
         $timeout(function() {
           $scope.$apply();
         });

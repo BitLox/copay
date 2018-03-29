@@ -231,8 +231,10 @@
         margin-right: .5rem;
         position: relative;
         img {
-          width: 45px;
-          margin-left: -0.6em;   
+          width: 35px;
+          margin-left: -0.6em;
+          position: relative;
+          left: 5px;
         }
 
         &::before {

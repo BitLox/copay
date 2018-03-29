@@ -19,14 +19,15 @@
               <i ng-show="!setupForm.secret.$invalid" class="icon ion-checkmark-circled valid"></i>
               <i ng-show="setupForm.secret.$invalid && formData.secret" class="icon ion-close-circled invalid"></i>
             </div>
-            <input id="secret"
+            <textarea id="secret"
                    type="text"
                    placeholder="{{'Paste invitation here'|translate}}"
                    name="secret"
                    ng-change="secretChange()"
                    autocapitalize="none" autocorrect="off" autocomplete="off" 
                    ng-model="formData.secret"
-                   wallet-secret required>
+                   rows="2"
+                   wallet-secret required></textarea>
           </label>
           <div class="qr-scan-icon">
             <qr-scanner class="qr-icon size-24" on-scan="onQrCodeScannedJoin(data)"></qr-scanner>

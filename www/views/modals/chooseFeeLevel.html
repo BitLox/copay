@@ -37,15 +37,16 @@
           <div class="list">
             <label class="item item-input">
               <input
-              type="number"
-              placeholder="{{'Enter custom fee'|translate}}"
-              ng-min="minFeeAllowed"
-              ng-max="maxFeeAllowed"
-              min="minFeeRecommended"
-              max="maxFeeRecommended"
-              ng-change="checkFees(customSatPerByte.value)"
-              ng-model="customSatPerByte.value"
-              ng-required="customFeePerKB">
+                id="customFeeInput"
+                type="number"
+                placeholder="{{'Enter custom fee'|translate}}"
+                ng-min="minFeeAllowed"
+                ng-max="maxFeeAllowed"
+                min="minFeeRecommended"
+                max="maxFeeRecommended"
+                ng-change="checkFees(customSatPerByte.value)"
+                ng-model="customSatPerByte.value"
+                ng-required="customFeePerKB">
               <span class="unit">sat/byte</span>
             </label>
           </div>
@@ -72,10 +73,10 @@
 
     <div class="list" ng-show="feeLevel">
       <label class="item item-input item-select">
-        <div class="input-label" translate>
-          Fee level
-        </div>
-        <select ng-options="fee as level | translate for (fee,level) in feeOpts" ng-model="selectedFee.value">
+        <div class="input-label" translate>Fee level</div>
+        <select ng-options="fee as level | translate for (fee,level) in feeOpts"
+                ng-model="selectedFee.value"
+                ng-change="focusInputWhenCustomFee()">
         </select>
       </label>
     </div>

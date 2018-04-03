@@ -366,6 +366,7 @@ msgid "Calculating fee"
 msgstr "Calculating fee"
 
 #: src/js/controllers/confirm.js:494
+#: src/js/controllers/confirm.js:523
 #: src/js/controllers/lockSetup.js:102
 #: src/js/services/popupService.js:59
 #: www/views/addressbook.add.html:10
@@ -440,7 +441,7 @@ msgstr "Commit hash"
 msgid "Complete the backup process to use this option"
 msgstr "Complete the backup process to use this option"
 
-#: src/js/controllers/confirm.js:493
+#: src/js/controllers/confirm.js:521
 #: src/js/controllers/copayers.js:41
 #: www/views/backup.html:53
 #: www/views/backup.html:72
@@ -901,12 +902,13 @@ msgid "Error pairing BitLox Account"
 msgstr "Error pairing BitLox Account"
 
 #: src/js/controllers/paperWallet.js:41
+#: src/js/controllers/paperWallet.js:100
 msgid "Error scanning funds:"
 msgstr "Error scanning funds:"
 
-#: src/js/controllers/paperWallet.js:91
+#: src/js/controllers/paperWallet.js:100
 msgid "Error sweeping wallet:"
-msgstr "Error sweeping wallet:"
+msgstr "Incompatible private key with the receiving wallet you selected:"
 
 #: src/js/controllers/bitpayCardIntro.js:20
 msgid "Error updating Debit Cards"
@@ -1564,7 +1566,7 @@ msgstr "Not even BitLox can access it."
 
 #: src/js/controllers/paperWallet.js:47
 msgid "Not funds found"
-msgstr "Not funds found"
+msgstr "No funds found"
 
 #: www/views/feedback/rateApp.html:3
 #: www/views/onboarding/notifications.html:8
@@ -1594,6 +1596,7 @@ msgstr "Now is a perfect time to assess your surroundings. Nearby windows? Hidde
 
 #: src/js/services/popupService.js:15
 #: src/js/services/popupService.js:58
+#: src/js/controllers/confirm.js:525
 msgid "OK"
 msgstr "OK"
 
@@ -1984,6 +1987,10 @@ msgstr "Repeat the password"
 #: www/views/preferences.html:60
 msgid "Request Fingerprint"
 msgstr "Request Fingerprint"
+
+#: www/views/preferences.html:60
+msgid "Request Face ID"
+msgstr "Request Face ID"
 
 #: www/views/addresses.html:38
 msgid "Request Specific amount"

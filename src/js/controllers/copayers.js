@@ -31,7 +31,7 @@ angular.module('copayApp.controllers').controller('copayersController',
         }
         $scope.wallet.status = status;
         $scope.copayers = $scope.wallet.status.wallet.copayers;
-        $scope.secret = $scope.wallet.status.wallet.secret;
+        $scope.secret = "bitlox-shared:"+$scope.wallet.status.wallet.secret;
         $timeout(function() {
           $scope.$apply();
         });

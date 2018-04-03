@@ -12,6 +12,7 @@
 
     function txUtilFactory($q, $http) {
 
+// hardware wallet altcoins must make variable
         var baseUrl = 'https://bitlox.io/api';
 //         var baseUrl = '/api';
 
@@ -22,7 +23,7 @@
 
         function getHex(bigEndianTxid) {
         	console.debug("raw source txid " + bigEndianTxid);
-            var url = baseUrl + '/rawtx/' + bigEndianTxid 
+            var url = baseUrl + '/rawtx/' + bigEndianTxid
             var d = $q.defer()
             console.log(url)
             $http.get(url).then(function(res) {

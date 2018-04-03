@@ -11,6 +11,24 @@
     line-height: 3.1em
   }
 }
+.bip39-count {
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  font-size: 200%;
+}
+.flex-bip39-indexes {
+  display: flex;
+  flex-direction: row;
+  span {
+    flex-grow: 0;
+    flex-basis: 1em;
+  }
+  span.flex-bip39-indexes-sep {
+    flex-shrink: 1;
+    flex-grow: 0;
+  }
+}
 .confirmed-check {
   width: 20px;
   margin: -4px 0px;
@@ -22,7 +40,6 @@
 .popup-title {
   font-weight: bold !important;
   font-size: 15px !important;
-  margin-bottom: 15px;
   color: rgb(101, 101, 101);
 }
 
@@ -30,6 +47,11 @@
   font-size: 12px !important;
   color: #6b6b6b !important;
 }
+
+.popup-body {
+  text-align: center;
+}
+
 .amount-label .big-icon-svg img {
   width: 27px !important;
   height: 27px;
@@ -66,3 +88,27 @@
     background-color: transparent !important;
   }
 }
+
+.confirmMnemonicPopup {
+  & > .popup {
+    width: 320px;
+    background-color: #fafafa;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+
+  ul > li {
+    font-size: 16px;
+    padding: 4px;
+    margin: 4px 18px 0 0;
+  }
+
+  .invalid {
+    color: #ff0000;
+  }
+}
+

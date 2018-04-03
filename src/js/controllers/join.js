@@ -1,37 +1,36 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('joinController',
-  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService, customNetworks) {
+  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService, bwcService, customNetworks, walletColorService) {
     $scope.formData = {};
     
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       var defaults = configService.getDefaults();
       $scope.formData = {};
-      $scope.formData.bwsurl = defaults.bws.url;
       $scope.formData.derivationPath = derivationPathHelper.default;
       $scope.formData.account = 1;
       $scope.formData.secret = null;
+      if ($stateParams.url) {
+        var data = $stateParams.url;
+        $scope.onQrCodeScannedJoin(data);
+      }      
       resetPasswordFields();
       updateSeedSourceSelect();
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         $scope.networks = CUSTOMNETWORKS;
-        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]       
       })      
+
     });
     $scope.$on('$ionicView.enter', function(event,data) {
-      $scope.showNetworkSelector()
-    })
 
-    $scope.showNetworkSelector = function() {
-      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
-      $scope.showNetworks = true;
-    };
-    $scope.onNetworkSelect = function(network) {
-      $scope.network = network
-      $scope.formData.derivationPath = derivationPathHelper.getDefault(network.name);
-      $scope.formData.bwsurl = network.bwsUrl;
-      $scope.showNetworks = false;
+    })
+    $scope.secretChange = function() {
+      $scope.formData.secret = $scope.formData.secret.replace('bitlox-shared:', '');
+      $scope.formData.secret = $scope.formData.secret.replace('copay:', '');      
+      $scope.$applyAsync()   
     }
+
     $scope.showAdvChange = function() {
       $scope.showAdv = !$scope.showAdv;
       $scope.encrypt = null;
@@ -67,15 +66,13 @@ angular.module('copayApp.controllers').controller('joinController',
     };
 
     $scope.onQrCodeScannedJoin = function(data) {
+      data = data.replace('bitlox-shared:', '');
+      data = data.replace('copay:', '');      
       $scope.formData.secret = data;
       $scope.$applyAsync();
     };
 
-    if ($stateParams.url) {
-      var data = $stateParams.url;
-      data = data.replace('copay:', '');
-      $scope.onQrCodeScannedJoin(data);
-    }
+
 
     function updateSeedSourceSelect() {
       $scope.seedOptions = [{
@@ -120,10 +117,7 @@ angular.module('copayApp.controllers').controller('joinController',
 
       var opts = {
         secret: $scope.formData.secret,
-        myName: $scope.formData.myName,
-        bwsurl: $scope.formData.bwsurl,
-        networkName: $scope.network.name,
-        network: $scope.network.name
+        myName: $scope.formData.myName
       }
 
       var setSeed = $scope.formData.seedSource.id == 'set';
@@ -142,7 +136,6 @@ angular.module('copayApp.controllers').controller('joinController',
           return;
         }
         opts.account = pathData.account;
-        // opts.networkName = pathData.networkName;
         opts.derivationStrategy = pathData.derivationStrategy;
       } else {
         opts.passphrase = $scope.formData.createPassphrase;
@@ -187,7 +180,7 @@ angular.module('copayApp.controllers').controller('joinController',
         }
 
         // TODO: cannot currently join an intelTEE testnet wallet (need to detect from the secret)
-        src.getInfoForNewWallet(true, account, defaults.defaultNetwork.name, function(err, lopts) {
+        src.getInfoForNewWallet(true, account, opts.networkName, function(err, lopts) {
           ongoingProcess.set('connecting' + $scope.formData.seedSource.id, false);
           if (err) {
             popupService.showAlert(gettextCatalog.getString('Error'), err);
@@ -198,7 +191,21 @@ angular.module('copayApp.controllers').controller('joinController',
         });
       } else {
 
-        _join(opts);
+        var walletData = bwcService.parseSecret($scope.formData.secret);
+
+        var networkName = walletData.network
+
+        opts.networkName = networkName
+        opts.network = networkName   
+
+        customNetworks.getCustomNetwork(opts.networkName).then(function(customNet) {
+          opts.derivationStrategy = "BIP44"
+          opts.bwsurl = customNet.bwsUrl
+          _join(opts)
+        }, function(err) {
+          popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Invalid') + ": " + networkName);
+          return
+        })
       }
     };
 
@@ -213,6 +220,7 @@ angular.module('copayApp.controllers').controller('joinController',
           }
 
           walletService.updateRemotePreferences(client);
+          walletColorService.setWalletColor(client.credentials.walletId, client.network);
           $ionicHistory.removeBackView();
 
           if (!client.isComplete()) {

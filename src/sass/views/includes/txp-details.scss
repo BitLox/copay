@@ -1,6 +1,5 @@
 #txp-details,
 #view-confirm {
-  
   $item-lateral-padding: 20px;
   $item-vertical-padding: 10px;
   $item-border-color: #EFEFEF;
@@ -41,6 +40,7 @@
       .amount{
         font-size: 38px;
         margin-bottom: .5rem;
+        line-height: 1.14;
 
         > .unit {
           font-family: "Roboto-Light";
@@ -168,6 +168,7 @@
            & > .bg {
               width: 40px;
               height: 40px;
+              padding: .25rem;
             }
           }
         }
@@ -230,8 +231,10 @@
         margin-right: .5rem;
         position: relative;
         img {
-          width: 45px;
-          margin-left: -0.6em;   
+          width: 35px;
+          margin-left: -0.6em;
+          position: relative;
+          left: 5px;
         }
 
         &::before {
@@ -320,5 +323,21 @@
     text-align: center;
     font-size: 12px;
     color: $v-mid-gray;
+  }
+}
+
+#txp-details {
+  .bar-header {
+    border: 0;
+    background: inherit;
+    .title, .button {
+      color: #fff;
+    }
+    .button {
+      background-color: transparent;
+    }
+  }
+  .nav-bar-block, .bar {
+    background: inherit;
   }
 }

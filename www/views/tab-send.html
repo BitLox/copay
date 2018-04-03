@@ -18,6 +18,7 @@
               ng-model="formData.search"
               ng-change="findContact(formData.search)"
               ng-model-onblur
+              autocapitalize="none" autocorrect="off" autocomplete="off" 
               ng-focus="searchInFocus()"
               ng-blur="searchBlurred()">
             <i class="icon icon-svg qr abs-v-center separator-left" on-tap="openScanner()">

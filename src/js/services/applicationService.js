@@ -35,9 +35,14 @@ angular.module('copayApp.services')
       }
     };
 
-    root.fingerprintModal = function() {
+    root.fingerprintModal = function(trigger) {
 
-      var scope = $rootScope.$new(true);
+      if(trigger && root.isTouchIDReadyInBackground) {
+        root.fingerprintModalScope.checkFingerprint()
+        return;
+      }
+      var scope = root.fingerprintModalScope = $rootScope.$new(true);
+      scope.trigger = trigger
       $ionicModal.fromTemplateUrl('views/modals/fingerprintCheck.html', {
         scope: scope,
         animation: 'none',
@@ -45,22 +50,28 @@ angular.module('copayApp.services')
         hardwareBackButtonClose: false
       }).then(function(modal) {
         scope.fingerprintCheckModal = modal;
-        root.isModalOpen = true;
         scope.openModal();
       });
       scope.openModal = function() {
         scope.fingerprintCheckModal.show();
-        scope.checkFingerprint();
+        if(scope.trigger) {
+          scope.checkFingerprint();
+        } else {
+          console.log("OOOOOOOOOOOK")
+          root.isTouchIDReadyInBackground = true
+        }
       };
       scope.hideModal = function() {
         root.isModalOpen = false;
+        root.isTouchIDReadyInBackground = false
         scope.fingerprintCheckModal.hide();
       };
       scope.checkFingerprint = function() {
+        root.isModalOpen = true;
         fingerprintService.check('unlockingApp', function(err) {
           if (err) return;
           scope.hideModal();
-        });
+        });                
       }
     };
 
@@ -75,10 +86,10 @@ angular.module('copayApp.services')
         hardwareBackButtonClose: false
       }).then(function(modal) {
         scope.pinModal = modal;
-        root.isModalOpen = true;
         scope.openModal();
       });
       scope.openModal = function() {
+        root.isModalOpen = true;
         scope.pinModal.show();
       };
       scope.hideModal = function() {
@@ -88,15 +99,16 @@ angular.module('copayApp.services')
       };
     };
 
-    root.appLockModal = function(action) {
+    root.appLockModal = function(action, trigger) {
 
       if (root.isModalOpen) return;
 
       configService.whenAvailable(function(config) {
         var lockMethod = config.lock && config.lock.method;
+        console.warn(lockMethod ,fingerprintService.isAvailable())
         if (!lockMethod || lockMethod == 'none') return;
 
-        if (lockMethod == 'fingerprint' && fingerprintService.isAvailable()) root.fingerprintModal();
+        if ((lockMethod == 'fingerprint' || lockMethod === 'face') && fingerprintService.isAvailable()) root.fingerprintModal(trigger);
         if (lockMethod == 'pin') root.pinModal(action);
 
       });

@@ -427,7 +427,6 @@ angular.module('copayApp.services')
 
       try {
         var walletData = bwcService.parseSecret(opts.secret);
-
         // check if exist
         if (lodash.find(root.profile.credentials, {
             'walletId': walletData.walletId

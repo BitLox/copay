@@ -38,10 +38,10 @@
                 ng-if="!recipientType"
                 ng-class="{'with-sub-wallet': tx.toName}">
             <i class="icon big-icon-svg"
-              wallet-icon
-              data-wallet="wallet"
-              data-network="network"
-              data-bgcolor="tx.toColor"></i>
+               wallet-icon
+               data-wallet="tx.toWallet"
+               data-network="tx.network"
+               data-bgcolor="tx.toColor"></i>
             <div class="ellipsis wallet-box"
                  ng-class="{'m3t': !tx.toName}"
                  copy-to-clipboard="tx.toAddress"

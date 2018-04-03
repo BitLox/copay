@@ -38,6 +38,7 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
       $scope.walletName = c.walletName;
       $scope.walletId = c.walletId;
       $scope.network = c.network;
+      console.log(wallet.credentials.externalSource.indexOf('bitlox/'), wallet.credentials.externalSource)
       $scope.addressType = c.addressType || 'P2SH';
       $scope.derivationStrategy = c.derivationStrategy || 'BIP45';
       $scope.basePath = basePath;
@@ -49,6 +50,8 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
       if (wallet.isPrivKeyExternal()) {
         if(wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
           $scope.externalSource = "BitLox";
+          var parts = wallet.credentials.externalSource.split('/')
+          $scope.bitloxWalletNumber = parts[1]
           return;
         }
         $scope.externalSource = lodash.find(walletService.externalSource, function(source) {

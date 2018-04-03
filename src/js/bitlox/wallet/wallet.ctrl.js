@@ -4,9 +4,9 @@
     angular.module('app.wallet')
         .controller('WalletCtrl', WalletCtrl);
 
-    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService'];
+    WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService', 'BIP39WordList'];
 
-    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService) {
+    function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService, BIP39WordList) {
         $scope.showBitLoxBuyLink = configService.getSync().showBitLoxBuyLink;
 
         var api = hidweb;
@@ -63,6 +63,14 @@
 
         $scope.refreshBitlox = function($event) {
           if(platformInfo.isMobile) {
+            if (platformInfo.isIOS && window.cordova.plugins.diagnostic) {
+              window.cordova.plugins.diagnostic.isBluetoothAvailable(function(available) {
+                if (!available) {
+                  $ionicLoading.show({ template: "Turn on Bluetooth to connect to BitLox", duration: 2000 })
+                }
+              });
+            }
+
             api.startScanNew();
             $timeout(function() {
               api.stopScan();
@@ -86,15 +94,23 @@
         }
 
         $scope.createWallet = function() {
-            $ionicLoading.show({template: "Creating Wallet, Check Your BitLox"})
+            if($scope.newWallet.isRestore && $scope.BIP39Words.length < 1) {
+              return $scope.showMnemonicModal()
+            }
+            if($scope.newWallet.isRestore) {
+              $ionicLoading.show({ template: "Restoring..." });
+            } else {
+              $ionicLoading.show({ template: "Creating Wallet, Check Your BitLox" });
+            }
             $scope.creatingWallet = true;
-            bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) { 
+
+            bitloxWallet.create($scope.newWallet.number, $scope.newWallet).then(function(res) {
               $ionicLoading.hide();
               if(res.type === api.TYPE_ERROR) {
                 popupService.showAlert(gettextCatalog.getString('Error'));
                 return false;
               }
-              $scope.resetNewWallet()     
+              $scope.resetNewWallet()
               $ionicHistory.goBack(-1)
             }, function(err) {
               popupService.showAlert(gettextCatalog.getString('Error'), err);
@@ -102,6 +118,7 @@
             }).finally(function(res) {
                 // reset();
                 $scope.creatingWallet = false;
+                $scope.newWallet.isRestore = false;
             });
         };
 
@@ -113,7 +130,7 @@
             var numbers = [];
             for (var i = 0; i < words.length; i++) {
                 var word = words[i];
-                var wordIndex = wordlist.indexOf(word);
+                var wordIndex = BIP39WordList.indexOf(word);
                 if (wordIndex < 0) {
                     numbers[i] = "INVALID WORD";
                 } else {
@@ -142,8 +159,9 @@
           });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
+
             opts.singleAddress = false
-            opts.externalSource = 'bitlox/'+result.payload.device_uuid.toString('hex')+'/'+wallet._uuid.toString("hex")
+            opts.externalSource = 'bitlox/'+wallet.number
             opts.isPrivKeyExternal = true
             opts.extendedPublicKey = wallet.xpub
             opts.derivationPath = derivationPathHelper.getDefault('livenet')
@@ -151,8 +169,10 @@
             opts.hasPassphrase = false;
             opts.name = wallet.name;
             opts.account = 0;
-            opts.hwInfo = result.payload.device_uuid.toString('hex')+'/'+wallet._uuid.toString("hex");
 
+            opts.hwInfo = wallet.number
+
+// hardware wallet CHANGE
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);
             opts.entropySource = x.publicKey.toString(); //"40c13cfdbafeccc47b4685d6e7f6a27c";
@@ -217,8 +237,8 @@
             // if(addresses.length > 0) {
             //   var sp = addresses[0].path.split('/')
             //   var p = parseInt(sp.pop(),10);
-                
-            //   api.setQrCode(p+1);              
+
+            //   api.setQrCode(p+1);
             // }
             // cb();
           });
@@ -243,8 +263,8 @@
                     $rootScope.$broadcast('bitloxConnectSuccess')
                     // only read wallets if we are on the add bitlox screen
                     if($state.current.url === '/attach-bitlox') {
-                        $scope.readWallets(); 
-                    }             
+                        $scope.readWallets();
+                    }
                   break;
               case api.STATUS_IDLE:
                   $scope.bitlox.connectAttempted = true;
@@ -266,8 +286,8 @@
                   $scope.bitlox.statusString = "Bitlox initializing";
                   $scope.bitlox.alertClass = "success";
                   $scope.bitlox.glyph = "glyphicon-refresh";
-                    $scope.initializeDevice();              
-                  break;          
+                    $scope.initializeDevice();
+                  break;
               case api.STATUS_DISCONNECTED:
                   $scope.bitlox.statusString = "Bitlox disconnected!";
                   $scope.bitlox.alertClass = "danger";
@@ -289,7 +309,7 @@
                             );
                         }
                     }
-                  }                              
+                  }
                   break;
               case api.STATUS_WRITING:
                   $scope.bitlox.connectAttempted = true;
@@ -369,23 +389,80 @@
           });
         };
 
-        $scope.directOpenNumber = 0;
+        $scope.formData = { directOpenNumber:  0 };
         $scope.directLoad = function() {
-            var wallet;
-            $scope.wallets.forEach(function(w) {
-                if (w.number === $scope.directOpenNumber) {
-                    wallet = w;
-                }
-            });
-            if (!wallet) {
-                wallet = new Wallet({
-                    wallet_number: $scope.directOpenNumber,
-                    version: 4,
-                    wallet_name: "HIDDEN",
-                    wallet_uuid: "HIDDEN",
-                });
+          var wallet = new bitloxWallet({
+            wallet_number: parseInt($scope.formData.directOpenNumber, 10)
+          });
+
+          $scope.loadWallet(wallet);
+        };
+
+        $scope.showLinkWalletModal = function() {
+          $ionicModal.fromTemplateUrl('views/modals/link-wallet.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.linkWalletByIdModal = modal;
+            $scope.linkWalletByIdModal.show();
+          });
+        };
+
+        $scope.hideLinkWalletModal = function() {
+          $scope.linkWalletByIdModal.hide();
+        };
+
+        $scope.showMnemonicModal = function() {
+          $ionicModal.fromTemplateUrl('views/modals/mnemonic.html', {
+            scope: $scope,
+            focusFirstInput: true
+          }).then(function(modal) {
+            $scope.mnemonicModal = modal;
+            $scope.mnemonicModal.show();
+          });
+        };
+
+        $scope.hideMnemonicModal = function() {
+          $scope.mnemonicModal.hide();
+        };
+
+        $scope.showWordIndexes = false;
+        $scope.BIP39Words = []
+
+        $scope.confirmMnemonicPhrase = function(userWords) {
+          var _userPhrases = userWords.split(/\s+/);
+          $scope.BIP39Words = []
+          var isValid = true
+          if(_userPhrases.length !== 12 && _userPhrases.length !== 18 && _userPhrases.length !== 24) {
+            isValid = false
+          }
+          _userPhrases.forEach(function(phrase) {
+            var phraseIndex = BIP39WordList.indexOf(phrase);
+            if(phraseIndex === -1) {
+              isValid = false;
             }
-            $scope.loadWallet(wallet);
+            $scope.BIP39Words.push({phrase: phrase, index: phraseIndex})
+          });
+
+          if(!isValid) {
+            $scope.BIP39Words = []
+            $ionicPopup.show({
+              template: 'Invalid Mnemonic Phrase',
+              cssClass: 'no-header',
+              buttons: [{
+                text: 'OK',
+                type: 'button-primary',
+                onTap: function() {
+                  return false;
+                }
+              }]
+            });    
+          } else {
+              $scope.showWordIndexes = true
+              $scope.newWallet.isRestore = true;
+              $scope.hideMnemonicModal();
+              $scope.createWallet();       
+          }
         };
 
         $scope.prepForFlash = function() {
@@ -424,14 +501,14 @@
             var session = new Date().getTime(true);
 
             $scope.timer = true;
-            $timeout.cancel($scope.timeout) 
-            api.initialize(session).then(function(res) {                
+            $timeout.cancel($scope.timeout)
+            api.initialize(session).then(function(res) {
                 if(!res || res.type === api.TYPE_ERROR) {
                     $ionicLoading.hide();
                     popupService.showAlert(gettextCatalog.getString('Error'), "BitLox Initialization Error.");
                     api.disconnect();
                 }
-            });            
+            });
         }
         $scope.reset = function() {
             // status variables
@@ -442,11 +519,12 @@
             $scope.refreshingBalance = false;
             $scope.openWallet = null;
             $scope.timer = false;
+            if($state.current.url === '/attach-bitlox') {
+              api.disconnect();
+            }
 
-            
             $scope.timeout = $timeout(function() {
                 $scope.timer = true;
-                $log.log($scope.bitlox);
                 $ionicLoading.hide();
             }, 3000);
 
@@ -467,7 +545,7 @@
                         })
                     },1000);
                 // })
-            } else {            
+            } else {
                 if(api.getStatus() === api.STATUS_IDLE) {
                     $scope.readWallets();
                 }
@@ -477,7 +555,11 @@
         $scope.$on('destroy', function() {
           $scope.timer = true;
           $timeout.cancel($scope.timeout);
-        })
+        });
+
+        $scope.$on('$destroy', function() {
+          $scope.linkWalletByIdModal.remove();
+        });
 
         $scope.reset();
     }

@@ -1,5 +1,4 @@
 #tab-home {
-  
   .icon-create-wallet {
     background-color: #4A90E2; // default wallet color
   }
@@ -55,11 +54,6 @@
           transform: scale(1.6);
         }
       }
-
-      > .rate-symbol {
-        display: inline-block;
-        width: 54px;
-      }
     }
 
     .disable-pointer-events {
@@ -98,6 +92,11 @@
     .rates {
       .item-content {
         padding: 16px;
+      }
+
+      .rate-symbol {
+        display: inline-block;
+        width: 54px;
       }
     }
   }

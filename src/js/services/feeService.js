@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('feeService', function($log, $timeout, $stateParams, bwcService, walletService, configService, gettext, lodash, txFormatService, gettextCatalog, customNetworks) {
+angular.module('copayApp.services').factory('feeService', function($log, $timeout, $stateParams, bwcService, walletService, configService, gettext, lodash, txFormatService, gettextCatalog, customNetworks, profileService) {
 
   var root = {};
   var CACHE_TIME_TS = 60; // 1 min
@@ -60,33 +60,34 @@ angular.module('copayApp.services').factory('feeService', function($log, $timeou
       return cb(null, cache.data, true);
     }
 
-    var CUSTOMNETWORKS = customNetworks.getStatic()
-
-    var length = Object.keys(CUSTOMNETWORKS).length;
+    var CUSTOMNETWORKS = customNetworks.getStatic();
 
     var count = 0;
     var retObj = {};        
-    for (var c in CUSTOMNETWORKS) {
-      // console.log(CUSTOMNETWORKS[c])
-      var thiswall = bwcService.getClient(null, {bwsurl:CUSTOMNETWORKS[c].bwsUrl});
-      // console.log(thiswall)
-      thiswall.getFeeLevels(CUSTOMNETWORKS[c].name, function(errThis, levelsThis) { // getFeeLevels(CUSTOMNETWORKS[c].name        
-        count++
-        // console.log(CUSTOMNETWORKS[levelsThis.network].bwsUrl,levelsThis)
+
+    var availableNetworks = profileService.getWallets().map(function(wallet) {
+      return wallet.network;
+    }).filter(function(value, index, self) {
+      return self.indexOf(value) === index;
+    });
+
+    availableNetworks.forEach(function(n) {
+      var thiswall = bwcService.getClient(null, { bwsurl:CUSTOMNETWORKS[n].bwsUrl });
+
+      thiswall.getFeeLevels(CUSTOMNETWORKS[n].name, function(errThis, levelsThis) {
+        count++;
         if (errThis) {
           return cb(gettextCatalog.getString('Could not get dynamic fee'));
-        }        
-        retObj[levelsThis.network] = levelsThis
+        }
+        retObj[levelsThis.network] = levelsThis;
         cache.data = retObj;
-        if(count === length) {
+        if(count === availableNetworks.length) {
           cache.updateTs = Date.now();
-          // console.warn(retObj)
           return cb(null, retObj); 
         }
       });
-    }
+    });
   };
-
 
   return root;
 });

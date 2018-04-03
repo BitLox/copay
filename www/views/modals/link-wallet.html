@@ -1,0 +1,38 @@
+<ion-modal-view>
+  <ion-header-bar align-title="center" class="bar-royal">
+    <button class="button button-clear" ng-click="hideLinkWalletModal()">
+      Cancel
+    </button>
+    <div class="title">{{'Link BitLox' | translate}}</div>
+  </ion-header-bar>
+  <ion-content class="has-header">
+    <div class="card">
+      <form id="openWalletId">
+        <div class="item">
+          <label>Link BitLox Wallet by ID #</label>
+        </div>
+
+        <div class="item">
+          <div>
+            <label class="size-14">Wallet ID number</label>
+            <input
+              id="directOpenNumber"
+              type="number"
+              pattern="[0-9]*"
+              ng-model="formData.directOpenNumber"
+              placeholder="Enter Wallet #">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <br/>
+
+    <button
+      class="button button-standard button-primary"
+      ng-click="directLoad()"
+      ng-disabled="formData.directOpenNumber == null">
+      Link Wallet #{{formData.directOpenNumber}}
+    </button>
+  </ion-content>
+</ion-modal-view>

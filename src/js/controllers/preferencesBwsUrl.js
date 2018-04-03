@@ -21,6 +21,7 @@ angular.module('copayApp.controllers').controller('preferencesBwsUrlController',
 
     $scope.save = function() {
 
+// altcoin bws defaults
       var bws;
       switch ($scope.bwsurl.value) {
         case 'prod':

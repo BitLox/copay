@@ -142,14 +142,18 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     };
   };
 
+  $scope.rescan = function() {
+    walletService.startScan($scope.wallet, function() {
+      $scope.updateAll();
+      $scope.$apply();
+    });    
+  }
+
   $scope.recreate = function() {
     walletService.recreate($scope.wallet, function(err) {
       if (err) return;
       $timeout(function() {
-        walletService.startScan($scope.wallet, function() {
-          $scope.updateAll();
-          $scope.$apply();
-        });
+        $scope.rescan()
       });
     });
   };
@@ -165,10 +169,11 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     var progressFn = function(txs, newTxs) {
       $scope.updatingTxHistoryProgress = newTxs;
       $scope.completeTxHistory = txs;
-      $scope.showHistory();
-      $timeout(function() {
-        $scope.$apply();
-      });
+      // ARE YOU HIGH? JUST WAIT UNTIL IT IS DONE TO DISPLAY
+      // $scope.showHistory();
+      // $timeout(function() {
+      //   $scope.$apply();
+      // });
     };
 
     feeService.getFeeLevels($scope.wallet.credentials.network, function(err, levels) {
@@ -182,11 +187,14 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
           $scope.updateTxHistoryError = true;
           return;
         }
-        $scope.completeTxHistory = txHistory;
-        $scope.showHistory();
-        $timeout(function() {
-          $scope.$apply();
-        });
+        
+        $scope.$apply(function() {
+          $scope.completeTxHistory = txHistory;
+          $scope.showHistory();
+        })
+        // $timeout(function() {
+        //   $scope.$apply();
+        // });
         return cb();
       });
     });
@@ -243,13 +251,25 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }, 100);
   };
-
+  $scope.throttleRescanTimer = 0;
+  $scope.rescanThrottled = lodash.throttle(function() {
+    $scope.rescan()
+  }, 60000)
   $scope.onRefresh = function() {
     $timeout(function() {
       $scope.$broadcast('scroll.refreshComplete');
     }, 300);
-    $scope.updateAll(true);
+    $scope.updateForce();
   };
+
+  $scope.updateForce = function() {
+    $scope.updateAll(true)
+    $scope.throttleRescanTimer++;
+    if($scope.throttleRescanTimer > 2) {
+      $scope.throttleRescanTimer = 0
+      $scope.rescanThrottled()
+    }        
+  }
 
   $scope.updateAll = function(force, cb)  {
     updateStatus(force);
@@ -295,9 +315,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     }
 
     scrollPos = scrollPos || 0;
+
     var amountHeight = 210 - scrollPos;
-    if (amountHeight < 110) {
-      amountHeight = 110;
+    if (amountHeight < 80) {
+      amountHeight = 80;
     }
     var contentMargin = amountHeight;
     if (contentMargin > 210) {
@@ -337,8 +358,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       $scope.amountHeight = amountHeight + 'px';
       $scope.contentMargin = contentMargin + 'px';
 
-      $scope.amountScale = 'translateY(' + t + 'px)';
-      // $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
+      $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
+      if(platformInfo.isIOS) {
+        $scope.amountScale = 'scale('+s+') translateY(' + t + 'px)';
+      }
       $scope.$digest();
       getScrollPosition();
     });

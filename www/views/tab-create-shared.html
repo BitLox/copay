@@ -8,6 +8,19 @@
   <ion-content>
     <form name="setupForm" ng-submit="create()" novalidate>
       <div class="list settings-list settings-input-group">
+        <a class="item" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
+          <span class="input-label" translate>Currency</span>
+          <div class="form-table -compact">
+            <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
+            <div>{{network.alias}}</div>
+          </div>
+          <div class="item-icon-right">
+            <i class="icon bp-arrow-right"></i>
+          </div>
+        </a>
+
+         <div class="item item-divider"></div>
+                 
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Wallet name</span>
           <input type="text"
@@ -18,7 +31,6 @@
             ng-blur="formFocus(false)"
             autocomplete="off"
             autocorrect="off"
-            autocapitalize="off"
             spellcheck="false">
         </label>
 
@@ -55,18 +67,7 @@
         </label>
 
         <div class="item item-divider"></div>
-        <a class="item" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
-          <span class="input-label" translate>Currency</span>
-          <div class="form-table -compact">
-            <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
-            <div>{{network.alias}}</div>
-          </div>
-          <div class="item-icon-right">
-            <i class="icon bp-arrow-right"></i>
-          </div>
-        </a>
 
-         <div class="item item-divider"></div>
 
         <a class="item" ng-click="showAdvChange()">
           <span translate ng-show="!showAdv">Show advanced options</span>
@@ -82,7 +83,7 @@
 
           <label ng-hide="formData.customParam" class="item item-input item-stacked-label">
             <span class="input-label">Wallet Service URL</span>
-            <input type="text" ng-model="formData.bwsurl">
+            <input autocapitalize="none" autocorrect="off" autocomplete="off"  type="text" ng-model="formData.bwsurl">
           </label>
 
           <label class="item item-input item-select">
@@ -102,6 +103,7 @@
             <input placeholder="{{'Enter the recovery phrase (BIP39)'|translate}}"
             autocapitalize="off"
             type="text"
+            autocapitalize="none" autocorrect="off" autocomplete="off" 
             ng-model="formData.privateKey">
           </label>
 

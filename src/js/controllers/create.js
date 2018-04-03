@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('createController',
-  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo) {
+  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo, walletColorService) {
 
     /* For compressed keys, m*73 + n*34 <= 496 */
     var COPAYER_PAIR_LIMITS = {
@@ -154,9 +154,6 @@ angular.module('copayApp.controllers').controller('createController',
         networkName = $scope.formData.customParam;
       }
 
-      if($scope.formData.customParam) {
-        networkName = $scope.formData.customParam
-      }
       var opts = {
         name: $scope.formData.walletName,
         m: $scope.formData.requiredCopayers,
@@ -273,6 +270,7 @@ angular.module('copayApp.controllers').controller('createController',
           }
 
           walletService.updateRemotePreferences(client);
+          walletColorService.setWalletColor(client.credentials.walletId, client.network);
           pushNotificationsService.updateSubscription(client);
 
           if ($scope.formData.seedSource.id == 'set') {

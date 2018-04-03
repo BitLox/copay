@@ -96,6 +96,7 @@ input[type=number] {
   white-space: normal;
 }
 
+
 .back-button {
   border: 0;
   .icon:before {
@@ -186,6 +187,10 @@ input[type=number] {
 
 .pr {
   position: relative;
+}
+
+.top0 {
+  top: 0 !important;
 }
 
 .m0 {
@@ -428,6 +433,10 @@ input[type=number] {
 
 .text-italic {
   font-style: italic;
+}
+
+.strike {
+  text-decoration: line-through;
 }
 
 .no-border {

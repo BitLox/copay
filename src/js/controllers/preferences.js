@@ -79,6 +79,17 @@ angular.module('copayApp.controllers').controller('preferencesController',
       $scope.isWindowsPhoneApp = platformInfo.isCordova && platformInfo.isWP;
       $scope.externalSource = null;
 
+      window.plugins.touchid.isAvailable(
+        function(type) {
+          if(type === 'face') {
+            $scope.touchIdType = type
+          } else {
+            $scope.touchIdType = 'fingerprint'
+          }
+          $timeout(function() {
+            $scope.apply()
+          })
+      })
       if (!wallet)
         return $ionicHistory.goBack();
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError, txConfirmNotification, customNetworks) {
+angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError, txConfirmNotification, customNetworks, $ionicPopup) {
 
   var countDown = null;
   var CONFIRM_LIMIT_USD = 20;
@@ -149,6 +149,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       toName: data.stateParams.toName,
       toEmail: data.stateParams.toEmail,
       toColor: data.stateParams.toColor,
+      toWallet: data.stateParams.toWallet,
       network: $scope.network,
       txp: {},
     };
@@ -309,29 +310,27 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           if (err) return cb(err);
 
           txp.feeStr = txFormatService.formatAmountStr(txp.fee);
+          var CUSTOMNETWORKS = customNetworks.getStatic()
+          var network = CUSTOMNETWORKS[wallet.credentials.network];
 
-          customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-            var network = CUSTOMNETWORKS[wallet.credentials.network];
-
-            txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
-              txp.alternativeFeeStr = fee;
-            });
-
-            var per = (txp.fee / txp.amount) * 100;
-
-            if (per > 0.00 && per < 0.01) {
-              per = 0.01;
-            }
-
-            txp.feeRatePerStr = per.toFixed(2) + '%';
-            txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
-
-            tx.txp[wallet.id] = txp;
-            $log.debug('Confirm. TX Fully Updated for wallet:' + wallet.id, tx);
-            refresh();
-
-            return cb();
+          txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
+            txp.alternativeFeeStr = fee;
           });
+
+          var per = (txp.fee / txp.amount) * 100;
+
+          if (per > 0.00 && per < 0.01) {
+            per = 0.01;
+          }
+
+          txp.feeRatePerStr = per.toFixed(2) + '%';
+          txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
+
+          tx.txp[wallet.id] = txp;
+          $log.debug('Confirm. TX Fully Updated for wallet:' + wallet.id, tx);
+          refresh();
+
+          return cb();
         });
       });
     });
@@ -513,14 +512,20 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         // if (amountUsd <= CONFIRM_LIMIT_USD)
         //   return cb();
 
-        var message = gettextCatalog.getString('Sending {{amountStr}} from\n{{name}}', {
+        var message = gettextCatalog.getString('Sending {{amountStr}} from\n {{name}}', {
           amountStr: tx.amountStr,
-          name: wallet.name.trim()
+          name: '<strong>' + wallet.name.trim() + '</strong>'
         });
-        var okText = gettextCatalog.getString('Confirm');
-        var cancelText = gettextCatalog.getString('Cancel');
-        popupService.showConfirm(null, message, okText, cancelText, function(ok) {
-          return cb(!ok);
+
+        $ionicPopup.confirm({
+          title: gettextCatalog.getString('Confirm'),
+          template: message,
+          cancelText: gettextCatalog.getString('Cancel'),
+          cancelType: 'button-clear button-dark',
+          okText: gettextCatalog.getString('OK'),
+          okType: 'button-clear button-positive'
+        }).then(function(ok) {
+          return cb(!ok); // yeah that's right `!ok` to confirm
         });
       }
 
@@ -538,6 +543,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           if (err === 'cancel') {
             return;
           } else if (err) {
+            walletService.removeTx(wallet, txp, function(){ });          
             return setSendError(err);
           }
 

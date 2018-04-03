@@ -7,7 +7,7 @@ angular.module('app.util')
 
 function Bitlox($q, $http, appConfigService, storageService, bitcore, $log) {
 
-this.customNetworks = {          
+this.customNetworks = {
   livenet: {
     network: 'livenet',
     name: 'livenet',
@@ -73,10 +73,52 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "bwsUrl": "https://aurs.dlc.net/bws/api",
     "port": "9697",
     "networkMagic": 0x6ee58c2a,
-    "explorer": "https://explorer.aureus.cc/"        
+    "explorer": "https://explorer.aureus.cc/"
   }
   bitcore.Networks.add(this.customNetworks.aureus)
 }
+
+this.customNetworks.dash = {
+  "network": "dash",
+  "name": "dash",
+  "alias": "Dash",
+  "code": "dash",
+  "symbol": "DASH",
+  "derivationCoinPath": 0,
+  "ratesUrl": "https://bws.bitlox.com:8443/rates/dash",
+  "pubkeyhash": 0x4C,
+  "privatekey": 0xCC,
+  "scripthash": 0x10,
+  "xpubkey": 0x0488B21E,
+  "xprivkey": 0x0488ade4,
+  "bwsUrl": "https://bws.dash.dlc.net/bws/api",
+  "port": "9999",
+  "networkMagic": 0xBF0C6BBD,
+  "explorer": "https://explorer.dash.dlc.net/"
+}
+bitcore.Networks.add(this.customNetworks.dash)
+
+
+this.customNetworks.litecoin = {
+  "network": "litecoin",
+  "name": "litecoin",
+  "alias": "Litecoin",
+  "code": "ltc",
+  "symbol": "LTC",
+  "derivationCoinPath": 0,
+  "ratesUrl": "https://bws.bitlox.com:8443/rates/litecoin",
+  "pubkeyhash": 0x30,
+  "privatekey": 0xb0,
+  "scripthash": 0x32,
+  "xpubkey": 0x019da462,
+  "xprivkey": 0x019d9cfe,
+  "networkMagic": 0xfbc0b6db,
+  "bwsUrl": "https://bws.ltc.dlc.net/bws/api",
+  "port": "9333",
+  "explorer": "https://explorer.ltc.dlc.net/"
+}
+bitcore.Networks.add(this.customNetworks.litecoin)
+
 this.getStatic = function() {
   return this.customNetworks;
 }
@@ -97,7 +139,7 @@ this.getAll = function() {
         if(!bitcore.Networks.get(networkList[n].name)) {
           bitcore.Networks.add(networkList[n])
         }
-      }      
+      }
     } else {
       // $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
@@ -105,7 +147,7 @@ this.getAll = function() {
     resourcePromise.resolve(self.customNetworks)
   })
 
-  return resourcePromise.promise    
+  return resourcePromise.promise
 }
 this.getCustomNetwork = function(customParam) {
   var def = $q.defer();
@@ -149,9 +191,9 @@ this.getCustomNetwork = function(customParam) {
         }, function(err) {
           // $log.warn('server network error', err)
           def.reject();
-        })              
+        })
       }
-    })        
+    })
   } else {
     return $q.resolve();
   }

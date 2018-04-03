@@ -9,10 +9,13 @@
     <div class="slide__slider__tip"></div>
   </div>
   <div class="slide__bitcoin" ng-style="bitcoinStyle">
-    <img src="img/aureus.svg" ng-show="wallet.network === 'aureus' || network === 'aureus'"/>
-    <img src="img/deuscoin.svg" ng-show="wallet.network === 'deuscoin' || network === 'deuscoin'"/>
-    <img src="img/icon-bitcoin.svg" ng-show="wallet.network === 'livenet' || network === 'livenet'"/>
-
+    <img src="img/dashcoin.svg" ng-if="wallet.network === 'dash' || network === 'dash'"/>
+    <img src="img/litecoin.svg" ng-if="wallet.network === 'litecoin' || network === 'litecoin'"/>
+    <img src="img/dogecoin.svg" ng-if="wallet.network === 'dogecoin' || network === 'dogecoin'"/>
+    <img src="img/zcash.svg" ng-if="wallet.network === 'zcash' || network === 'zcash'"/>
+    <img src="img/aureus.svg" ng-if="wallet.network === 'aureus' || network === 'aureus'"/>
+    <img src="img/deuscoin.svg" ng-if="wallet.network === 'deuscoin' || network === 'deuscoin'"/>
+    <img src="img/icon-bitcoin.svg" ng-if="wallet.network === 'livenet' || network === 'livenet'"/>
   </div>
   <div class="slide__button-text" ng-style="textStyle">
     <ng-transclude class="justify"></ng-transclude>

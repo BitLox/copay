@@ -429,7 +429,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     };
 
     getSavedTxs(walletId, function(err, txsFromLocal) {
-      if (err) return cb(err);
+      if (err) {
+        console.error("fetch saved txs err", err)
+        return cb(err);
+      }
 
       fixTxsUnit(txsFromLocal);
 
@@ -489,7 +492,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       };
 
       getNewTxs([], 0, function(err, txs) {
-        if (err) return cb(err);
+        if (err) {
+          console.error('get new txs error',err)
+          return cb(err);
+        }
 
         var newHistory = lodash.uniq(lodash.compact(txs.concat(confirmedTxs)), function(x) {
           return x.txid;
@@ -594,18 +600,18 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       if (!tx) return cb('Could not get transaction');
       return cb(null, tx);
     };
+    finish(wallet.completeHistory);
+    // if (wallet.completeHistory && wallet.completeHistory.isValid) {
+    //   finish(wallet.completeHistory);
+    // } else {
+    //   root.getTxHistory(wallet, {
+    //     limitTx: txid
+    //   }, function(err, txHistory) {
+    //     if (err) return cb(err);
 
-    if (wallet.completeHistory && wallet.completeHistory.isValid) {
-      finish(wallet.completeHistory);
-    } else {
-      root.getTxHistory(wallet, {
-        limitTx: txid
-      }, function(err, txHistory) {
-        if (err) return cb(err);
-
-        finish(txHistory);
-      });
-    }
+    //     finish(txHistory);
+    //   });
+    // }
   };
 
 
@@ -639,7 +645,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     $log.debug('Updating Transaction History');
 
     updateLocalTxHistory(wallet, opts, function(err, txs) {
-      if (err) return cb(err);
+      if (err) {
+        console.error("update local tx history error", err)
+        return cb(err);
+      }
 
       if (opts.limitTx) {
         return cb(err, txs);
@@ -701,7 +710,11 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
         //   });
         //   $rootScope.bitloxConnectErrorListener()
         // });
-        return bitlox.wallet.signTransaction(wallet, txp, cb)
+        var externalSource = wallet.getPrivKeyExternalSourceName();
+        var bitloxInfo = externalSource.split('/');
+        var walletNumber = parseInt(bitloxInfo[1],10)        
+        var bitloxWallet = new bitlox.wallet({wallet_number:walletNumber})
+        return bitloxWallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
         case root.externalSource.ledger.id:
@@ -1144,7 +1157,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         ongoingProcess.set('signingTx', true, customStatusHandler);
         root.signTx(wallet, publishedTxp, password, function(err, signedTxp) {
-          $rootScope.bitloxConnectErrorListener()
+          if($rootScope.bitloxConnectErrorListener) { $rootScope.bitloxConnectErrorListener() }
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
@@ -1152,7 +1165,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
             var msg = err && err.message ?
               err.message :
               gettextCatalog.getString('The payment was canceled or rejected by the user, or the BitLox was disconnected.');
-
+            
             $rootScope.$emit('Local/TxAction', wallet.id);
             return cb(msg);
           }          
@@ -1164,10 +1177,14 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               
               root.invalidateCache(wallet);
               
-              
               return root.removeTx(wallet, txp, function() {
                 $ionicLoading.hide();
-                // $rootScope.$emit('Local/TxAction', wallet.id);
+                $timeout(function() {
+                  root.startScan(wallet);
+                  $timeout(function() { 
+                    $rootScope.$emit('Local/TxAction', wallet.id)
+                  },30000);
+                },30000);
                 return cb(null, signedTxp);
               });
             }

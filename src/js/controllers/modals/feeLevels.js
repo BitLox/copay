@@ -83,6 +83,14 @@ angular.module('copayApp.controllers').controller('feeLevelsController', functio
     });
   };
 
+  $scope.focusInputWhenCustomFee = function() {
+    if ($scope.selectedFee.value === 'custom') {
+      $timeout(function() {
+        document.getElementById('customFeeInput').focus();
+      });
+    }
+  };
+
   $scope.$watch(
     "selectedFee.value",
     function ( newValue, oldValue ) {

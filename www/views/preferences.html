@@ -52,7 +52,8 @@
       </div>
       <div ng-show="wallet.canSign() && touchIdAvailable">
         <ion-toggle  ng-model="touchIdEnabled.value" toggle-class="toggle-balanced" ng-change="touchIdChange()">
-          <span class="toggle-label" translate>Request Fingerprint</span>
+          <span class="toggle-label" ng-show="touchIdType === 'face'" translate>Request Face ID</span>
+          <span class="toggle-label" ng-show="touchIdType === 'fingerprint'" translate>Request Fingerprint</span>
         </ion-toggle>
       </div>
       <div class="item item-divider"></div>

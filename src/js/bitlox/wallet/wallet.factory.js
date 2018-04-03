@@ -111,7 +111,8 @@
             });
         };
 
-        Wallet.signTransaction = function(wallet, txp, cb) {
+        Wallet.prototype.signTransaction = function(copayWallet, txp, cb) {
+          var bitloxWallet = this
           $log.log('we gonna sign bitlox transaction')
           var signTimer = 900000;
           var longSign = false;
@@ -128,13 +129,13 @@
               return popupService.showConfirm(gettextCatalog.getString('Warning'),
                 "BitLox will take a very long time to sign this transaction. Please keep your BitLox plugged in and be patient.", "OK", "Cancel", function(ok) {
                 if(ok) {
-                  _bitloxSend(wallet, txp, signTimer, cb);
+                  _bitloxSend(txp, signTimer, cb);
                 } else {
                   return cb(new Error("Transaction Canceled"));
                 }
               });
             } else {
-              return _bitloxSend(wallet, txp, signTimer, cb);
+              return _bitloxSend(txp, signTimer, cb);
             }
           } else {
             $log.log('bitlox device is not connected yet');
@@ -181,7 +182,7 @@
                   popupService.showConfirm(gettextCatalog.getString('Error'), confirmMsg, "OK", "Cancel", function(ok) {
                     if(ok) {
                       $timeout(function() {
-                        _bitloxSend(wallet, txp, signTimer, cb);
+                        _bitloxSend(txp, signTimer, cb);
                       });
                     } else {
                       return cb(new Error("Transaction Canceled"));
@@ -189,7 +190,7 @@
                   });
                 } else {
                   $timeout(function() {
-                    _bitloxSend(wallet, txp, signTimer, cb);
+                    _bitloxSend(txp, signTimer, cb);
                   });
                 }
               });
@@ -203,9 +204,8 @@
                 $rootScope.destroyBitloxListeners();
               });
           }
-        }
 
-        function _bitloxSend(wallet, txp, signTimer, cb) {
+          function _bitloxSend(txp, signTimer, cb) {
             if(api.getStatus() !== api.STATUS_CONNECTED && api.getStatus() !== api.STATUS_IDLE) {
               return cb('cancel');
               // return cb(new Error("Unable to connect to BitLox"))
@@ -219,11 +219,11 @@
 
             try {
               var tx = new Transaction({
-                  outputs: txp.outputs,
-                  fee: txp.fee,
-                  inputs: txp.inputs,
-                  changeAddress: txp.changeAddress.address,
-                  // forceSmallChange: forceSmallChange,
+                outputs: txp.outputs,
+                fee: txp.fee,
+                inputs: txp.inputs,
+                changeAddress: txp.changeAddress.address,
+                // forceSmallChange: forceSmallChange,
               });
             } catch(err) {
               return cb(err);
@@ -232,143 +232,87 @@
             tx.bwsInputs = txp.inputs;
 
             $log.info('Requesting Bitlox to sign the transaction');
-            var xPubKeys = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey');
-            // var opts = {tx: txp, rawTx: bwcService.getUtils().buildTx(txp).uncheckedSerialize()}
-            if(!xPubKeys) {
-              return cb(new Error("Unable to connect to BitLox, pub key error"))
-            }
-            //$log.log('xPubKeys', xPubKeys)
 
-            return api.getDeviceUUID().then(function(results) {
-
-
-              $log.log('got device UUID, finding wallet');
-
-              var externalSource = wallet.getPrivKeyExternalSourceName();
-              var bitloxInfo = externalSource.split('/');
-
-              if(!results) {
-                return cb(new Error('Unable to get BitLox device information. Try reconnecting the BitLox'));
-              }
-
-              if(bitloxInfo[1] !== results.payload.device_uuid.toString('hex')) {
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'));
-              }
-
+            $ionicLoading.show({
+              template: 'Opening Wallet. Check Your BitLox...'
+            });
+            return bitloxWallet.open().then(function() {
+              $log.log("WALLET LOADED", bitloxWallet.xpub)
               $ionicLoading.show({
-                template: 'Opening Wallet. Check Your BitLox...'
+                template: 'Preparing Transaction. Please Wait...'
               });
-
-              return api.listWallets().then(function(res) {
+              var changeIndex = txp.changeAddress.path.split('/')[2]
+              $log.log('changeIndex', changeIndex)
+              return api.setChangeAddress(changeIndex).then(function() {
+                $log.log('Done setting change address')
                 $ionicLoading.show({
-                  template: 'Opening Wallet. Please Wait...'
+                  template: 'Signing Transaction. Check Your BitLox...'
                 });
 
-                if(!res || res.type === api.TYPE_ERROR) {
-                  return cb(new Error('BitLox wallet connection error'));
-                }
+                return api.signTransaction(tx, signTimer).then(function(result) {
+                  $log.log('Bitlox response', result);
+                  if(!result) {
+                    return cb(new Error('Unable to get signatures from BitLox. Try reconnecting the BitLox'))
+                  }
 
-                var wallets = [];
-                res.payload.wallets.forEach(function(data) {
-                    wallets.push(new Wallet(data));
-                });
+                  if(result.type === api.TYPE_SIGNATURE_RETURN) {
+                    
+                    api.disconnect(true)
+                    txp.signatures = result.payload.signedScripts;
+                    tx.replaceScripts(txp.signatures);
 
-                for(var i = 0; i < wallets.length; i++) {
-                  var thisWallet = wallets[i]
+                    $ionicLoading.show({
+                      template: 'Broadcasting Transaction. Please Wait...'
+                    });
 
-                  if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
-                    return thisWallet.open().then(function() {
-                        $log.log("WALLET LOADED", thisWallet.xpub)
-                        $ionicLoading.show({
-                          template: 'Preparing Transaction. Please Wait...'
-                        });
-                        if(thisWallet.xpub !== xPubKeys[0]) {
-                          $log.log('pubkeys do not match')
-                          return cb(new Error('pubkeys do not match'))
-                        }
-                        var changeIndex = txp.changeAddress.path.split('/')[2]
-                        $log.log('changeIndex', changeIndex)
-                        return api.setChangeAddress(changeIndex).then(function() {
-                          $log.log('Done setting change address')
-                          $ionicLoading.show({
-                            template: 'Signing Transaction. Check Your BitLox...'
-                          });
-
-                          return api.signTransaction(tx, signTimer).then(function(result) {
-                            $log.log('Bitlox response', result);
-                            if(!result) {
-                              return cb(new Error('Unable to get signatures from BitLox. Try reconnecting the BitLox'))
-                            }
-
-                            if(result.type === api.TYPE_SIGNATURE_RETURN) {
-                              
-                              api.disconnect(true)
-                              txp.signatures = result.payload.signedScripts;
-                              tx.replaceScripts(txp.signatures);
-
-                              $ionicLoading.show({
-                                template: 'Broadcasting Transaction. Please Wait...'
-                              });
-
-                              wallet.getMainAddresses({ reverse: true }, function(err, addresses) {
-                                if(addresses.length > 0) {
-                                  var sp = addresses[0].path.split('/');
-                                  var p = parseInt(sp.pop(), 10);
-                                    
-                                  api.setQrCode(p + 1);
-                                }
-                              });
+                    copayWallet.getMainAddresses({ reverse: true }, function(err, addresses) {
+                      if(addresses.length > 0) {
+                        var sp = addresses[0].path.split('/');
+                        var p = parseInt(sp.pop(), 10);
+                          
+                        api.setQrCode(p + 1);
+                      }
+                    });
 
 
-                              // comment out these lines and send `return cb(null,txp) to skip broadcast`
-                              return txUtil.submit(tx.signedHex).then(function() {
-                                return cb(null, txp);
-                              }, function(err) {
-                                return cb(err);
-                              })
-                              // this does not work, always gives BAD_SIGNATURES from BWS
-                              // wallet.signTxProposal(txp, function(signedTxp) {
-                              //   return cb(null,signedTxp)
-                              // })
-                              // return cb(null,txp)
-                            } else {
-                              $log.log('TX signing error')
-                              if(platformInfo.isMobile) {
-                                return cb(new Error(result.type.error_message));
-                              } else {
-                                return cb(new Error(result));
-                              }
-                            }
-                          }, function(err) {
-                            $log.log("TX sign error");
-                            $log.log(err);
-                            return cb(err);
-                          })
-                        }, function(err) {
-                          $log.log("setChangeAddress error");
-                          $log.log(err);
-                          return cb(err);
-                        })
+                    // comment out these lines and send `return cb(null,txp) to skip broadcast`
+                    return txUtil.submit(tx.signedHex).then(function() {
+                      return cb(null, txp);
                     }, function(err) {
-                      $log.log('load wallet error');
-                      $log.log(err);
                       return cb(err);
                     })
+                    // this does not work, always gives BAD_SIGNATURES from BWS
+                    // copayWallet.signTxProposal(txp, function(signedTxp) {
+                    //   return cb(null,signedTxp)
+                    // })
+                    // return cb(null,txp)
+                  } else {
+                    $log.log('TX signing error')
+                    if(platformInfo.isMobile) {
+                      return cb(new Error(result.type.error_message));
+                    } else {
+                      return cb(new Error(result));
+                    }
                   }
-                }
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
-
-              }, function(e) {
-                $log.log('Bitlox wallet list error');
-                $log.log(e);
-                return cb(e);
+                }, function(err) {
+                  $log.log("TX sign error");
+                  $log.log(err);
+                  return cb(err);
+                })
+              }, function(err) {
+                $log.log("setChangeAddress error");
+                $log.log(err);
+                return cb(err);
               })
-            }, function(e) {
-              $log.log('cannot get device uuid');
-              $log.log(e);
-              return cb(e);
+            }, function(err) {
+              $log.log('load wallet error');
+              $log.log(err);
+              return cb(err);
             })
+          }
         }
+
+
 
         Wallet.prototype.clearSpent = function(inputs) {
             var wallet = this;
@@ -536,6 +480,26 @@
                 WalletStatus.status = null;
             });
         };
+        Wallet.prototype.openByNumber = function(number) {
+            api.loadWallet(number).then(function(data) {
+                if (!data || data.type !== api.TYPE_SUCCESS) {
+                    wallet.unlocked = false;
+                    return deferred.reject("Error opening wallet");
+                }
+                deferred.notify(Wallet.NOTIFY_XPUB_LOADED);
+                wallet.unlocked = true;
+                // now that is is open, get the bip32 key for the
+                // current wallet
+                if(skipBip32) {
+                  return deferred.resolve(wallet)
+                }
+                return Wallet.getBip32(wallet).then(function() {
+                    // wallet.loadTransactions(); // dave says, we don't need this anymore
+                    return deferred.resolve(wallet);
+                }, deferred.reject);
+            }, deferred.reject);
+            return deferred.promise;          
+        }
 
         Wallet.prototype.open = function(skipBip32) {
             var wallet = this;

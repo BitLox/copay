@@ -9,14 +9,15 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       }
 
       function getBalance(privateKey, cb) {
-        $scope.wallet.getBalanceFromPrivateKey(privateKey, cb);
+        $scope.wallet.getBalanceFromPrivateKey(privateKey, $scope.wallet.network, cb);
       }
 
       function checkPrivateKey(privateKey) {
         try {
-          var networkName = $scope.network && $scope.network.name || defaults.defaultNetwork.name;
+          var networkName = $scope.wallet.network;
           new bitcore.PrivateKey(privateKey, networkName);
         } catch (err) {
+          console.error(err)
           return false;
         }
         return true;
@@ -25,7 +26,6 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       getPrivateKey($scope.scannedKey, $scope.isPkEncrypted, $scope.passphrase, function(err, privateKey) {
         if (err) return cb(err);
         if (!checkPrivateKey(privateKey)) return cb(new Error('Invalid private key'));
-
         getBalance(privateKey, function(err, balance) {
           if (err) return cb(err);
           return cb(null, privateKey, balance);
@@ -47,8 +47,8 @@ angular.module('copayApp.controllers').controller('paperWalletController',
             $scope.balanceSat = balance;
             if ($scope.balanceSat <= 0)
               popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Not funds found'));
-            var config = configService.getSync().wallet.settings;
-            $scope.balance = txFormatService.formatAmount(balance) + ' ' + config.unitName;
+            var CUSTOMNETWORKS = customNetworks.getStatic();
+            $scope.balance = txFormatService.formatAmount(balance) + ' ' + CUSTOMNETWORKS[$scope.wallet.network].symbol;
           }
           $scope.$apply();
         });
@@ -59,14 +59,14 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       walletService.getAddress($scope.wallet, true, function(err, destinationAddress) {
         if (err) return cb(err);
 
-        $scope.wallet.buildTxFromPrivateKey($scope.privateKey, destinationAddress, null, function(err, testTx) {
+        $scope.wallet.buildTxFromPrivateKey($scope.privateKey, $scope.wallet.network, destinationAddress, null, function(err, testTx) {
           if (err) return cb(err);
           var rawTxLength = testTx.serialize().length;
-          feeService.getCurrentFeeValue($scope.wallet.network, function(err, feePerKB) {
+          feeService.getCurrentFeeRate($scope.wallet.network, function(err, feePerKB) {
 
             var opts = {};
             opts.fee = Math.round((feePerKB * rawTxLength) / 2000);
-            $scope.wallet.buildTxFromPrivateKey($scope.privateKey, destinationAddress, opts, function(err, tx) {
+            $scope.wallet.buildTxFromPrivateKey($scope.privateKey, $scope.wallet.network, destinationAddress, opts, function(err, tx) {
               if (err) return cb(err);
               $scope.wallet.broadcastRawTx({
                 rawTx: tx.serialize(),
@@ -91,7 +91,13 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           $scope.sending = false;
           if (err) {
             $log.error(err);
-            popupService.showAlert(gettextCatalog.getString('Error sweeping wallet:'), err || err.toString());
+            var _title = 'Error sweeping wallet:';
+
+            if (err.toString().indexOf('Insufficient funds') !== -1) {
+              _title = 'Error scanning funds:';
+            }
+
+            popupService.showAlert(gettextCatalog.getString(_title), err || err.toString());
           } else {
             $scope.sendStatus = 'success';
           }
@@ -106,6 +112,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
 
     $scope.onWalletSelect = function(wallet) {
       $scope.wallet = wallet;
+      $scope.init()
     };
 
     $scope.showWalletSelector = function() {
@@ -114,15 +121,6 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       $scope.showWallets = true;
     };
 
-    $scope.showNetworkSelector = function() {
-      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
-      $scope.showNetworks = true;
-    };
-
-    $scope.onNetworkSelect = function(network) {
-      $scope.network = network;
-      $scope.showNetworks = false;
-    };
 
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       $scope.scannedKey = (data.stateParams && data.stateParams.privateKey) ? data.stateParams.privateKey : null;
@@ -139,15 +137,14 @@ angular.module('copayApp.controllers').controller('paperWalletController',
         $scope.noMatchingWallet = true;
         return;
       }
-
-      customNetworks.getAll().then(function(networks) {
-        $scope.networks = networks;
-        $scope.network = networks[defaults.defaultNetwork.name];
-      });
     });
 
     $scope.$on("$ionicView.enter", function(event, data) {
-      $scope.wallet = $scope.wallets[0];
+      // $scope.wallet = $scope.wallets[0];
+      $scope.showWalletSelector()
+      $scope.init()
+    });
+    $scope.init = function() {
       if (!$scope.wallet) return;
       if (!$scope.isPkEncrypted) $scope.scanFunds();
       else {
@@ -156,7 +153,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           $scope.passphrase = res;
           $scope.scanFunds();
         });
-      }
-    });
+      }      
+    }
 
   });

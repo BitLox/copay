@@ -124,7 +124,7 @@
     </div>
 
     <div class="list card">
-      <div class="item item-heading" ng-click="setRates(true)">
+      <div class="item item-heading" ng-click="setRates({ showLoading: true })">
         <span translate>Exchange Rates</span>
         <a class="right">
           <i class="icon ion-ios-refresh-empty"></i>
@@ -134,7 +134,7 @@
         <ion-item class="item"
                   ng-repeat="rate in rates"
                   ui-sref="tabs.rates-calculator({ network: rate.network })">
-          <span class="rate-symbol">1 {{rate.symbol}}</span> = <span>{{rate.altStr}}</span>
+          <span class="rate-symbol">1 {{rate.symbol}}</span> = <span>{{ rate.altStr || '...' }}</span>
         </ion-item>
       </ion-list>
     </div>

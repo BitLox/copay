@@ -35,6 +35,7 @@
                  id="email"
                  placeholder="{{'name@example.com' | translate}}"
                  name="email"
+                 autocapitalize="none" autocorrect="off" autocomplete="off" 
                  ng-model="addressbookEntry.email">
         </label>
         <div>
@@ -52,6 +53,7 @@
                    ng-model="addressbookEntry.address"
                    ng-paste="stripUnnecessaryAddressValue($event)"
                    valid-address
+                   autocapitalize="none" autocorrect="off" autocomplete="off" 
                    required>
             <p ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
                class="invalid-field"

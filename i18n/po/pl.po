@@ -2313,6 +2313,10 @@ msgstr "Powtórz hasło"
 msgid "Request Fingerprint"
 msgstr "Zapytaj o odcisk palca"
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr "Zapytaj o odcisk palca"
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr "Prośba o konkretną kwotę"

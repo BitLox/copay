@@ -3,8 +3,7 @@
 angular.module('copayApp.controllers').controller('pinController', function($state, $interval, $stateParams, $ionicHistory, $timeout, $scope, $log, configService, appConfigService, applicationService) {
   var ATTEMPT_LIMIT = 3;
   var ATTEMPT_LOCK_OUT_TIME = 5 * 60;
-  var currentPin;
-  currentPin = $scope.confirmPin = '';
+  var currentPin = $scope.confirmPin = '';
 
   $scope.match = $scope.error = $scope.disableButtons = false;
   $scope.currentAttempts = 0;

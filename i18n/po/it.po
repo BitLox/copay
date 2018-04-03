@@ -2313,6 +2313,10 @@ msgstr "Ripeti la password"
 msgid "Request Fingerprint"
 msgstr "Richiesta delle impronte digitali"
 
+#: www/views/preferences.html:55
+msgid "Request Face ID"
+msgstr "Richiesta delle impronte digitali"
+
 #: www/views/tab-receive.html:45
 msgid "Request Specific amount"
 msgstr "Richiedi un importo specifico"

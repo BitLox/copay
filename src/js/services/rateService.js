@@ -1,25 +1,17 @@
 'use strict';
 
-//var util = require('util');
-//var _ = require('lodash');
-//var log = require('../util/log');
-//var preconditions = require('preconditions').singleton();
-//var request = require('request');
-
 /*
-  This class lets interfaces with BitPay's exchange rate API.
-*/
+ * This class lets interfaces with BitPay's exchange rate API.
+ */
 
 var RateService = function(opts) {
   var self = this;
 
   opts = opts || {};
-  self.httprequest = opts.httprequest; // || request;
+  self.httprequest = opts.httprequest;
   self.lodash = opts.lodash;
-  self.storageService = opts.storageService;
   self.customNetworks = opts.customNetworks;
   self.defaults = opts.defaults;
-  self.wallets = opts.wallets;
 
   self.SAT_TO_BTC = 1 / 1e8;
   self.BTC_TO_SAT = 1e8;
@@ -44,58 +36,47 @@ RateService.singleton = function(opts) {
   return _instance;
 };
 
-RateService.prototype._fetchCurrencies = function(fetchCallback) {
+RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   var self = this;
 
-  var backoffSeconds = 5;
+  var backoffSeconds = 10;
   var updateFrequencySeconds = 5 * 60;
 
+  // if (!networks) {
+  //   return;
+  // }
 
-  var retrieveOne = function(network, cb) {
-    // console.info('Fetching exchange rates', network);
-    self.httprequest.get(network.ratesUrl).success(function(res) {
-      self.lodash.each(res, function(currency) {
-        self._rates[network.name][currency.code] = currency.rate;
-        self._alternatives[network.name].push({
-          name: currency.name,
-          isoCode: currency.code,
-          rate: currency.rate
-        });
-      });
-      cb()
-    }).error(function(err) {
-      //log.debug('Error fetching exchange rates', err);
-      return cb(new Error("error retrieving at least one rate table"))
-    });
-  };
-  var retrieve = function() {
+  retrieve();
 
+  function retrieve() {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-      // for(var i in self.wallets) {
-      //   if(CUSTOMNETWORKS[self.wallets[i].network]) {
-      //     self.networks[self.wallets[i].network] = CUSTOMNETWORKS[self.wallets[i].network]
-      //   }
-      // }
-      for (var c in CUSTOMNETWORKS) {
-        self.networks[CUSTOMNETWORKS[c].name] = CUSTOMNETWORKS[c]
+      if(networks) {
+        networks.forEach(function(n) {
+         self.networks[CUSTOMNETWORKS[n].name] = CUSTOMNETWORKS[n];
+        });
+      } else {
+        self.networks = CUSTOMNETWORKS
       }
       for (var i in self.networks) {
         if(!self._rates[self.networks[i].name]) {
           self._rates[self.networks[i].name] = []
           self._alternatives[self.networks[i].name] = []
         }
-      }      
+      }
       var length = Object.keys(self.networks).length;
-      var done = 0
+      var done = 0;
       for(var i in self.networks) {
         retrieveOne(self.networks[i], function(err) {
-          done++
+          done++;
           if(err) {
             setTimeout(function() {
-              backoffSeconds *= 1.2
+              backoffSeconds *= 1.2;
               retrieve();
             }, backoffSeconds * 1000);
-          } else if(done === length) {
+
+          }
+          // even if there are errors, if we have done all the calls, we want to return what we do have 
+          if(done === length) {
             self._isAvailable = true;
             self.lodash.each(self._queued, function(callback) {
               setTimeout(callback, 1);
@@ -108,9 +89,21 @@ RateService.prototype._fetchCurrencies = function(fetchCallback) {
     })
   }
 
-
-
-  retrieve();
+  function retrieveOne(network, cb) {
+    self.httprequest.get(network.ratesUrl).success(function(res) {
+      self.lodash.each(res, function(currency) {
+        self._rates[network.name][currency.code] = currency.rate;
+        self._alternatives[network.name].push({
+          name: currency.name,
+          isoCode: currency.code,
+          rate: currency.rate
+        });
+      });
+      cb()
+    }).error(function() {
+      return cb(new Error("error retrieving at least one rate table"))
+    });
+  }
 };
 
 RateService.prototype.getRate = function(code, network) {
@@ -119,7 +112,7 @@ RateService.prototype.getRate = function(code, network) {
   }
 
   if(!this._rates[network.name]) {
-    return console.error("rate service unavailable as yet.",network.name)
+    return console.error("rate service unavailable as yet.", network.name);
   }
   return this._rates[network.name][code];
 };
@@ -129,7 +122,7 @@ RateService.prototype.getAlternatives = function(network) {
     network = this.networks['livenet']
   }  
   if(!this._alternatives[network.name]) {
-    return console.error("rate service unavailable as yet.",network.name)
+    return console.error("rate service unavailable as yet.", network.name);
   }
   return this._alternatives[network.name];
 };
@@ -183,20 +176,17 @@ RateService.prototype.listAlternatives = function(sort, network) {
   return self.lodash.uniq(alternatives, 'isoCode');
 };
 
-angular.module('copayApp.services').factory('rateService', function($http, lodash, configService, profileService, customNetworks, storageService) {
-  // var cfg = _.extend(config.rates, {
-  //   httprequest: $http
-  // });
-  var wallets = profileService.getWallets();
-  var defaults = configService.getDefaults()
+angular
+  .module('copayApp.services')
+  .factory('rateService', function($http, lodash, configService, customNetworks) {
+    var defaults = configService.getDefaults();
 
     var cfg = {
       httprequest: $http,
       lodash: lodash,
       customNetworks: customNetworks,
-      storageService: storageService,
       defaults: defaults,
-      wallets: wallets
     };
+
     return RateService.singleton(cfg);    
   });

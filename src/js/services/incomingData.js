@@ -9,6 +9,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
   };
 
   root.redir = function(data) {
+    console.log(data)
     $log.debug('Processing incoming data: ' + data);
 
     function sanitizeUri(data) {
@@ -43,9 +44,13 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       } catch (err) {
         return false;
       }
-      if(bitcore.PrivateKey.isValid(privateKey, defaults.defaultNetwork.name) && data.length >= 26) {
-        return true
-      }
+
+      for(var i in CUSTOMNETWORKS) {
+        if(bitcore.PrivateKey.isValid(privateKey, defaults.defaultNetwork.name) && data.length >= 26) {
+          $log.log('found private key for network', CUSTOMNETWORKS[i].name)
+          return true
+        }
+      }      
       return false;
     }
 
@@ -208,7 +213,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       return true;
 
       // Join
-    } else if (data && (/^copay:[0-9A-HJ-NP-Za-km-z]{70,80}$/).exec(data)) {
+    } else if (data && ((/^copay:[0-9A-HJ-NP-Za-z]{70,100}$/).exec(data) || (/^bitlox\-shared:[0-9A-HJ-NP-Za-z]{70,100}$/).exec(data))) {
       $state.go('tabs.home', {}, {
         'reload': true,
         'notify': $state.current.name == 'tabs.home' ? false : true
@@ -220,7 +225,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       return true;
 
       // Old join
-    } else if (data && data.match(/^[0-9A-HJ-NP-Za-km-z]{70,80}$/)) {
+    } else if (data && data.match(/^[0-9A-HJ-NP-Za-z]{70,100}$/)) {
       $state.go('tabs.home', {}, {
         'reload': true,
         'notify': $state.current.name == 'tabs.home' ? false : true

@@ -2,7 +2,7 @@
 
 angular.module('copayApp.controllers').controller('addressesController', function($scope, $log, $stateParams, $state, $timeout, $ionicHistory, $ionicScrollDelegate, configService, popupService, gettextCatalog, ongoingProcess, lodash, profileService, walletService, bwcError, platformInfo, appConfigService, txFormatService, feeService) {
   var UNUSED_ADDRESS_LIMIT = 5;
-  var BALANCE_ADDRESS_LIMIT = 5;
+  var BALANCE_ADDRESS_LIMIT = 500;
   var config = configService.getSync().wallet.settings;
   var unitName = config.unitName;
   var unitToSatoshi = config.unitToSatoshi;
@@ -79,8 +79,6 @@ angular.module('copayApp.controllers').controller('addressesController', functio
         if (err) return;
 
         if (resp.allUtxos && resp.allUtxos.length) {
-
-
           var allSum = lodash.sum(resp.allUtxos || 0, 'satoshis');
           var per = (resp.minFee / allSum) * 100;
 
@@ -90,9 +88,12 @@ angular.module('copayApp.controllers').controller('addressesController', functio
           $scope.lowUtxosSum = txFormatService.formatAmountStr(lodash.sum(resp.lowUtxos || 0, 'satoshis'));
           $scope.allUtxosSum = txFormatService.formatAmountStr(allSum);
           $scope.minFee = txFormatService.formatAmountStr(resp.minFee || 0);
-          $scope.minFeePer = per.toFixed(2) + '%';
 
-
+          if (per > 0.00 && per < 0.01) {
+            $scope.minFeePer = '< 0.01%';
+          } else {
+            $scope.minFeePer = per.toFixed(2) + '%';
+          }
         }
       });
     });

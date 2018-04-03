@@ -6,7 +6,7 @@
   </ion-nav-bar>
 
 
-  <ion-content>
+  <ion-content class="has-header">
     <br />
     <br />
 
@@ -15,12 +15,12 @@
               No BitLox device detected.<br /><br />
               Please turn on your BitLox, enter the device PIN, select USB mode, and then touch the refresh button on this screen.<br/><br/>
               <button class="button button-standard button-primary button-blue" ng-click="reset()">Refresh</button>
-              <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
+              <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>
           </span>
       </div>
 
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <div class="item item-remove-animate center-child" style="border:0;">
+        <div class="item item-remove-animate center-child" ng-if="api.getNumDevices() < 1" style="border:0;">
           <span>No devices found</span>
           <br />
           <br />
@@ -40,7 +40,7 @@
                 style="width:90%;margin: 2rem auto"
                 ng-click="refreshBitlox($event)">
           Scan for Bitlox Hardware
-        </button>        
+        </button>
         <button class="button button-standard button-primary p10h"
                 ng-if="closeModal"
                 ng-click="closeModal()"
@@ -48,25 +48,31 @@
           Cancel
         </button>
       </div>
-      <div
-        ng-show="bitlox.connected">
+      <div ng-show="bitlox.connected">
         <!-- <h3 ng-show="readingWallets">Loading wallets</h3> -->
+        <br />
+        <br />
 
-        <div class="list card"  ng-show="!readingWallets">
-          <a
-          style="padding-top: 2rem; padding-bottom: 2rem"
-          class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
-          type="item-text-wrap" ui-sref="tabs.add.create-bitlox">
+        <div class="list card" ng-show="!readingWallets">
+          <a class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
+             type="item-text-wrap"
+             ui-sref="tabs.add.create-bitlox">
             <i class="icon big-icon-svg">
-              <img src="img/icon-wallet.svg" class="bg wallet"/>
+              <img src="img/icon-wallet.svg" class="bg wallet-background-color-default"/>
             </i>
             <span class="add-type" translate>Create/Restore<br />BitLox Wallet</span>
             <i class="icon bp-arrow-right"></i>
           </a>
-          <!-- <div class="item" ng-show="createToggle">
-            <wallet-create available-numbers="availableWalletNumbers"
-                           on-finish="onCreateFinished()"></wallet-create>
-          </div> -->
+          <a class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
+             type="item-text-wrap"
+             ng-click="showLinkWalletModal()">
+            <i class="icon big-icon-svg">
+              <img src="img/icon-wallet.svg" class="bg wallet-background-color-default"/>
+            </i>
+            <span class="add-type" translate>Link BitLox<br />Wallet by ID #</span>
+            <i class="icon bp-arrow-right"></i>
+          </a>
+
           <!-- <a class="item item-remove-animate item-icon-right item-icon-left item-big-icon-left" type="item-text-wrap" ng-click="ping()">
             <i class="icon big-icon-svg">
               <img src="img/icon-wallet.svg" class="bg"/>
@@ -105,6 +111,6 @@
        </i>
         <span style="text-decoration: none" translate>Buy a BitLox Now</span>
       </a>
-    </div>    
+    </div>
   </ion-content>
 </ion-view>

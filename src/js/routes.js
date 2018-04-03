@@ -305,7 +305,8 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
           }
         },
         params: {
-          paypro: null
+          paypro: null,
+          toWallet: null
         }
       })
       .state('tabs.send.addressbook', {
@@ -1324,11 +1325,11 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       }, 101);
 
       $ionicPlatform.on('pause', function() {
-        // Nothing to do
+        applicationService.appLockModal('check');
       });
 
       $ionicPlatform.on('resume', function() {
-        applicationService.appLockModal('check');
+        applicationService.appLockModal('check', true);
       });
 
       $ionicPlatform.on('menubutton', function() {
@@ -1375,7 +1376,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
               // Clear history
               $ionicHistory.clearHistory();
             });
-            applicationService.appLockModal('check');
+            applicationService.appLockModal('check', true);
           });
         };
         // After everything have been loaded

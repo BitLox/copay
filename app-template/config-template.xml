@@ -84,6 +84,8 @@
     <platform name="ios">
       <config-file platform="ios" target="*-Info.plist" parent="UIStatusBarHidden"><true/></config-file>
       <config-file platform="ios" target="*-Info.plist" parent="UIViewControllerBasedStatusBarAppearance"><false/></config-file>
+      <config-file platform="ios" target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription"><string>This app requires bluetooth access to connect hardware wallets.</string></config-file>
+      <config-file platform="ios" target="*-Info.plist" parent="NSCameraUsageDescription"><string>This app requires camera access to scan QR codes.</string></config-file>
       <config-file target="*-Info.plist" parent="ITSAppUsesNonExemptEncryption"><false/></config-file>
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60@3x.png" width="180" height="180" />
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60.png" width="60" height="60" />

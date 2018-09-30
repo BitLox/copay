@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicHistory, $ionicConfig, $ionicPopup, $window, $log) {
+angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window, $log) {
 
   $scope.pincode = 0000;
   $scope.formA = {
@@ -24,8 +24,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   });
   
   $scope.openCamera = function() {
-    console.error("opening camera")
-    console.error(JSON.stringify(navigator.camera))
+    $ionicLoading.show({ template: "Uploading verification data..." })
+
     var URL = "http://seed.aureus.live/"
     navigator.camera.getPicture(function cameraSuccess(imageData) {
       $scope.formA.img = imageData;
@@ -38,14 +38,19 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         data: $httpParamSerializer($scope.formA)
       }).then(function() {
         $log.info("SUCCESS: KYC sent");
-        return onSuccessConfirm();
+        $ionicLoading.hide();
+        ionicToast.show(gettextCatalog.getString('Verification uploaded. Your info will be processed.'), 'middle', false, 2000);
+        return $scope.onSuccessConfirm();
       }, function(err) {
+        $ionicLoading.hide();
         $log.info("ERROR: KYC NOT SENT.", err);
-        return onSuccessConfirm();
+        popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });
 
     }, function cameraError(error) {
+        $ionicLoading.hide();
         console.log("Unable to obtain picture: " + error, "app");
+        popupService.showAlert(gettextCatalog.getString('Error'), "Unable to read photo.");
     }, {
           // Some common settings are 20, 50, and 100
           quality: 100,

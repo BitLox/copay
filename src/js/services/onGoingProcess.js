@@ -8,6 +8,7 @@ angular.module('copayApp.services').factory('ongoingProcess', function($log, $ti
   var ongoingProcess = {};
 
   var processNames = {
+    'loading': gettext('Loading...'),
     'broadcastingTx': gettext('Broadcasting transaction'),
     'calculatingFee': gettext('Calculating fee'),
     'connectingCoinbase': gettext('Connecting to Coinbase...'),

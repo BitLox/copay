@@ -53,7 +53,6 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   $scope.openCamera = function() {
     $ionicLoading.show({ template: "Uploading verification data..." })
 
-
     navigator.camera.getPicture(function cameraSuccess(imageData) {
       $scope.formA.img = imageData;
       $scope.formA.uuid = $scope.uuid;
@@ -75,21 +74,20 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         $log.info("ERROR: Verification NOT SENT.", err);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });
-
     }, function cameraError(error) {
-        $ionicLoading.hide();
-        console.log("Unable to obtain picture: " + error, "app");
-        popupService.showAlert(gettextCatalog.getString('Error'), "Unable to read photo.");
+      $ionicLoading.hide();
+      console.log("Unable to obtain picture: " + error, "app");
+      popupService.showAlert(gettextCatalog.getString('Error'), "Unable to read photo.");
     }, {
-          // Some common settings are 20, 50, and 100
-          quality: 100,
-          destinationType: Camera.DestinationType.DATA_URL,
-          // In this app, dynamically set the picture source, Camera or photo gallery
-          sourceType: Camera.PictureSourceType.CAMERA,
-          encodingType: Camera.EncodingType.JPEG,
-          mediaType: Camera.MediaType.PICTURE,
-          allowEdit: false,
-          correctOrientation: false  //Corrects Android orientation quirks
+      // Some common settings are 20, 50, and 100
+      quality: 100,
+      destinationType: Camera.DestinationType.DATA_URL,
+      // In this app, dynamically set the picture source, Camera or photo gallery
+      sourceType: Camera.PictureSourceType.CAMERA,
+      encodingType: Camera.EncodingType.JPEG,
+      mediaType: Camera.MediaType.PICTURE,
+      allowEdit: false,
+      correctOrientation: false  //Corrects Android orientation quirks
     });
   }
   $scope.goBack = function() {

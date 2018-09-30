@@ -73,6 +73,7 @@
     <plugin name="cordova.plugins.diagnostic" spec="3.9.2" />
     <!-- <plugin name="cordova-plugin-fcm" spec="https://github.com/cmgustavo/cordova-plugin-fcm.git" /> -->
     <plugin name="cordova-plugin-ble" spec="2.0.1" />
+    <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <!-- Supported Platforms -->
     <engine name="ios" spec="4.5.4" />
     <engine name="android" spec="6.4.0" />
@@ -85,6 +86,9 @@
       <config-file platform="ios" target="*-Info.plist" parent="UIStatusBarHidden"><true/></config-file>
       <config-file platform="ios" target="*-Info.plist" parent="UIViewControllerBasedStatusBarAppearance"><false/></config-file>
       <config-file target="*-Info.plist" parent="ITSAppUsesNonExemptEncryption"><false/></config-file>
+      <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+          <string>need camera access to take pictures</string>
+      </edit-config>      
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60@3x.png" width="180" height="180" />
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60.png" width="60" height="60" />
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60@2x.png" width="120" height="120" />

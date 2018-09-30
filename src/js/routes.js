@@ -398,6 +398,14 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
           },
         }
       })
+      .state('tabs.link-aurs', {
+        url: '/link-aurs',
+        views: {
+          'tab-home@tabs': {
+            templateUrl: 'views/bitlox/aurs-dividend.html',
+          },
+        }
+      })      
       .state('tabs.add.create-personal', {
         url: '/create-personal',
         views: {

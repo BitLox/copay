@@ -1,0 +1,58 @@
+<ion-view class="settings pane" id="view-aurs-dividend" ng-controller="linkAursController">
+  <ion-nav-bar class="bar-royal">
+    <ion-nav-title>Link AURS Dividends</ion-nav-title>
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-content>
+      <div class="list settings-list settings-input-group">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Phone</span>
+          <input type="text"
+          placeholder="{{'+60161234567'|translate}}"
+          ng-model="formA.phone"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Full Name</span>
+          <input type="text"
+          placeholder="{{'John Doe'|translate}}"
+          ng-model="formA.name"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>  
+
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Email Address</span>
+          <input type="text"
+          placeholder="{{'user@yahoo.com'|translate}}"
+          ng-model="formA.email"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>        
+
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Upload a verification photo</span>
+
+          <br/><br/>
+          <span class="input-label" translate>• Write the PIN code on a piece of paper and hold it along with your ID.</span>
+          <span class="input-label" translate>• Then take a picture with your face, the PIN code, and your ID document clearly showing.</span>
+          <span class="input-label"><img class="kyc-example" src="img/icon-kyc-example.png"/></span>
+          <span class="input-label" translate>•Your information will be processed and cleared after you upload your photo.</span>     
+          <span class="input-label">• YOUR PIN CODE IS <span ng-bind="pincode"></span></span>
+        </label>
+      </div>
+
+      <div class="form-group"> 
+          <button ng-click="openCamera()"
+                 class="button button-standard button-primary">Open Camera</button>
+          <br/><br/>   
+      </div>
+
+  </ion-content>
+</ion-view>

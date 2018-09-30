@@ -107,6 +107,13 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         $scope.addressbook = ab || {};
       });
 
+      $scope.hasBitcoinWallet = false;
+      for(var i in $scope.wallets) {
+        if($scope.wallets[i].network === 'livenet') {
+          $scope.hasBitcoinWallet = true;
+        }
+      }
+
       listeners = [
         $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
           var wallet = profileService.getWallet(walletId);

@@ -139,6 +139,25 @@
       </ion-list>
     </div>
 
+    <div class="list card" ng-if="hasBitcoinWallet">
+      <a ui-sref="tabs.link-aurs" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
+       <i class="icon big-icon-svg">
+         <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
+       </i>
+        <span style="text-decoration: none" translate>Link AURS Dividends</span>
+      </a>
+    </div>
+
+    <div class="list card" ng-if="!hasBitcoinWallet">
+      <span class="input-label">To Link AURS Dividends, create a Bitcoin wallet</span>
+      <a ui-sref="tabs.add.create-personal" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
+       <i class="icon big-icon-svg">
+         <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
+       </i>
+        <span style="text-decoration: none" translate>Create BTC Wallet</span>
+      </a>
+    </div>
+
     <div class="list card" ng-if="showBitLoxBuyLink">
       <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">

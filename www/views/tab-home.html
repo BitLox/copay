@@ -144,13 +144,15 @@
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
        </i>
-        <span style="text-decoration: none" translate>Link AURS Dividends</span>
+        <span style="text-decoration: none" translate>Register AURS Wallet</span>
       </a>
     </div>
 
-    <div class="list card" ng-if="!hasBitcoinWallet">
-      <span class="input-label">To Link AURS Dividends, create a Bitcoin wallet</span>
-      <a ui-sref="tabs.add.create-personal" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
+    <div class="list card"><!-- ng-if="!hasBitcoinWallet">-->
+      <span class="item item-heading">
+        <span>To Register AURS Wallet, first create a Bitcoin wallet</span>
+      </span>
+      <a ui-sref="tabs.add.create-personal({currency:'livenet',name:'Dividends'})" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
        </i>

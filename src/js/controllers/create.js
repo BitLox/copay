@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('createController',
-  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo, walletColorService) {
+  function($scope, $rootScope, $timeout, $stateParams, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo, walletColorService) {
 
     /* For compressed keys, m*73 + n*34 <= 496 */
     var COPAYER_PAIR_LIMITS = {
@@ -32,9 +32,15 @@ angular.module('copayApp.controllers').controller('createController',
       $scope.setTotalCopayers(tc);
       updateRCSelect(tc);
       resetPasswordFields();
+      $scope.formData.walletName = $stateParams.name || "";
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         $scope.networks = CUSTOMNETWORKS;
-        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+        if($stateParams.currency) {
+          $scope.network = CUSTOMNETWORKS[$stateParams.currency]        
+        }
+        if(!$scope.network) {
+          $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]
+        }
       })
     });
 

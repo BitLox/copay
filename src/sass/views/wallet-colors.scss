@@ -15,10 +15,16 @@ $deuscoin-color: #0000AA;
 $zcash-color: #FBD35B;
 $litecoin-color: #91caf4;
 $dogecoin-color: #FF599E;
+$bitcoin-color: #bb1a1a;
 
 .wallet-bg-color-default {
   background-color: $default-wallet-color;
 }
+
+.wallet-bg-color-default.bitcoin {
+  background-color: $bitcoin-color;
+}
+
 
 .wallet-bg-color-default.dash {
   background-color: $dash-color;

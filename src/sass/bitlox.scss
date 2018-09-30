@@ -88,7 +88,12 @@
     background-color: transparent !important;
   }
 }
-
+input::-webkit-input-placeholder {
+color: #DDD;
+}
+input:focus::-webkit-input-placeholder {
+color: #DDD;
+}
 .confirmMnemonicPopup {
   & > .popup {
     width: 320px;

@@ -100,6 +100,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     });
 
     $scope.$on("$ionicView.enter", function(event, data) {
+      
+      var config = configService.getSync();
       updateAllWallets();
 
       addressbookService.list(function(err, ab) {
@@ -113,7 +115,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.hasBitcoinWallet = true;
         }
       }
-
+      $scope.uploadedVerification = config.wallet.uploadedVerification
       listeners = [
         $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
           var wallet = profileService.getWallet(walletId);

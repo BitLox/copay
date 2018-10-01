@@ -5,7 +5,7 @@
   </ion-nav-bar>
 
   <ion-content>
-      <div class="list settings-list settings-input-group">
+      <div class="list settings-list settings-input-group" ng-hide="showCameraOnly">
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Phone</span>
           <input type="tel"
@@ -35,7 +35,8 @@
           autocorrect="off" autocomplete="off"
           ng-required="true">
         </label>        
-
+      </div>
+      <div class="list settings-list settings-input-group" ng-hide="showInfoOnly">
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Upload a verification photo</span>
 
@@ -44,15 +45,20 @@
           <span class="input-label" translate>• Then take a picture with your face, the PIN code, and your ID document clearly showing.</span>
           <span class="input-label"><img class="kyc-example" src="img/icon-kyc-example.png"/></span>
           <span class="input-label" translate>•Your information will be processed and cleared after you upload your photo.</span>     
-          <span class="input-label">• YOUR PIN CODE IS <span ng-bind="pincode"></span></span>
+          <span class="input-label">• YOUR PIN CODE IS <span class="pincode" ng-bind="formA.pincode"></span></span>
         </label>
       </div>
 
-      <div class="form-group"> 
+      <div class="form-group" ng-hide="showInfoOnly"> 
           <button ng-click="openCamera()"
                  class="button button-standard button-primary">Open Camera</button>
           <br/><br/>   
       </div>
 
+      <div class="form-group" ng-hide="showCameraOnly || !showInfoOnly"> 
+          <button ng-click="sendInfoOnly()"
+                 class="button button-standard button-primary">Update Info</button>
+          <br/><br/>   
+      </div>
   </ion-content>
 </ion-view>

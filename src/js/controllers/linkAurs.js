@@ -17,7 +17,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   });
 
   $scope.$on("$ionicView.enter", function(event, data) {
-    
+   
     $scope.getNewPin()
   });
 
@@ -27,7 +27,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   });
 
   $scope.getNewPin = function() {
-
+    $ionicLoading.show({ template: "Please wait..." })
+    $scope.formA.pincode = null;
     var wallets = profileService.getWallets();
     for(var i in wallets) {
       if(wallets[i].network === 'livenet') {
@@ -52,9 +53,11 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       // $log.warn(JSON.stringify(result))
       $scope.formA.pincode = result.data.pincode
       $log.info("SUCCESS: Verification PIN retrieved");
+      $ionicLoading.hide()
     }, function(err) {
       $log.info("ERROR: Verification PIN NOT RETRIEVED.", err);
       ionicToast.show(gettextCatalog.getString('Network error: cannot get pin code'), 'middle', false, 2000);
+      $ionicLoading.hide();
       return $scope.goBack();
     });        
   }  
@@ -124,7 +127,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         return $scope.goBack();
       }, function(err) {
         $ionicLoading.hide();
-        $log.info("ERROR: Verification NOT SENT.", err.message);
+        delete err.data
+        $log.info("ERROR: Verification NOT SENT.", err);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });
     }, function cameraError(error) {
@@ -153,6 +157,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       historyRoot: true
     });
     $ionicHistory.clearHistory();
-    $state.transitionTo('tabs.home');
+    if($stateParams.isSettings) { $state.transitionTo('tabs.settings'); }
+    else { $state.transitionTo('tabs.home'); }
   };
 });

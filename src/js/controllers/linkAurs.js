@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, configService, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
+angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
 
   $scope.formA = {
     phone: '',
@@ -8,6 +8,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     email: '',
     img: null,
     pincode: null,
+    bitcoinAddress: null,
+    bitcoinWalletName: null,
     appId: device.uuid
   }
   $scope.$on("$ionicView.beforeLeave", function(event, data) {
@@ -25,6 +27,19 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   });
 
   $scope.getNewPin = function() {
+
+    var wallets = profileService.getWallets();
+    for(var i in wallets) {
+      if(wallets[i].network === 'livenet') {
+        $scope.formA.bitcoinWalletName = wallets[i].name;
+        walletService.getAddress(wallets[i], false, function(err, addr) {
+          $scope.formA.bitcoinAddress = addr;
+          $log.warn($scope.formA.bitcoinWalletName)
+          $log.warn($scope.formA.bitcoinAddress)
+        })
+        break;
+      }
+    }
     var URL = 'https://seed.aureus.cc/api/verification'
     $http({
       method: 'POST',
@@ -34,7 +49,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       },
       data: $httpParamSerializer({appId: device.uuid})
     }).then(function(result) {
-      // console.log(JSON.stringify(result))
+      // $log.warn(JSON.stringify(result))
       $scope.formA.pincode = result.data.pincode
       $log.info("SUCCESS: Verification PIN retrieved");
     }, function(err) {
@@ -70,21 +85,17 @@ angular.module('copayApp.controllers').controller('linkAursController', function
           if (err) $log.debug(err);
         });        
         ionicToast.show(gettextCatalog.getString('Verification uploaded. Your info will be processed.'), 'middle', false, 2000);
-        return $scope.goBack();
+        
+        var config = configService.getSync();
+        if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }
+        else { return $scope.loadCameraOnly(); }
       }, function(err) {
         $ionicLoading.hide();
         $log.info("ERROR: Verification NOT SENT.", err);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });    
   }
-  $scope.openCamera = function() {
-
-    if(!$scope.formA.name || !$scope.formA.email || !$scope.formA.phone) {
-      if(!$stateParams.showCameraOnly) {
-        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again."), 'middle', false, 2000);
-        return;        
-      }
-    }
+  $scope.sendPhotoOnly = function() {
 
     $ionicLoading.show({ template: "Uploading verification data..." })
 
@@ -95,7 +106,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         method: 'PUT',
         url: URL,
         headers: {
-          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+           'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
         },
         data: $httpParamSerializer($scope.formA)
       }).then(function() {
@@ -113,7 +124,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         return $scope.goBack();
       }, function(err) {
         $ionicLoading.hide();
-        $log.info("ERROR: Verification NOT SENT.", err);
+        $log.info("ERROR: Verification NOT SENT.", err.message);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });
     }, function cameraError(error) {
@@ -132,6 +143,10 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       correctOrientation: false  //Corrects Android orientation quirks
     });
   }
+  $scope.loadCameraOnly = function() {
+    $scope.showCameraOnly = true;
+    $scope.showInfoOnly = false;
+  };  
   $scope.goBack = function() {
     $ionicHistory.nextViewOptions({
       disableAnimate: true,

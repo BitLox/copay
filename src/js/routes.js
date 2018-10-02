@@ -400,6 +400,10 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       })
       .state('tabs.link-aurs', {
         url: '/link-aurs',
+        params: {
+          showInfoOnly: true,
+          showCameraOnly: false
+        },
         views: {
           'tab-home@tabs': {
             templateUrl: 'views/bitlox/aurs-dividend.html',
@@ -410,7 +414,8 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/link-aurs',
         params: {
           showInfoOnly: false,
-          showCameraOnly: false
+          showCameraOnly: false,
+          isSettings: true
         },
         views: {
           'tab-settings@tabs': {
@@ -422,7 +427,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/create-personal',
         params: { currency: null, name: null },
         views: {
-          'tab-settings@tabs': {
+          'tab-home@tabs': {
             templateUrl: 'views/tab-create-personal.html',
             controller: 'createController'
           },

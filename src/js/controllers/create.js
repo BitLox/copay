@@ -19,6 +19,7 @@ angular.module('copayApp.controllers').controller('createController',
       12: 1,
     };
     $scope.platformInfo = platformInfo
+    $scope.network = null;
 
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       $scope.formData = {};
@@ -35,7 +36,7 @@ angular.module('copayApp.controllers').controller('createController',
       $scope.formData.walletName = $stateParams.name || "";
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         $scope.networks = CUSTOMNETWORKS;
-        if($stateParams.currency) {
+        if($stateParams.currency && CUSTOMNETWORKS[$stateParams.currency]) {
           $scope.network = CUSTOMNETWORKS[$stateParams.currency]        
         }
         if(!$scope.network) {

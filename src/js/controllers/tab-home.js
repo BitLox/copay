@@ -117,13 +117,23 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       $scope.isVerified = false;
       $scope.uploadedVerification = config.wallet.uploadedVerification
-      if($scope.uploadedVerification) {
+      if($scope.uploadedVerification && !config.wallet.isVerified) {
         var URL = 'https://seed.aureus.cc/api/verification/status/'+device.uuid
         $http({
           method: 'GET',
           url: URL
         }).then(function(result) {
           $scope.isVerified = result.data.isVerified
+          if($scope.isVerified) {
+            var opts = {
+              wallet: {
+                isVerified: true
+              }
+            };
+            configService.set(opts, function(err) {
+              if (err) $log.debug(err);
+            });     
+          }
         }, function(err) {
         });        
       }

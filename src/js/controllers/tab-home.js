@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading, rateService) {
+  function($rootScope, $http, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading, rateService) {
 
     var wallet;
     var listeners = [];
@@ -115,7 +115,19 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.hasBitcoinWallet = true;
         }
       }
+      $scope.isVerified = false;
       $scope.uploadedVerification = config.wallet.uploadedVerification
+      if($scope.uploadedVerification) {
+        var URL = 'https://seed.aureus.cc/api/verification/status/'+device.uuid
+        $http({
+          method: 'GET',
+          url: URL
+        }).then(function(result) {
+          $scope.isVerified = result.data.isVerified
+        }, function(err) {
+        });        
+      }
+
       listeners = [
         $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
           var wallet = profileService.getWallet(walletId);

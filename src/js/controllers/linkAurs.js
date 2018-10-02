@@ -78,16 +78,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         data: $httpParamSerializer($scope.formA)
       }).then(function() {
         $log.info("SUCCESS: Verification sent");
-        $ionicLoading.hide();
-        var opts = {
-          wallet: {
-            uploadedVerification: true
-          }
-        };
-        configService.set(opts, function(err) {
-          if (err) $log.debug(err);
-        });        
-        ionicToast.show(gettextCatalog.getString('Verification uploaded. Your info will be processed.'), 'middle', false, 2000);
+        $ionicLoading.hide();     
+        ionicToast.show(gettextCatalog.getString('Verification info updated. Please upload verification photo.'), 'middle', false, 2000);
         
         var config = configService.getSync();
         if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }

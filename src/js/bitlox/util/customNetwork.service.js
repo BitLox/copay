@@ -64,16 +64,16 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "code": "aurs",
     "symbol": "AURS",
     "derivationCoinPath": 0,
-    "ratesUrl": "https://seed.aureus.cc/rates",
+    "ratesUrl": "https://seed.aureus.live/rates",
     "pubkeyhash": 0x17,
     "privatekey": 0x80,
     "scripthash": 0x1C,
     "xpubkey": 0x0488b21e,
     "xprivkey": 0x0488ade4,
-    "bwsUrl": "https://aurs.dlc.net/bws/api",
+    "bwsUrl": "https://bws.aureus.live/bws/api",
     "port": "9697",
     "networkMagic": 0x6ee58c2a,
-    "explorer": "https://explorer.aureus.cc/"
+    "explorer": "https://explorer.aureus.live/"
   }
   bitcore.Networks.add(this.customNetworks.aureus)
 }

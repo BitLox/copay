@@ -6,16 +6,7 @@
 
   <ion-content>
       <div class="list settings-list settings-input-group" ng-hide="showCameraOnly">
-        <label class="item item-input item-stacked-label">
-          <span class="input-label" translate>Phone</span>
-          <input type="tel"
-          placeholder="{{'+60161234567'|translate}}"
-          ng-model="formA.phone"
-          autocorrect="off" autocomplete="off"
-          ng-required="true">
-        </label>
 
-        <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Full Name</span>
           <input type="text"
@@ -25,6 +16,25 @@
           ng-required="true">
         </label>  
 
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Main Phone</span>
+          <input type="tel"
+          placeholder="{{'+60161234567'|translate}}"
+          ng-model="formA.phone"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Mobile Phone</span>
+          <input type="tel"
+          placeholder="{{'+60161234567'|translate}}"
+          ng-model="formA.phone2"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
 
         <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
@@ -34,7 +44,127 @@
           ng-model="formA.email"
           autocorrect="off" autocomplete="off"
           ng-required="true">
-        </label>        
+        </label> 
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>ID/Passport #</span>
+          <input type="number"
+          placeholder="{{'5520231923'|translate}}"
+          ng-model="formA.idNumber"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Date of Birth</span>
+          <input type="text"
+          placeholder="{{'22/12/1984'|translate}}"
+          ng-model="formA.dob"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Address</span>
+          <input type="text"
+          placeholder="{{'123 Jalan St.'|translate}}"
+          ng-model="formA.address1"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Apt/Suite #</span>
+          <input type="text"
+          placeholder="{{'Suite 200'|translate}}"
+          ng-model="formA.address2"
+          autocorrect="off" autocomplete="off">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>City</span>
+          <input type="text"
+          placeholder="{{'Los Angeles'|translate}}"
+          ng-model="formA.city"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>State/Province</span>
+          <input type="text"
+          placeholder="{{'California'|translate}}"
+          ng-model="formA.state"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Country</span>
+          <input type="text"
+          placeholder="{{'United States'|translate}}"
+          ng-model="formA.country"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Gender</span>
+          <input type="text"
+          placeholder="{{'Male/Female'|translate}}"
+          ng-model="formA.gender"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Marital Status</span>
+          <input type="text"
+          placeholder="{{'Married/Single/Divorced'|translate}}"
+          ng-model="formA.maritalStatus"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus Central AURS Balance</span>
+          <input type="number"
+          placeholder="{{'3000 AURS'|translate}}"
+          ng-model="formA.aursCentralBalance"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label> 
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus CC AURS Balance</span>
+          <input type="number"
+          placeholder="{{'9382 AURS'|translate}}"
+          ng-model="formA.aursCCBalance"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>  
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus CC BTC Balance</span>
+          <input type="number"
+          placeholder="{{'1.38437 BTC'|translate}}"
+          ng-model="formA.btcCCBalance"
+          autocorrect="off" autocomplete="off"
+          ng-required="true">
+        </label>                       
       </div>
       <div class="list settings-list settings-input-group" ng-hide="showInfoOnly">
         <label class="item item-input item-stacked-label">

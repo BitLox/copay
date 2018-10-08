@@ -10,15 +10,29 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     pincode: null,
     bitcoinAddress: null,
     bitcoinWalletName: null,
-    appId: device.uuid
+    appId: device.uuid,
+    address1:null,
+    address2:null,
+    city:null,
+    state:null,
+    country:null,
+    gender:null,
+    dob:null,
+    idNumber:null,
+    phone2:null,
+    maritalStatus:null,
+    aursCentralBalance:null,
+    aursCCBalance:null,
+    btcCCBalance:null    
   }
+  $scope.optionalFields = ['address2', 'img']
   $scope.$on("$ionicView.beforeLeave", function(event, data) {
     
   });
 
   $scope.$on("$ionicView.enter", function(event, data) {
    
-    $scope.getNewPin()
+    $scope.getPin()
   });
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
@@ -26,7 +40,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
      $scope.showCameraOnly = $stateParams.showCameraOnly
   });
 
-  $scope.getNewPin = function() {
+  $scope.getPin = function() {
     $ionicLoading.show({ template: "Please wait..." })
     $scope.formA.pincode = null;
     var wallets = profileService.getWallets();
@@ -35,13 +49,11 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         $scope.formA.bitcoinWalletName = wallets[i].name;
         walletService.getAddress(wallets[i], false, function(err, addr) {
           $scope.formA.bitcoinAddress = addr;
-          $log.warn($scope.formA.bitcoinWalletName)
-          $log.warn($scope.formA.bitcoinAddress)
         })
         break;
       }
     }
-    var URL = 'https://seed.aureus.cc/api/verification'
+    var URL = 'https://seed.aureus.live/api/verification'
     $http({
       method: 'POST',
       url: URL,
@@ -51,7 +63,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       data: $httpParamSerializer({appId: device.uuid})
     }).then(function(result) {
       // $log.warn(JSON.stringify(result))
-      $scope.formA.pincode = result.data.pincode
+      $scope.formA = angular.extend($scope.formA, result.data)// $scope.formA.pincode = result.data.pincode
       $log.info("SUCCESS: Verification PIN retrieved");
       $ionicLoading.hide()
     }, function(err) {
@@ -62,13 +74,16 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     });        
   }  
   $scope.sendInfoOnly = function() {
-    if(!$scope.formA.name || !$scope.formA.email || !$scope.formA.phone) {
-      ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again."), 'middle', false, 2000);
-      return;
-    }    
+    for (var i in $scope.formA) {
+      if($scope.optionalFields.indexOf(i) === -1 && !$scope.formA[i]) {
+        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again."), 'middle', false, 2000);
+        return;
+      }
+    }
+   
     $ionicLoading.show({ template: "Uploading verification data..." })
 
-    var URL = "https://seed.aureus.cc/api/verification"
+    var URL = "https://seed.aureus.live/api/verification"
       $http({
         method: 'PUT',
         url: URL,
@@ -96,7 +111,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
 
     navigator.camera.getPicture(function cameraSuccess(imageData) {
       $scope.formA.img = imageData;
-      var URL = "https://seed.aureus.cc/api/verification"
+      var URL = "https://seed.aureus.live/api/verification"
       $http({
         method: 'PUT',
         url: URL,

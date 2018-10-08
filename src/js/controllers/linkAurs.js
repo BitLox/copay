@@ -25,7 +25,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     aursCCBalance:null,
     btcCCBalance:null    
   }
-  $scope.optionalFields = ['address2', 'img']
+  $scope.optionalFields = ['address2', 'img', 'isVerified']
   $scope.$on("$ionicView.beforeLeave", function(event, data) {
     
   });
@@ -76,7 +76,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   $scope.sendInfoOnly = function() {
     for (var i in $scope.formA) {
       if($scope.optionalFields.indexOf(i) === -1 && !$scope.formA[i]) {
-        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again, starting with "+i), 'middle', false, 2000);
+        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again, starting with "+), 'middle', false, 2000);
         return;
       }
     }

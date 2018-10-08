@@ -76,7 +76,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   $scope.sendInfoOnly = function() {
     for (var i in $scope.formA) {
       if($scope.optionalFields.indexOf(i) === -1 && !$scope.formA[i]) {
-        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again."), 'middle', false, 2000);
+        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again, starting with "+i), 'middle', false, 2000);
         return;
       }
     }

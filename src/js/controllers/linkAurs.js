@@ -214,11 +214,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       var URL = "https://seed.aureus.live/api/verification"
 
 
-      httpOverload({
-        method: 'PUT',
-        url: URL,
-        data: $httpParamSerializer($scope.formA)
-      }).then(function() {
+      httpOverload('PUT', URL, $httpParamSerializer($scope.formA)).then(function() {
         $log.info("SUCCESS: Verification sent");
         $ionicLoading.hide();
         var opts = {

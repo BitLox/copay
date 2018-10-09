@@ -102,7 +102,7 @@
 
         <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
-          <span class="input-label" translate>Apt/Suite #</span>
+          <span class="input-label" translate>Apt/Suite # (Optional)</span>
           <input type="text"
           placeholder="{{'Suite 200'|translate}}"
           ng-model="formA.address2"
@@ -162,12 +162,29 @@
 
         <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus Central Username</span>
+          <input type="text"
+          placeholder="{{'user123'|translate}}"
+          ng-model="formA.aursCentralUsername"
+          autocorrect="off" autocomplete="off">
+        </label> 
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus CC Username</span>
+          <input type="text"
+          placeholder="{{'user123'|translate}}"
+          ng-model="formA.aursCCUsername"
+          autocorrect="off" autocomplete="off">
+        </label> 
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Aureus Central AURS Balance</span>
           <input type="number"
           placeholder="{{'3000 AURS'|translate}}"
           ng-model="formA.aursCentralBalance"
-          autocorrect="off" autocomplete="off"
-          ng-required="true">
+          autocorrect="off" autocomplete="off">
         </label> 
 
         <div class="item item-divider"></div>
@@ -176,8 +193,7 @@
           <input type="number"
           placeholder="{{'9382 AURS'|translate}}"
           ng-model="formA.aursCCBalance"
-          autocorrect="off" autocomplete="off"
-          ng-required="true">
+          autocorrect="off" autocomplete="off">
         </label>  
 
         <div class="item item-divider"></div>
@@ -186,8 +202,7 @@
           <input type="number"
           placeholder="{{'1.38437 BTC'|translate}}"
           ng-model="formA.btcCCBalance"
-          autocorrect="off" autocomplete="off"
-          ng-required="true">
+          autocorrect="off" autocomplete="off">
         </label>                       
       </div>
       <div class="list settings-list settings-input-group" ng-hide="showInfoOnly">

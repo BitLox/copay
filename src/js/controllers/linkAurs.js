@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
+angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $q, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
 
   $scope.formA = {
     phone: '',
@@ -140,23 +140,6 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       result.data.btcCCBalance = parseFloat(result.data.btcCCBalance)
       result.data.aursCCBalance = parseFloat(result.data.aursCCBalance)
       result.data.aursCentralBalance = parseFloat(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(result.data.aursCentralBalance)
-      $log.warn(typeof(result.data.aursCentralBalance))
       $scope.formA = angular.extend($scope.formA, result.data)// $scope.formA.pincode = result.data.pincode
       $log.info("SUCCESS: Verification PIN retrieved");
       $ionicLoading.hide()
@@ -199,19 +182,41 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
       });    
   }
+
+  function httpOverload(method, url, data) {
+    var xhttp = new XMLHttpRequest();
+    var promise = $q.defer();
+
+
+    xhttp.upload.addEventListener("progress",function (e) {
+        promise.notify(e);
+    });
+    xhttp.upload.addEventListener("load",function (e) {
+        promise.resolve(e);
+    });
+    xhttp.upload.addEventListener("error",function (e) {
+        promise.reject(e);
+    });
+
+    xhttp.open(method,url,true);
+    xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded; charset=UTF-8')
+
+    xhttp.send(data);
+
+    return promise.promise;    
+  }  
   $scope.sendPhotoOnly = function() {
 
-    $ionicLoading.show({ template: "Uploading verification data..." })
+    $ionicLoading.show({ template: '<h4>Uploading verification data...</h4><div class="verification-loader" ng-style="imgUploadPercentStyle"><p class="percent" ng-bind="imgUploadPercentText"></p></div>'})
 
     navigator.camera.getPicture(function cameraSuccess(imageData) {
       $scope.formA.img = imageData;
       var URL = "https://seed.aureus.live/api/verification"
-      $http({
+
+
+      httpOverload({
         method: 'PUT',
         url: URL,
-        headers: {
-           'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
         data: $httpParamSerializer($scope.formA)
       }).then(function() {
         $log.info("SUCCESS: Verification sent");
@@ -233,6 +238,11 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         delete err.data
         $log.info("ERROR: Verification NOT SENT.", err);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
+      }, function(progress) {
+        $log.warn(progress)
+        var percent = 10;
+        $rootScope.imgUploadPercentText = percent+"%"
+        $rootScope.imgUploadPercentStyle = "width: "+percent+"%" 
       });
     }, function cameraError(error) {
       $ionicLoading.hide();

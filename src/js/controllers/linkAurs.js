@@ -23,36 +23,103 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     maritalStatus:null,
     aursCentralBalance:null,
     aursCCBalance:null,
-    btcCCBalance:null    
+    btcCCBalance:null,
+    aursWalletXpub: null,
+    aursWalletName: null
   }
   $scope.optionalFields = ['address2', 'img', 'isVerified']
   $scope.$on("$ionicView.beforeLeave", function(event, data) {
     
   });
 
+  function refresh() {
+    $timeout(function() {
+      $scope.$apply();
+    }, 1);
+  }
+
+  $scope.showBtcWalletSelector = function() {
+    $scope.btcWalletSelector = true;
+    refresh();
+  };
+  $scope.showAursWalletSelector = function() {
+    $scope.aursWalletSelector = true;
+    refresh();
+  };
+
   $scope.$on("$ionicView.enter", function(event, data) {
    
     $scope.getPin()
   });
 
+  function exitWithError(err) {
+    $log.info('Error setting verification:' + err);
+    popupService.showAlert(gettextCatalog.getString("Error"), err, function() {
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        historyRoot: true
+      });
+      $ionicHistory.clearHistory();
+      $state.go('tabs.home');
+    });
+  }
+
+  function onAursWalletSelect(wallet) {
+    $scope.formA.aursWalletXpub = wallet.xpub;
+    $scope.formA.aursWalletName = wallet.name;
+    $scope.aursWallet = wallet;
+  }
+  function onBtcWalletSelect(wallet) {
+    $scope.formA.bitcoinWalletName = wallet.name;
+    walletService.getAddress(wallet, false, function(err, addr) {
+      $scope.formA.bitcoinAddress = addr;
+    })
+    $scope.btcWallet = wallet;
+  }
+
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
-     $scope.showInfoOnly = $stateParams.showInfoOnly
-     $scope.showCameraOnly = $stateParams.showCameraOnly
+    $scope.showInfoOnly = $stateParams.showInfoOnly
+    $scope.showCameraOnly = $stateParams.showCameraOnly
+
+    $scope.aursWalletSelectorTitle = gettextCatalog.getString('Select AURS wallet to link');
+    $scope.btcWalletSelectorTitle = gettextCatalog.getString('Select BTC wallet to link');
+    $scope.aursWallet = null;
+    $scope.btcWallet = null;
+
+    $scope.aursWallets = profileService.getWallets({
+      onlyComplete: true,
+      network: 'aureus'
+    });
+
+    if (!$scope.aursWallets || !$scope.aursWallets.length) {
+      return exitWithError(gettextCatalog.getString('No Aureus wallets available'));
+    }
+
+    $scope.btcWallets = profileService.getWallets({
+      onlyComplete: true,
+      network: 'livenet'
+    });
+
+    if (!$scope.btcWallets || !$scope.btcWallets.length) {
+      return exitWithError(gettextCatalog.getString('No Bitcoin wallets available'));
+    }
+  
+    $scope.aursWallet = $scope.aursWallets[0]
+    $scope.btcWallet = $scope.btcWallets[0]
+
+    if ($scope.aursWallets.length > 1) {
+      $scope.showAursWalletSelector();
+    }
+    if ($scope.btcWallets.length > 1) {
+      $scope.showBtcWalletSelector();     
+    }
+
   });
 
   $scope.getPin = function() {
     $ionicLoading.show({ template: "Please wait..." })
     $scope.formA.pincode = null;
-    var wallets = profileService.getWallets();
-    for(var i in wallets) {
-      if(wallets[i].network === 'livenet') {
-        $scope.formA.bitcoinWalletName = wallets[i].name;
-        walletService.getAddress(wallets[i], false, function(err, addr) {
-          $scope.formA.bitcoinAddress = addr;
-        })
-        break;
-      }
-    }
+
     var URL = 'https://seed.aureus.live/api/verification'
     $http({
       method: 'POST',
@@ -124,7 +191,9 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         $ionicLoading.hide();
         var opts = {
           wallet: {
-            uploadedVerification: true
+            uploadedVerification: true,
+            linkedAursWallet: $scope.aursWallet.xpub,
+            linkedBtcWallet: $scope.btcWallet.xpub
           }
         };
         configService.set(opts, function(err) {

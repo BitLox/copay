@@ -6,6 +6,30 @@
 
   <ion-content>
       <div class="list settings-list settings-input-group" ng-hide="showCameraOnly">
+        
+        <a class="item item-icon-right" ng-click="showAursWalletSelector()">
+          <span class="label" translate>AURS Stake Wallet</span>
+          <div class="wallet">
+            <i class="icon big-icon-svg" wallet-icon data-wallet="aursWallet">
+            </i>
+            <div class="wallet-name">{{aursWallet.name}}</div>
+          </div>
+          <i class="icon bp-arrow-right"></i>
+        </a>
+
+        
+        <div class="item item-divider"></div>
+        <a class="item item-icon-right" ng-click="showBtcWalletSelector()">
+          <span class="label" translate>BTC Dividends Wallet</span>
+          <div class="wallet">
+            <i class="icon big-icon-svg" wallet-icon data-wallet="btcWallet">
+            </i>
+            <div class="wallet-name">{{btcWallet.name}}</div>
+          </div>
+          <i class="icon bp-arrow-right"></i>
+        </a>
+
+        <div class="item item-divider"></div>
 
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Full Name</span>
@@ -191,4 +215,20 @@
           <br/><br/>   
       </div>
   </ion-content>
+  <wallet-selector
+    wallet-selector-title="aursWalletSelectorTitle"
+    wallet-selector-wallets="aursWallets"
+    wallet-selector-selected-wallet="aursWallet"
+    wallet-selector-show="aursWalletSelector"
+    wallet-selector-on-select="onAursWalletSelect">
+  </wallet-selector>
+  <wallet-selector
+    wallet-selector-title="btcWalletSelectorTitle"
+    wallet-selector-wallets="btcWallets"
+    wallet-selector-selected-wallet="btcWallet"
+    wallet-selector-show="btcWalletSelector"
+    wallet-selector-on-select="onBtcWalletSelect">
+  </wallet-selector>
+
+
 </ion-view>

@@ -111,8 +111,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       return exitWithError(gettextCatalog.getString('No Bitcoin wallets available'));
     }
   
-    $scope.aursWallet = $scope.aursWallets[0]
-    $scope.btcWallet = $scope.btcWallets[0]
+    $scope.aursWallet = $scope.onAursWalletSelect(aursWallets[0])
+    $scope.btcWallet = $scope.onBtcWalletSelect(btcWallets[0])
 
     if(!$scope.showCameraOnly) {
       if ($scope.aursWallets.length > 1) {
@@ -155,7 +155,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   $scope.sendInfoOnly = function() {
     for (var i in $scope.formA) {
       if($scope.optionalFields.indexOf(i) === -1 && !$scope.formA[i]) {
-        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again" + i), 'middle', false, 2000);
+        ionicToast.show(gettextCatalog.getString("Please fill out ALL form fields and try again: " + i), 'middle', false, 2000);
         return;
       }
     }

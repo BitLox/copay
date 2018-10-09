@@ -105,7 +105,6 @@ angular.module('copayApp.services')
 
       configService.whenAvailable(function(config) {
         var lockMethod = config.lock && config.lock.method;
-        console.warn(lockMethod ,fingerprintService.isAvailable())
         if (!lockMethod || lockMethod == 'none') return;
 
         if ((lockMethod == 'fingerprint' || lockMethod === 'face') && fingerprintService.isAvailable()) root.fingerprintModal(trigger);

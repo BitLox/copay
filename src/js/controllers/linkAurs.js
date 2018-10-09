@@ -29,7 +29,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     aursCentralUsername:null,
     aursCCUsername:null,    
   }
-  $scope.optionalFields = ['address2', 'img', 'isVerified']
+  $scope.optionalFields = ['address2', 'img', 'isVerified', 'aursCCUsername', 'aursCentralUsername', 'btcCCBalance', 'aursCCBalance', 'aursCentralBalance']
   $scope.$on("$ionicView.beforeLeave", function(event, data) {
     
   });

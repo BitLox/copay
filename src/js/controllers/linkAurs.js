@@ -186,20 +186,22 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   function httpOverload(method, url, data) {
     var xhttp = new XMLHttpRequest();
     var promise = $q.defer();
+    var progress = 0
+
+    xhttp.open(method,url,true);
+    xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded; charset=UTF-8')
 
 
     xhttp.upload.addEventListener("progress",function (e) {
-        promise.notify(e);
-    });
+      progress+=5
+      promise.notify(progress);
+    }, false);
     xhttp.upload.addEventListener("load",function (e) {
         promise.resolve(e);
     });
     xhttp.upload.addEventListener("error",function (e) {
         promise.reject(e);
     });
-
-    xhttp.open(method,url,true);
-    xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded; charset=UTF-8')
 
     xhttp.send(data);
 
@@ -234,9 +236,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         delete err.data
         $log.info("ERROR: Verification NOT SENT.", err);
         popupService.showAlert(gettextCatalog.getString('Error'), "Network error sending verification info");
-      }, function(progress) {
-        $log.warn(progress)
-        var percent = 10;
+      }, function(percent) {
         $rootScope.imgUploadPercentText = percent+"%"
         $rootScope.imgUploadPercentStyle = "width: "+percent+"%" 
       });

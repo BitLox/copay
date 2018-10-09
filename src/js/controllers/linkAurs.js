@@ -64,17 +64,20 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     });
   }
 
-  function onAursWalletSelect(wallet) {
+  $scope.onAursWalletSelect(wallet) {
     $scope.formA.aursWalletXpub = wallet.xpub;
     $scope.formA.aursWalletName = wallet.name;
     $scope.aursWallet = wallet;
+
+    $log.warn($scope.aursWallet)
   }
-  function onBtcWalletSelect(wallet) {
+  $scope.onBtcWalletSelect(wallet) {
     $scope.formA.bitcoinWalletName = wallet.name;
     walletService.getAddress(wallet, false, function(err, addr) {
       $scope.formA.bitcoinAddress = addr;
     })
     $scope.btcWallet = wallet;
+    $log.warn($scope.btcWallet)
   }
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {

@@ -51,7 +51,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
 
   $scope.$on("$ionicView.enter", function(event, data) {
    
-    $scope.getPin()
+    
   });
 
   function exitWithError(err) {
@@ -70,8 +70,6 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     $scope.formA.aursWalletXpub = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop()
     $scope.formA.aursWalletName = wallet.name;
     $scope.aursWallet = wallet;
-
-    $log.warn(lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop())
   }
   $scope.onBtcWalletSelect = function(wallet) {
     $scope.formA.bitcoinWalletName = wallet.name;
@@ -79,14 +77,11 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       $scope.formA.bitcoinAddress = addr;
     })
     $scope.btcWallet = wallet;
-    $log.warn($scope.btcWallet)
   }
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
     $scope.showInfoOnly = $stateParams.showInfoOnly
     $scope.showCameraOnly = $stateParams.showCameraOnly
-
-
 
     $scope.aursWalletSelectorTitle = gettextCatalog.getString('Select AURS wallet to link');
     $scope.btcWalletSelectorTitle = gettextCatalog.getString('Select BTC wallet to link');
@@ -122,7 +117,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         $scope.showBtcWalletSelector();     
       }
     }
-
+    $scope.getPin()
   });
 
   $scope.getPin = function() {

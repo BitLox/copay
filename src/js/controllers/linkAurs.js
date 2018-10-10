@@ -194,7 +194,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
 
 
     xhttp.upload.addEventListener("progress",function (e) {
-      progress+=5
+      if(progress < 100) { progress+=1 }
+
       promise.notify(progress);
     }, false);
     xhttp.upload.addEventListener("load",function (e) {

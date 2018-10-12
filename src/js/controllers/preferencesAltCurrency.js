@@ -24,7 +24,9 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
         $scope.altCurrencyList = completeAlternativeList.slice(0, 10);
 
         $timeout(function() {
-          $scope.$apply();
+          $scope.$apply(function() {
+            $scope.currentCurrency = "USD"
+          });
         });
      
     }

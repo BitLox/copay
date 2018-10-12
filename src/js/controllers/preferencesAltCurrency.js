@@ -25,9 +25,16 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
 
         $scope.altCurrencyList = completeAlternativeList.slice(0, 10);
 
-        $timeout(function() {
-          $scope.$apply();
-        });
+        for(var i=0;i<$scope.altCurrencyList.length;i++) {
+          $scope.altCurrencyList[i]['model'] = $scope.data.currentCurrency
+        }
+        for(var x=0;x<$scope.lastUsedAltCurrencyList.length;x++) {
+          $scope.lastUsedAltCurrencyList[x]['model'] = $scope.data.currentCurrency
+        }
+        // $timeout(function() {
+        //   $scope.$apply();
+        //   $log.warn($scope.lastUsedAltCurrencyList)
+        // });
       })
     }
 

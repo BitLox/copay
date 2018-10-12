@@ -52,7 +52,9 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(networks) {
         networks.forEach(function(n) {
-         self.networks[CUSTOMNETWORKS[n].name] = CUSTOMNETWORKS[n];
+         if(CUSTOMNETWORKS[n]) {
+           self.networks[CUSTOMNETWORKS[n].name] = CUSTOMNETWORKS[n];
+         }
         });
       } else {
         self.networks = CUSTOMNETWORKS

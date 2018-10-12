@@ -75,7 +75,7 @@
     <plugin name="cordova-plugin-ble" spec="2.0.1" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <!-- Supported Platforms -->
-    <engine name="ios" spec="4.5.4" />
+    <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="6.4.0" />
 <!--
     <engine name="windows" spec="5.0.0" />

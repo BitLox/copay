@@ -7,11 +7,12 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     var completeAlternativeList = [];
     $scope.searchedAltCurrency = '';
 
-    $scope.init = function() {
+    function init() {
       var unusedCurrencyList = [
         { isoCode: 'LTL' },
         { isoCode: 'BTC' }
       ];
+      rateService.whenAvailable(function() {
         $scope.listComplete = false;
 
         var idx = lodash.indexBy(unusedCurrencyList, 'isoCode');
@@ -24,11 +25,9 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
         $scope.altCurrencyList = completeAlternativeList.slice(0, 10);
 
         $timeout(function() {
-          $scope.$apply(function() {
-            
-          });
+          $scope.$apply();
         });
-     
+      })
     }
 
     $scope.loadMore = function() {
@@ -49,7 +48,7 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     $scope.findCurrency = function(search) {
       $scope.searchedAltCurrency = search;
 
-      if (!search) $scope.init();
+      if (!search) init();
 
       $scope.altCurrencyList = lodash.filter(completeAlternativeList, function(item) {
         var val = item.name;
@@ -95,16 +94,9 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
 
     function beforeEnter(event, data) {
       $scope.currentCurrency = configService.getSync().wallet.settings.alternativeIsoCode;
-      $log.warn("CURRENT CURRENCY: "+$scope.currentCurrency)
       storageService.getLastCurrencyUsed(function(err, lastUsedAltCurrency) {
         $scope.lastUsedAltCurrencyList = lastUsedAltCurrency ? JSON.parse(lastUsedAltCurrency) : [];
-        if($scope.lastUsedAltCurrencyList[0]) {
-          $log.warn("last currency used: " + $scope.lastUsedAltCurrencyList[0].isoCode)
-        }
-
-        rateService.whenAvailable(function() {
-          $scope.init();
-        })
+        init();
       });
     }
 

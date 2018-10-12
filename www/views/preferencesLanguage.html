@@ -7,11 +7,11 @@
     </ion-nav-back-button>
   </ion-nav-bar>
   <ion-content>
-    <div class="list">
+    <ion-list class="list">
       <ion-radio ng-repeat="lang in availableLanguages" ng-value="lang.isoCode" ng-model="currentLanguage"
         ng-click="save(lang.isoCode)">{{lang.name}}
       </ion-radio>
-    </div>
+    </ion-list>
     <div class="settings-explanation">
       <div class="settings-description" translate>
         We’re always looking for translation contributions! You can make corrections or help to make this app available in your native language by joining our community on Crowdin.

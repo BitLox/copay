@@ -12,8 +12,6 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
         { isoCode: 'LTL' },
         { isoCode: 'BTC' }
       ];
-
-      rateService.whenAvailable(function() {
         $scope.listComplete = false;
 
         var idx = lodash.indexBy(unusedCurrencyList, 'isoCode');
@@ -25,10 +23,10 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
 
         $scope.altCurrencyList = completeAlternativeList.slice(0, 10);
 
-        $timeout(function() {
-          $scope.$apply();
-        });
-      });
+        // $timeout(function() {
+        //   $scope.$apply();
+        // });
+     
     }
 
     $scope.loadMore = function() {
@@ -101,7 +99,10 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
         if($scope.lastUsedAltCurrencyList[0]) {
           $log.warn("last currency used: " + $scope.lastUsedAltCurrencyList[0].isoCode)
         }
-        init();
+
+        rateService.whenAvailable(function() {
+          init();
+        })
       });
     }
 

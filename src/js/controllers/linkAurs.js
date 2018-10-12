@@ -232,9 +232,9 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         };
         configService.set(opts, function(err) {
           if (err) $log.debug(err);
+          ionicToast.show(gettextCatalog.getString('Verification uploaded. Your info will be processed.'), 'middle', false, 2000);
+          return $scope.goBack();
         });        
-        ionicToast.show(gettextCatalog.getString('Verification uploaded. Your info will be processed.'), 'middle', false, 2000);
-        return $scope.goBack();
       }, function(err) {
         $ionicLoading.hide();
         delete err.data

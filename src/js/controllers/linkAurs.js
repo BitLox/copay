@@ -80,6 +80,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   }
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
+    $scope.imgUploadPercentText = "";
+    $scope.imgUploadPercentStyle = "";
     $scope.showInfoOnly = $stateParams.showInfoOnly
     $scope.showCameraOnly = $stateParams.showCameraOnly
 
@@ -187,7 +189,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   function httpOverload(method, url, data) {
     var xhttp = new XMLHttpRequest();
     var promise = $q.defer();
-    var progress = 0
+    var progress = 1
 
     xhttp.open(method,url,true);
     xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded; charset=UTF-8')

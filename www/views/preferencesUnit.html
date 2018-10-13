@@ -7,8 +7,10 @@
     </ion-nav-back-button>
   </ion-nav-bar>
   <ion-content>
-    <ion-radio ng-repeat="unit in unitList" ng-value="unit.code" ng-model="currentUnit"
-      ng-click="save(unit)">{{unit.shortName}}
-    </ion-radio>
+    <div class="list">
+      <a class="item item-icon-right" ng-repeat="unit in unitList" ng-click="save(unit)">{{unit.shortName}}
+        <i ng-show="unit.code == currentUnit" class="radio-icon disable-pointer-events icon ion-checkmark"></i>      
+      </a>
+    </div>
   </ion-content>
 </ion-view>

@@ -78,7 +78,7 @@ angular.module('copayApp.controllers').controller('preferencesController',
       $scope.wallet = wallet;
       $scope.isWindowsPhoneApp = platformInfo.isCordova && platformInfo.isWP;
       $scope.externalSource = null;
-
+      window.plugins.touchid = window.plugins.touchid || {};
       window.plugins.touchid.isAvailable(
         function(type) {
           if(type === 'face') {

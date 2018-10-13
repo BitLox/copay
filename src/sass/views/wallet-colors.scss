@@ -63,8 +63,8 @@ $bitcoin-color: #bb1a1a;
   .wallet-color-#{$id} {
     background: map-get($map, color);
   }
-  .wallet-color-#{$id}:before {
+  .wallet-color-text-#{$id}:before {
     content: map-get($map, name);
-    margin-left: 2.4rem;
+    margin-left: 10px;
   }
 }

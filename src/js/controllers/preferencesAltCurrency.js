@@ -6,6 +6,7 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     var next = 10;
     var completeAlternativeList = [];
     $scope.searchedAltCurrency = '';
+    $scope.data = {}
 
     function init() {
       var unusedCurrencyList = [

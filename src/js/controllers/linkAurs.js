@@ -25,6 +25,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     aursCCBalance:null,
     btcCCBalance:null,
     aursWalletXpub: null,
+    btcWalletXpub: null,
     aursWalletName: null,
     aursCentralUsername:null,
     aursCCUsername:null,    
@@ -72,6 +73,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     $scope.aursWallet = wallet;
   }
   $scope.onBtcWalletSelect = function(wallet) {
+    $scope.formA.btcWalletXpub = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop()
     $scope.formA.bitcoinWalletName = wallet.name;
     walletService.getAddress(wallet, false, function(err, addr) {
       $scope.formA.bitcoinAddress = addr;
@@ -123,6 +125,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   });
 
   $scope.getPin = function() {
+    $scope.pinRecord = {}
     $ionicLoading.show({ template: "Please wait..." })
     $scope.formA.pincode = null;
 
@@ -136,6 +139,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       data: $httpParamSerializer({appId: device.uuid})
     }).then(function(result) {
       // $log.warn(JSON.stringify(result))
+      $scope.pinRecord = result.data
       result.data.btcCCBalance = parseFloat(result.data.btcCCBalance)
       result.data.aursCCBalance = parseFloat(result.data.aursCCBalance)
       result.data.aursCentralBalance = parseFloat(result.data.aursCentralBalance)
@@ -174,11 +178,22 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       }).then(function() {
         $log.info("SUCCESS: Verification sent");
         $ionicLoading.hide();     
-        ionicToast.show(gettextCatalog.getString('Verification info updated. Please upload verification photo.'), 'middle', false, 2000);
+        ionicToast.show(gettextCatalog.getString('Verification info updated.'), 'middle', false, 2000);
         
         var config = configService.getSync();
-        if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }
-        else { return $scope.loadCameraOnly(); }
+
+        var opts = {
+          wallet: {
+            linkedAursWallet: $scope.formA.aursWalletXpub,
+            linkedBtcWallet: $scope.formA.btcWalletXpub
+          }
+        };
+        configService.set(opts, function(err) {
+          if (err) $log.debug(err);
+          if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }
+          else if($scope.pinRecord.name) { return $scope.goBack(); } // means if this is a record update, we assume photo already uploaded
+          else { return $scope.loadCameraOnly(); }
+        });        
       }, function(err) {
         $ionicLoading.hide();
         $log.info("ERROR: Verification NOT SENT.", err);
@@ -226,8 +241,8 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         var opts = {
           wallet: {
             uploadedVerification: true,
-            linkedAursWallet: $scope.aursWallet.xpub,
-            linkedBtcWallet: $scope.btcWallet.xpub
+            linkedAursWallet: lodash.pluck($scope.aursWallet.credentials.publicKeyRing, 'xPubKey').pop(),
+            linkedBtcWallet: lodash.pluck($scope.btcWallet.credentials.publicKeyRing, 'xPubKey').pop(),
           }
         };
         configService.set(opts, function(err) {

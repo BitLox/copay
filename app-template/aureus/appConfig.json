@@ -19,7 +19,7 @@
   "gitHubRepoBugs": "https://github.com/bitlox/copay/issues",
   "disclaimerUrl": "https://aureus.live/",
   "url": "https://aureus.live/",
-  "bwsUrl": "https://aurs.dlc.net/bws/api",
+  "bwsUrl": "https://bws.aureus.live/bws/api",
   "ratesUrl": "https://seed.aureus.live/rates",
   "unitName": "AURS",
   "unitCode": "aurs",

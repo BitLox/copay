@@ -7,13 +7,6 @@
     </ion-nav-back-button>
   </ion-nav-bar>
   <ion-content>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
-    <i  class="icon ion-ios-checkmark"></i>
     <div class="bar bar-header item-input-inset m20b">
       <label class="item-input-wrapper">
         <i class="icon ion-ios-search placeholder-icon"></i>
@@ -24,7 +17,6 @@
       </label>
     </div>
     <div class="list" ng-if="lastUsedAltCurrencyList[0]">
-
       <a ng-repeat="lastUsedAltCurrency in lastUsedAltCurrencyList" class="item item-icon-right" ng-click="save(lastUsedAltCurrency)">
         {{lastUsedAltCurrency.name}}
         <i ng-show="lastUsedAltCurrency.isoCode == data.currentCurrency" class="icon ion-ios-checkmark"></i>

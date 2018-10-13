@@ -25,10 +25,6 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
 
         $scope.altCurrencyList = completeAlternativeList.slice(0, 10);
 
-        $scope.data.currentCurrency = configService.getSync().wallet.settings.alternativeIsoCode;
-        $log.warn(typeof($scope.data.currentCurrency))
-        $log.warn(typeof($scope.lastUsedAltCurrencyList[0].isoCode))
-
         $timeout(function() {
           $scope.$apply();
         });
@@ -98,7 +94,8 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     }
 
     function beforeEnter(event, data) {
-
+      $scope.data.currentCurrency = configService.getSync().wallet.settings.alternativeIsoCode;
+      
       storageService.getLastCurrencyUsed(function(err, lastUsedAltCurrency) {
         $scope.lastUsedAltCurrencyList = lastUsedAltCurrency ? JSON.parse(lastUsedAltCurrency) : [];
         init();

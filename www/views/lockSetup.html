@@ -6,11 +6,12 @@
   </ion-nav-bar>
 
   <ion-content>
-    <ion-list>
-      <ion-radio ng-repeat="opt in options" ng-model="savedMethod" ng-value="opt.method" ng-click="select(opt.method)" ng-disabled="opt.needsBackup || opt.disabled">
+    <div class="list">
+      <a class="item item-icon-right" ng-repeat="opt in options" ng-click="select(opt.method)" ng-hide="opt.needsBackup || opt.disabled">
         <span ng-class="{'disabled': opt.needsBackup || opt.disabled}">{{opt.label}}</span>
-      </ion-radio>
-    </ion-list>
+        <i ng-show="opt.method == savedMethod" class="radio-icon disable-pointer-events icon ion-checkmark"></i>          
+      </a>
+    </div>
     <div class="assertive" style="text-align: center; margin: 4rem" ng-if="errorMsg">
       {{errorMsg}}
     </div>

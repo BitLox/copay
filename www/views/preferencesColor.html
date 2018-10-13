@@ -7,8 +7,12 @@
     </ion-nav-back-button>
   </ion-nav-bar>
   <ion-content class="wallet-color-count wallet-color-default">
-    <ion-radio ng-repeat="i in [] | range:colorCount" ng-value="i" ng-model="currentColorIndex" ng-click="save(i)">
-      <span class="settings-color-block wallet-color-{{i}}"></span>
-    </ion-radio>
+    <div class="list">
+      <a class="item item-icon-right" ng-repeat="i in [] | range:colorCount" ng-click="save(i)">
+        <span class="settings-color-block wallet-color-{{i}}"></span>
+        <span class="wallet-color-text-{{i}}"></span>
+        <i ng-show="i == currentColorIndex" class="radio-icon disable-pointer-events icon ion-checkmark"></i>
+      </a>
+    </div>
   </ion-content>
 </ion-view>

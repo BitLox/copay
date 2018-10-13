@@ -128,7 +128,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             }
           }
           if($scope.wallets[i].network === 'aureus') {
-            $log.warn($scope.wallets[i].credentials.publicKeyRing)
+            // $log.warn($scope.wallets[i].credentials.publicKeyRing)
             $scope.hasAursWallet = true
             if(thisxpub === $scope.linkedAursWallet) {
               $scope.isAursLinked = true;
@@ -136,8 +136,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
         }
       }
-      $log.warn("is aurs link :" + $scope.isAursLinked)
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
+      $log.warn("is  link :" + $scope.isLinked)
       if($scope.uploadedVerification) {
         var URL = 'https://seed.aureus.live/api/verification/status/'+device.uuid
         $http({

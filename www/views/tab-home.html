@@ -111,13 +111,13 @@
                    class="tab-home__wallet__status-icon ion-ios-timer-outline"></i>
                 <span class="assertive" ng-if="wallet.error">{{wallet.error}}</span>
               </span>
-              &nbsp;
             </p>
             <ion-reorder-button
                class="ion-navicon"
                on-reorder="reorderWallet(wallet, $fromIndex, $toIndex)">
             </ion-reorder-button>
-            <i class="icon bp-arrow-right"></i>
+            <i ng-if="isLinked" class="icon ion-ios-checkmark"></i>            
+            <i ng-if="!isLinked" class="icon bp-arrow-right"></i>
           </ion-item>
         </ion-list>
       </div>

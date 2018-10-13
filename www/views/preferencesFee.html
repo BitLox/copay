@@ -23,10 +23,10 @@
         </div>
       </div>
     </div>
-    <div class="fee-policies">
+    <div class="list fee-policies">
       <a class="item item-icon-right" ng-repeat="(fee, level) in feeOpts" ng-if="fee != 'custom'" ng-value="fee" ng-click="save(fee)">
         {{level|translate}}
-        <i ng-show="level == currentFeeLevel" class="radio-icon disable-pointer-events icon ion-checkmark"></i>
+        <i ng-show="fee == currentFeeLevel" class="radio-icon disable-pointer-events icon ion-checkmark"></i>
       </a>
     </div>
   </ion-content>

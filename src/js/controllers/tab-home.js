@@ -138,8 +138,9 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
       $log.warn("is  link :" + $scope.isLinked)
-      if($scope.uploadedVerification) {
+      if($scope.hasAursWallet) {
         var URL = 'https://seed.aureus.live/api/verification/status/'+device.uuid
+        $log.warn(URL)
         $http({
           method: 'GET',
           url: URL
@@ -148,6 +149,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             return;
           }
           $scope.isVerified = result.data.isVerified      
+          $scope.noteMisc = result.data.noteMisc   
+          $scope.noteDividend = result.data.noteDividend
           if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
             $log.warn("AURS Wallet not linked after render from server")
             $scope.isAursLinked = false
@@ -432,6 +435,16 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         })
       });
     };
+    $scope.openLink = function(url) {
+      if(!url) { return; }
+      var optIn = true;
+      var title = gettextCatalog.getString('External Link');
+      var message = gettextCatalog.getString('Do you want to visit this external link?');
+      var okText = gettextCatalog.getString('Yes');
+      var cancelText = gettextCatalog.getString('Cancel');
+      externalLinkService.open(url, optIn, title, message, okText, cancelText);
+    }
+
     $scope.openBitlox = function() {
       var url = 'https://bitlox.com';
       var optIn = true;

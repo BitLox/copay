@@ -183,12 +183,30 @@
     </div>
 
     <div class="list card" ng-if="showBitLoxBuyLink">
-      <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
+      <a ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>
        </i>
         <span style="text-decoration: none" translate>Buy a BitLox Now</span>
       </a>
     </div>
+
+    <div class="list card"  ng-if="isLinked" ng-repeat="note in noteDividends">
+      <a ng-href="note.linkUrl" class="item item-sub item-icon-left item-big-icon-left">
+       <i ng-if="note.icon" class="icon big-icon-svg">
+         <img ng-src="note.icon" class="bg wallet icon-create-wallet"/>
+       </i>
+        <span style="text-decoration: none" translate ng-bind="note.text"></span>
+      </a>
+    </div>
+
+    <div class="list card" ng-if="hasAursWallet" ng-repeat="note in noteMisc">
+      <a ng-click="openLink(note.linkUrl)" class="item item-sub item-icon-left item-big-icon-left">
+       <i ng-if="note.icon" class="icon big-icon-svg">
+         <img ng-src="note.icon" class="bg wallet icon-create-wallet"/>
+       </i>
+        <span style="text-decoration: none" translate ng-bind="note.text"></span>
+      </a>
+    </div>    
   </ion-content>
 </ion-view>

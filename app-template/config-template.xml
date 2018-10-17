@@ -37,7 +37,10 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
 
     <!-- Android Version: KitKat 4.4 (API Level 19) or higher -->
+<!--
     <preference name="android-minSdkVersion" value="19" />
+ -->
+    <preference name="android-minSdkVersion" value="14" />
 
     <!-- Plugins -->
     <!-- <plugin name="cordova-plugin-privacyscreen" spec="https://github.com/BitLox/PrivacyScreenPlugin" /> -->
@@ -88,7 +91,7 @@
       <config-file target="*-Info.plist" parent="ITSAppUsesNonExemptEncryption"><false/></config-file>
       <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
           <string>need camera access to take pictures</string>
-      </edit-config>      
+      </edit-config>
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60@3x.png" width="180" height="180" />
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60.png" width="60" height="60" />
       <icon src="resources/*PACKAGENAME*/ios/icon/icon-60@2x.png" width="120" height="120" />

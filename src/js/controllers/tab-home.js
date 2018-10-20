@@ -118,8 +118,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.uploadedVerification = config.wallet.uploadedVerification
       $scope.linkedAursWallet = null;
       $scope.linkedBtcWallet = null;
-      $scope.linkedAursXpub = null;
-      $scope.linkedBtcXpub = null;      
+      $scope.linkedAursWalletId = null;
+      $scope.linkedBtcWalletid = null;      
       for(var i in $scope.wallets) {
         if($scope.wallets[i].credentials) { 
           var thisxpub = lodash.pluck($scope.wallets[i].credentials.publicKeyRing, 'xPubKey').pop()
@@ -127,8 +127,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.hasBitcoinWallet = true;
             if(thisxpub === config.wallet.linkedBtcWallet) {
               $scope.isBtcLinked = true;
-              $scope.linkedBtcWallet = $scope.wallets[i].id
-              $scope.linkedBtcXpub = thisxpub
+              $scope.linkedBtcWalletId = $scope.wallets[i].id
+              $scope.linkedBtcWallet = thisxpub
             }
           }
           if($scope.wallets[i].network === 'aureus') {
@@ -136,8 +136,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.hasAursWallet = true
             if(thisxpub === config.wallet.linkedAursWallet) {
               $scope.isAursLinked = true;
-              $scope.linkedAursWallet = $scope.wallets[i].id
-              $scope.linkedAursXpub = thisxpub
+              $scope.linkedAursWalletId = $scope.wallets[i].id
+              $scope.linkedAursWallet = thisxpub
             }          
           }
         }
@@ -164,12 +164,12 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.isVerified = result.data.isVerified      
           $scope.noteMisc = result.data.noteMisc   
           $scope.noteDividend = result.data.noteDividend 
-          if(result.data.aursWalletXpub !== $scope.linkedAursXpub) {
+          if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
             $log.warn("AURS Wallet not linked after render from server")
             $scope.isAursLinked = false
             $scope.isLinked = false;
           }
-          if(result.data.btcWalletXpub !== $scope.linkedBtcXpub) {
+          if(result.data.btcWalletXpub !== $scope.linkedBtcWallet) {
             $log.warn("BTC Wallet not linked after render from server")
             $scope.isBtcLinked = false
             $scope.isLinked = false;

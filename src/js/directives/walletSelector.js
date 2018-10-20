@@ -11,12 +11,15 @@ angular.module('copayApp.directives')
         show: '=walletSelectorShow',
         wallets: '=walletSelectorWallets',
         selectedWallet: '=walletSelectorSelectedWallet',
-        onSelect: '=walletSelectorOnSelect'
+        onSelect: '=walletSelectorOnSelect',
+        onClose: '=walletSelectorOnClose'
       },
       link: function(scope, element, attrs) {
         scope.hide = function() {
           scope.show = false;
-
+          if(typeof(scope.onClose === 'function')) {
+            scope.onClose()
+          }
           if (!scope.selectedWallet) {
             $ionicHistory.goBack(-2);
           }

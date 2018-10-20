@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $q, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
-  var deviceId = 1;
+  var deviceId = null;
   try {
       if(device !== undefined && device.uuid) {
         deviceId = device.uuid
@@ -73,11 +73,19 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       $state.go('tabs.home');
     });
   }
-
+  $scope.walletSelectorOnClose = function() {
+    if($scope.forceWalletSelection) {
+      $scope.forceWalletSelection = false
+      if ($scope.btcWallets.length > 1) {
+        $scope.showBtcWalletSelector();   
+      }
+    }
+  }
   $scope.onAursWalletSelect = function(wallet) {
     $scope.formA.aursWalletXpub = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop()
     $scope.formA.aursWalletName = wallet.name;
     $scope.aursWallet = wallet;
+    $scope.walletSelectorOnClose()
   }
   $scope.onBtcWalletSelect = function(wallet) {
     $scope.formA.btcWalletXpub = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop()
@@ -93,7 +101,6 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     $scope.imgUploadPercentStyle = "";
     $scope.showInfoOnly = $stateParams.showInfoOnly
     $scope.showCameraOnly = $stateParams.showCameraOnly
-
     $scope.aursWalletSelectorTitle = gettextCatalog.getString('Select AURS wallet to link');
     $scope.btcWalletSelectorTitle = gettextCatalog.getString('Select BTC wallet to link');
     $scope.aursWallet = null;
@@ -119,13 +126,13 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   
     $scope.onAursWalletSelect($scope.aursWallets[0])
     $scope.onBtcWalletSelect($scope.btcWallets[0])
-
+    $scope.forceWalletSelection = false;
     if(!$scope.showCameraOnly) {
       if ($scope.aursWallets.length > 1) {
         $scope.showAursWalletSelector();
-      }
-      if ($scope.btcWallets.length > 1) {
-        $scope.showBtcWalletSelector();     
+        $scope.forceWalletSelection = true;
+      } else if ($scope.btcWallets.length > 1) {
+        $scope.showBtcWalletSelector();   
       }
     }
     $scope.getPin()

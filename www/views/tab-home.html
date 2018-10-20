@@ -204,7 +204,7 @@
     <div class="list card" ng-if="hasAursWallet" ng-repeat="note in noteMisc">
       <a ng-click="openLink(note.linkUrl)" class="item item-sub item-icon-left item-big-icon-left">
        <i ng-if="note.type === 'img'" class="icon big-icon-svg notes-icon">
-         <img ng-src="{{note.icon}}" class="bg wallet-color-1"/>
+         <img ng-src="{{note.icon}}" class="bg"/>
        </i>
        <i ng-if="note.type === 'icon'"  class="icon notes-ionicon {{note.icon}}" name="{{note.icon}}"></i>
         <span style="text-decoration: none" translate ng-bind="note.text"></span>

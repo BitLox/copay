@@ -124,8 +124,41 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       return exitWithError(gettextCatalog.getString('No Bitcoin wallets available'));
     }
   
-    $scope.onAursWalletSelect($scope.aursWallets[0])
-    $scope.onBtcWalletSelect($scope.btcWallets[0])
+    var config = configService.getSync();
+
+    for(var i in $scope.btcWallets) {
+      if($scope.btcWallets[i].credentials) { 
+        var thisxpub = lodash.pluck($scope.btcWallets[i].credentials.publicKeyRing, 'xPubKey').pop()
+        $scope.hasBitcoinWallet = true;
+        if(thisxpub === config.wallet.linkedBtcWallet) {
+          $scope.isBtcLinked = true;
+          $scope.linkedBtcWalletId = $scope.btcWallets[i].id
+          $scope.linkedBtcWallet = thisxpub
+          $scope.onBtcWalletSelect($scope.btcWallets[i])
+        }
+      }
+    }
+    for(var x in $scope.aursWallets) {
+      if($scope.aursWallets[x].credentials) {
+        // $log.warn($scope.aursWallets[x].credentials.publicKeyRing)
+        var thisxpub = lodash.pluck($scope.aursWallets[x].credentials.publicKeyRing, 'xPubKey').pop()
+        $scope.hasAursWallet = true
+        if(thisxpub === config.wallet.linkedAursWallet) {
+          $scope.isAursLinked = true;
+          $scope.linkedAursWalletId = $scope.aursWallets[x].id
+          $scope.linkedAursWallet = thisxpub
+          $scope.onAursWalletSelect($scope.aursWallets[x])
+        }          
+      }
+    }
+    if(!$scope.isAursLinked) {
+      $log.warn("nothing linked AURS")
+      $scope.onAursWalletSelect($scope.aursWallets[0])
+    }
+    if(!$scope.isBtcLinked) {
+      $log.warn("nothing linked BTC")
+      $scope.onBtcWalletSelect($scope.btcWallets[0])
+    }
     $scope.forceWalletSelection = false;
     if(!$scope.showCameraOnly) {
       if ($scope.aursWallets.length > 1) {
@@ -193,8 +226,6 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         $log.info("SUCCESS: Verification sent");
         $ionicLoading.hide();     
         ionicToast.show(gettextCatalog.getString('Verification info updated.'), 'middle', false, 2000);
-        
-        var config = configService.getSync();
 
         var opts = {
           wallet: {

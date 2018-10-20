@@ -17,7 +17,7 @@ angular.module('copayApp.directives')
       link: function(scope, element, attrs) {
         scope.hide = function() {
           scope.show = false;
-          if(typeof(scope.onClose === 'function')) {
+          if(scope.onClose && typeof(scope.onClose === 'function')) {
             scope.onClose()
           }
           if (!scope.selectedWallet) {

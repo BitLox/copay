@@ -9,7 +9,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
   };
 
   root.redir = function(data) {
-    console.log(data)
+    // console.log(data)
     $log.debug('Processing incoming data: ' + data);
 
     function sanitizeUri(data) {
@@ -95,7 +95,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
     var networkName = 'Bitcoin';
     for(var i in CUSTOMNETWORKS) {
       if(bitcore.Address.isValid(data, CUSTOMNETWORKS[i].name)) {
-        $log.log('found valid address for network', CUSTOMNETWORKS[i].name)
+        // $log.log('found valid address for network', CUSTOMNETWORKS[i].name)
         isNetworkValid = true
         network = CUSTOMNETWORKS[i].name
         networkName = CUSTOMNETWORKS[i].alias

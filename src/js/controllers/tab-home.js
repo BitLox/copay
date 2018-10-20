@@ -160,7 +160,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         }).then(function(result) {
           if(!result.data) {
             $scope.uploadedVerification = false;
-            return;
+            $scope.isLinked = false;
+            $scope.isBtcLinked = false;
+            $scope.isAursLinked = false;
+            $scope.isVerified = false;
+            $scope.linkedAursWallet = null;
+            $scope.linkedBtcWallet = null;
+            $scope.linkedAursWalletId = null;
+            $scope.linkedBtcWalletid = null; 
+            return;    
           }
           $scope.isVerified = result.data.isVerified      
           $scope.noteMisc = result.data.noteMisc   

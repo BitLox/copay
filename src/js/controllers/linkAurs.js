@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $q, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
-
+  var deviceId = 1;
+  try {
+      if(device !== undefined && device.uuid) {
+        deviceId = device.uuid
+      }
+  } catch(e) {
+    $log.error(e)
+  }
   $scope.formA = {
     phone: '',
     name: '',
@@ -10,7 +17,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     pincode: null,
     bitcoinAddress: null,
     bitcoinWalletName: null,
-    appId: device.uuid,
+    appId: deviceId,
     address1:null,
     address2:null,
     city:null,
@@ -136,7 +143,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
       headers: {
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
       },
-      data: $httpParamSerializer({appId: device.uuid})
+      data: $httpParamSerializer({appId: deviceId})
     }).then(function(result) {
       // $log.warn(JSON.stringify(result))
       $scope.pinRecord = result.data

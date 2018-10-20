@@ -116,8 +116,8 @@
                class="ion-navicon"
                on-reorder="reorderWallet(wallet, $fromIndex, $toIndex)">
             </ion-reorder-button>
-            <i ng-if="isLinked" class="icon ion-ios-checkmark icon-verified"></i>            
-            <i ng-if="!isLinked" class="icon bp-arrow-right"></i>
+            <i ng-if="isLinked && linkedAursWallet === wallet.id" class="icon ion-ios-checkmark icon-verified"></i>            
+            <i ng-if="!isLinked || linkedAursWallet !== wallet.id" class="icon bp-arrow-right"></i>
           </ion-item>
         </ion-list>
       </div>
@@ -191,20 +191,22 @@
       </a>
     </div>
 
-    <div class="list card"  ng-if="isLinked" ng-repeat="note in noteDividends">
+    <div class="list card"  ng-if="isLinked && isVerified" ng-repeat="note in noteDividends">
       <a ng-href="note.linkUrl" class="item item-sub item-icon-left item-big-icon-left">
-       <i ng-if="note.icon" class="icon big-icon-svg">
-         <img ng-src="note.icon" class="bg wallet icon-create-wallet"/>
+       <i ng-if="note.type === 'img'" class="icon big-icon-svg">
+         <img ng-src="{{note.icon}}" class="bg wallet icon-create-wallet"/>
        </i>
+       <i ng-if="note.type === 'icon'" class="{{note.icon}}" name="{{note.icon}}"></i>
         <span style="text-decoration: none" translate ng-bind="note.text"></span>
       </a>
     </div>
 
     <div class="list card" ng-if="hasAursWallet" ng-repeat="note in noteMisc">
       <a ng-click="openLink(note.linkUrl)" class="item item-sub item-icon-left item-big-icon-left">
-       <i ng-if="note.icon" class="icon big-icon-svg">
-         <img ng-src="note.icon" class="bg wallet icon-create-wallet"/>
+       <i ng-if="note.type === 'img'" class="icon big-icon-svg">
+         <img ng-src="{{note.icon}}" class="bg wallet icon-create-wallet"/>
        </i>
+       <i ng-if="note.type === 'icon'"  class="{{note.icon}}" name="{{note.icon}}"></i>
         <span style="text-decoration: none" translate ng-bind="note.text"></span>
       </a>
     </div>    

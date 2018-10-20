@@ -116,31 +116,44 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.isAursLinked = false;
       $scope.isVerified = false;
       $scope.uploadedVerification = config.wallet.uploadedVerification
-      $scope.linkedAursWallet = config.wallet.linkedAursWallet
-      $scope.linkedBtcWallet = config.wallet.linkedBtcWallet
+      $scope.linkedAursWallet = null;
+      $scope.linkedBtcWallet = null;
+      $scope.linkedAursXpub = null;
+      $scope.linkedBtcXpub = null;      
       for(var i in $scope.wallets) {
         if($scope.wallets[i].credentials) { 
           var thisxpub = lodash.pluck($scope.wallets[i].credentials.publicKeyRing, 'xPubKey').pop()
           if($scope.wallets[i].network === 'livenet') {
             $scope.hasBitcoinWallet = true;
-            if(thisxpub === $scope.linkedBtcWallet) {
+            if(thisxpub === config.wallet.linkedBtcWallet) {
               $scope.isBtcLinked = true;
+              $scope.linkedBtcWallet = $scope.wallets[i].id
+              $scope.linkedBtcXpub = thisxpub
             }
           }
           if($scope.wallets[i].network === 'aureus') {
             // $log.warn($scope.wallets[i].credentials.publicKeyRing)
             $scope.hasAursWallet = true
-            if(thisxpub === $scope.linkedAursWallet) {
+            if(thisxpub === config.wallet.linkedAursWallet) {
               $scope.isAursLinked = true;
+              $scope.linkedAursWallet = $scope.wallets[i].id
+              $scope.linkedAursXpub = thisxpub
             }          
           }
         }
       }
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
-      $log.warn("is  link :" + $scope.isLinked)
+      
       if($scope.hasAursWallet) {
-        var URL = 'https://seed.aureus.live/api/verification/status/'+device.uuid
-        $log.warn(URL)
+        var deviceId = 1;
+        try {
+              deviceId = device.uuid
+        } catch(e) {
+
+        }
+
+        $log.warn("is  link :" + $scope.isLinked)
+        var URL = 'https://seed.aureus.live/api/verification/status/'+deviceId
         $http({
           method: 'GET',
           url: URL
@@ -150,13 +163,13 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
           $scope.isVerified = result.data.isVerified      
           $scope.noteMisc = result.data.noteMisc   
-          $scope.noteDividend = result.data.noteDividend
-          if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
+          $scope.noteDividend = result.data.noteDividend 
+          if(result.data.aursWalletXpub !== $scope.linkedAursXpub) {
             $log.warn("AURS Wallet not linked after render from server")
             $scope.isAursLinked = false
             $scope.isLinked = false;
           }
-          if(result.data.btcWalletXpub !== $scope.linkedBtcWallet) {
+          if(result.data.btcWalletXpub !== $scope.linkedBtcXpub) {
             $log.warn("BTC Wallet not linked after render from server")
             $scope.isBtcLinked = false
             $scope.isLinked = false;

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $q, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
-  var deviceId = 1;
+  var deviceId = null;
   try {
       if(device !== undefined && device.uuid) {
         deviceId = device.uuid

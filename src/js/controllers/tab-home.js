@@ -146,7 +146,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
       
       if($scope.hasAursWallet) {
-        var deviceId = 1;
+        var deviceId = null;
         try {
               deviceId = device.uuid
         } catch(e) {

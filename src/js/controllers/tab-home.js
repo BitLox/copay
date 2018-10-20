@@ -159,6 +159,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           url: URL
         }).then(function(result) {
           if(!result.data) {
+            $scope.uploadedVerification = false;
             return;
           }
           $scope.isVerified = result.data.isVerified      

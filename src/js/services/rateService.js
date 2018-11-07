@@ -92,9 +92,11 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   }
 
   function retrieveOne(network, cb) {
+    console.log(network.ratesUrl)
     self.httprequest.get(network.ratesUrl).success(function(res) {
       self.lodash.each(res, function(currency) {
         self._rates[network.name][currency.code] = currency.rate;
+        console.log(currency.rate)
         self._alternatives[network.name].push({
           name: currency.name,
           isoCode: currency.code,

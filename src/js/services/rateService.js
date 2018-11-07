@@ -12,6 +12,7 @@ var RateService = function(opts) {
   self.lodash = opts.lodash;
   self.customNetworks = opts.customNetworks;
   self.defaults = opts.defaults;
+  self.timeout = setTimeout(function() { },0)
 
   self.SAT_TO_BTC = 1 / 1e8;
   self.BTC_TO_SAT = 1e8;
@@ -49,6 +50,7 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   retrieve();
 
   function retrieve() {
+    console.log("retrieve call")
     self.customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(networks) {
         networks.forEach(function(n) {
@@ -71,7 +73,8 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
         retrieveOne(self.networks[i], function(err) {
           done++;
           if(err) {
-            setTimeout(function() {
+            clearTimeout(self.timeout)
+            self.timeout = setTimeout(function() {
               backoffSeconds *= 1.2;
               retrieve();
             }, backoffSeconds * 1000);
@@ -83,7 +86,9 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
             self.lodash.each(self._queued, function(callback) {
               setTimeout(callback, 1);
             });
-            setTimeout(retrieve, updateFrequencySeconds * 1000);      
+            
+            clearTimeout(self.timeout)
+            self.timeout = setTimeout(retrieve, updateFrequencySeconds * 1000);      
             if(fetchCallback) fetchCallback();    
           }
         })
@@ -92,11 +97,9 @@ RateService.prototype._fetchCurrencies = function(networks, fetchCallback) {
   }
 
   function retrieveOne(network, cb) {
-    console.log(network.ratesUrl)
     self.httprequest.get(network.ratesUrl).success(function(res) {
       self.lodash.each(res, function(currency) {
         self._rates[network.name][currency.code] = currency.rate;
-        console.log(currency.rate)
         self._alternatives[network.name].push({
           name: currency.name,
           isoCode: currency.code,

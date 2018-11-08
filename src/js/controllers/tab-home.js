@@ -171,7 +171,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.linkedBtcWalletid = null; 
             return;    
           }
-          $scope.isVerified = result.data.isVerified      
+          $scope.isVerified = result.data.isVerified  
+          $scope.note = results.data.note    
           $scope.noteMisc = result.data.noteMisc   
           $scope.noteDividend = result.data.noteDividend 
           if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {

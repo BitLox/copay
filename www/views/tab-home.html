@@ -191,8 +191,18 @@
       </a>
     </div>
 
+    <div class="list card"  ng-if="isLinked && note">
+      <a ng-click="openLink(note.linkUrl)" class="item item-sub item-icon-left item-big-icon-left">
+       <i ng-if="note.type === 'img'" class="icon big-icon-svg notes-icon">
+         <img ng-src="{{note.icon}}" class="bg"/>
+       </i>
+       <i ng-if="note.type === 'icon'" class="icon notes-ionicon {{note.icon}}" name="{{note.icon}}"></i>
+        <span style="text-decoration: none" translate ng-bind="note.text"></span>
+      </a>
+    </div>
+
     <div class="list card"  ng-if="isLinked && isVerified" ng-repeat="note in noteDividends">
-      <a ng-href="note.linkUrl" class="item item-sub item-icon-left item-big-icon-left">
+      <a ng-click="openLink(note.linkUrl)" class="item item-sub item-icon-left item-big-icon-left">
        <i ng-if="note.type === 'img'" class="icon big-icon-svg notes-icon">
          <img ng-src="{{note.icon}}" class="bg"/>
        </i>

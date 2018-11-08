@@ -161,37 +161,89 @@ this.getCustomNetwork = function(customParam) {
         // $log.log('found in local cache')
         def.resolve(customNet)
       } else {
-        // try getting it from bitlox website
-        $http.get("https://btm.bitlox.com/coin/"+networkName+".php").then(function(response){
-          // $log.log('got network from server', response)
-          if(!response) {
-            // $log.log('no response from server')
-            def.reject();
+
+
+        if(networkName === 'aureus') {
+          var res = self.customNetworks.aureus = {
+              "network": "aureus",
+              "name": "aureus",
+              "alias": "Aureus",
+              "code": "aurs",
+              "symbol": "AURS",
+              "derivationCoinPath": 0,
+              "ratesUrl": "https://seed.aureus.live/rates",
+              "pubkeyhash": 0x17,
+              "privatekey": 0x80,
+              "scripthash": 0x1C,
+              "xpubkey": 0x0488b21e,
+              "xprivkey": 0x0488ade4,
+              "bwsUrl": "https://bws.aureus.live/bws/api",
+              "port": "9697",
+              "networkMagic": 0x6ee58c2a,
+              "explorer": "https://explorer.aureus.live/"
+            }        
+        }
+        if(networkName === 'deuscoin') {
+          var res = self.customNetworks.deuscoin = {
+            "network": "deuscoin",
+            "name": "deuscoin",
+            "alias": "Deuscoin",
+            "code": "deus",
+            "symbol": "DEUS",
+            "derivationCoinPath": 0,
+            "ratesUrl": "https://bws.deuscoin.org:8443/rates",
+            "pubkeyhash": 0x1e,
+            "privatekey": 0x80,
+            "scripthash": 0x23,
+            "xpubkey": 0x0488b21e,
+            "xprivkey": 0x0488ade4,
+            "bwsUrl": "https://deus.dlc.net/bws/api",
+            "port": 19697,
+            "networkMagic": 0x9ee8bc5a,
+            "explorer": "https://explorer.deuscoin.org/"
           }
-          var res = response.data;
-          res.pubkeyhash = parseInt(res.pubkeyhash,16)
-          res.privatekey = parseInt(res.privatekey,16)
-          res.scripthash = parseInt(res.scripthash,16)
-          res.xpubkey = parseInt(res.xpubkey,16)
-          res.xprivkey = parseInt(res.xprivkey,16)
-          res.networkMagic = parseInt(res.networkMagic,16)
-          res.port = parseInt(res.port, 10)
-          $log.log('parsed network from server', res)
-          self.customNetworks[customParam] = res;
-          storageService.getCustomNetworks(function(err, customNetworkListRaw) {
-            var customNetworkList = {}
-            if(customNetworkListRaw) {
-              customNetworkList = JSON.parse(customNetworkListRaw)
-            }
-            customNetworkList[customParam] = res;
-            storageService.setCustomNetworks(JSON.stringify(customNetworkList));
-            if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
-            def.resolve(res)
-          })
-        }, function(err) {
-          // $log.warn('server network error', err)
-          def.reject();
+        }
+        storageService.getCustomNetworks(function(err, customNetworkListRaw) {
+          var customNetworkList = {}
+          if(customNetworkListRaw) {
+            customNetworkList = JSON.parse(customNetworkListRaw)
+          }
+          customNetworkList[customParam] = res;
+          storageService.setCustomNetworks(JSON.stringify(customNetworkList));
+          if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
+          def.resolve(res)
         })
+        // try getting it from bitlox website
+        // $http.get("https://btm.bitlox.com/coin/"+networkName+".php").then(function(response){
+        //   // $log.log('got network from server', response)
+        //   if(!response) {
+        //     // $log.log('no response from server')
+        //     def.reject();
+        //   }
+        //   var res = response.data;
+        //   res.pubkeyhash = parseInt(res.pubkeyhash,16)
+        //   res.privatekey = parseInt(res.privatekey,16)
+        //   res.scripthash = parseInt(res.scripthash,16)
+        //   res.xpubkey = parseInt(res.xpubkey,16)
+        //   res.xprivkey = parseInt(res.xprivkey,16)
+        //   res.networkMagic = parseInt(res.networkMagic,16)
+        //   res.port = parseInt(res.port, 10)
+        //   $log.log('parsed network from server', res)
+        //   self.customNetworks[customParam] = res;
+        //   storageService.getCustomNetworks(function(err, customNetworkListRaw) {
+        //     var customNetworkList = {}
+        //     if(customNetworkListRaw) {
+        //       customNetworkList = JSON.parse(customNetworkListRaw)
+        //     }
+        //     customNetworkList[customParam] = res;
+        //     storageService.setCustomNetworks(JSON.stringify(customNetworkList));
+        //     if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
+        //     def.resolve(res)
+        //   })
+        // }, function(err) {
+        //   // $log.warn('server network error', err)
+        //   def.reject();
+        // })
       }
     })
   } else {

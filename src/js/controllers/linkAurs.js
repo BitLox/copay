@@ -32,6 +32,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
     aursCCBalance:null,
     btcCCBalance:null,
     aursWalletXpub: null,
+    aursWalletId: null,
     btcWalletXpub: null,
     aursWalletName: null,
     aursCentralUsername:null,
@@ -84,6 +85,7 @@ angular.module('copayApp.controllers').controller('linkAursController', function
   $scope.onAursWalletSelect = function(wallet) {
     $scope.formA.aursWalletXpub = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey').pop()
     $scope.formA.aursWalletName = wallet.name;
+    $scope.formA.aursWalletId = wallet.id;
     $scope.aursWallet = wallet;
     $scope.walletSelectorOnClose()
   }

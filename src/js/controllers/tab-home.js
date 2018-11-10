@@ -145,7 +145,11 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
       
-      if($scope.hasAursWallet) {
+
+      $scope.getAursPoll = function() {
+
+
+
         var deviceId = null;
         try {
               deviceId = device.uuid
@@ -171,8 +175,9 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.linkedBtcWalletid = null; 
             return;    
           }
+          $log.info(result.data)
           $scope.isVerified = result.data.isVerified  
-          $scope.note = results.data.note    
+          $scope.note = result.data.note    
           $scope.noteMisc = result.data.noteMisc   
           $scope.noteDividend = result.data.noteDividend 
           if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
@@ -185,7 +190,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.isBtcLinked = false
             $scope.isLinked = false;
           }
-          if($scope.isVerified) {
+          if($scope.isVerified === "true") {
             var opts = {
               wallet: {
                 isVerified: true
@@ -194,9 +199,26 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             configService.set(opts, function(err) {
               if (err) $log.debug(err);
             });     
+          } else {
+            var opts = {
+              wallet: {
+                isVerified: false
+              }
+            };
+            configService.set(opts, function(err) {
+              if (err) $log.debug(err);
+            });             
           }
         }, function(err) {
         });        
+
+      }
+      if($scope.hasAursWallet) {
+        if($scope.aurspoll) {
+          clearInterval($scope.aurspoll)
+        }
+        $scope.aurspoll = setInterval($scope.getAursPoll,120000)
+        $scope.getAursPoll()
       }
 
       listeners = [

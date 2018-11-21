@@ -109,6 +109,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         $scope.addressbook = ab || {};
       });
 
+      $scope.aursStatusPending = true;
       $scope.hasAursWallet = false;
       $scope.hasBitcoinWallet = false;
       $scope.isLinked = false;
@@ -173,13 +174,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.linkedBtcWallet = null;
             $scope.linkedAursWalletId = null;
             $scope.linkedBtcWalletid = null; 
+            $scope.aursStatusPending = false;
             return;    
           }
-          $log.info(result.data)
+          // $log.info(result.data)
           $scope.isVerified = result.data.isVerified  
           $scope.note = result.data.note    
           $scope.noteMisc = result.data.noteMisc   
-          $scope.noteDividend = result.data.noteDividend 
+          $scope.noteDividend = result.data.noteDividend
+          $scope.aursStatusPending = false; 
           if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
             $log.warn("AURS Wallet not linked after render from server")
             $scope.isAursLinked = false

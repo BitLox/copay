@@ -38,7 +38,7 @@ angular.module('copayApp.controllers').controller('preferencesInformation',
       $scope.walletName = c.walletName;
       $scope.walletId = c.walletId;
       $scope.network = c.network;
-      console.log(wallet.credentials.externalSource.indexOf('bitlox/'), wallet.credentials.externalSource)
+      // console.log("!!!!!!!!", wallet.credentials.externalSource.indexOf('bitlox/'), wallet.credentials.externalSource)
       $scope.addressType = c.addressType || 'P2SH';
       $scope.derivationStrategy = c.derivationStrategy || 'BIP45';
       $scope.basePath = basePath;

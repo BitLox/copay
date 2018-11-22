@@ -126,7 +126,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
           if($scope.wallets[i].network === 'aureus') {
             $scope.hasAursWallet = true
-            $log.log('has aurs wallet')
+            // $log.log('has aurs wallet')
             if(thisxpub === config.wallet.linkedAursWallet) {
               // $log.warn("AURS", $scope.wallets[i].credentials.publicKeyRing)
               $scope.isAursLinked = true;
@@ -163,7 +163,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
 
           // }
 
-          $log.warn("getting verify info")
+          // $log.warn("getting verify info")
           var URL = 'https://seed.aureus.live/api/verification/status/'+deviceId
           $http({
             method: 'GET',
@@ -171,7 +171,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }).then(function(result) {
             if(!result.data) {
 
-              $log.warn("no verify data")
+              // $log.warn("no verify data")
               $scope.uploadedVerification = false;
               $scope.isLinked = false;
               $scope.isBtcLinked = false;
@@ -199,7 +199,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
               $scope.isBtcLinked = false
               $scope.isLinked = false;
             }
-            $log.info($scope.uploadedVerification, result.data.isVerified, result.data.noteMisc,result.data.note, $scope.isLinked)
+            // $log.info($scope.uploadedVerification, result.data.isVerified, result.data.noteMisc,result.data.note, $scope.isLinked)
 
             if($scope.isVerified === "true") {
               var opts = {
@@ -224,7 +224,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           });        
         })        
       }
-      $log.log($scope.hasAursWallet)
+      // $log.log($scope.hasAursWallet)
       if($scope.hasAursWallet) {
         if($scope.aurspoll) {
           clearInterval($scope.aurspoll)

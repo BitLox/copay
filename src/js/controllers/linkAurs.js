@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('linkAursController', function($rootScope, $q, $stateParams, $scope, $http, $httpParamSerializer, $interval, $filter, $timeout, $ionicScrollDelegate, ionicToast, gettextCatalog, walletService, platformInfo, lodash, configService, $stateParams, $window, $state, $log, profileService, $ionicModal, popupService, $ionicLoading, $ionicHistory, $ionicConfig, $ionicPopup, $window) {
-  var deviceId = null;
-  try {
-      if(device !== undefined && device.uuid) {
-        deviceId = device.uuid
-      }
-  } catch(e) {
-    $log.error(e)
-  }
+  var deviceId = 1;
+  // try {
+  //     if(device !== undefined && device.uuid) {
+  //       deviceId = device.uuid
+  //     }
+  // } catch(e) {
+  //   $log.error(e)
+  // }
   $scope.formA = {
     phone: '',
     name: '',
@@ -237,9 +237,19 @@ angular.module('copayApp.controllers').controller('linkAursController', function
         };
         configService.set(opts, function(err) {
           if (err) $log.debug(err);
-          if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }
-          else if($scope.pinRecord.name) { return $scope.goBack(); } // means if this is a record update, we assume photo already uploaded
-          else { return $scope.loadCameraOnly(); }
+
+          var opts = {
+            wallet: {
+              uploadedVerification: true,
+            }
+          };
+          configService.set(opts, function(err) {
+            if (err) $log.debug(err);
+            if($stateParams.showInfoOnly && $stateParams.isSettings) { return $scope.goBack(); }
+            else if($scope.pinRecord.name) { return $scope.goBack(); } // means if this is a record update, we assume photo already uploaded
+            else { return $scope.loadCameraOnly(); }
+          });            
+
         });        
       }, function(err) {
         $ionicLoading.hide();

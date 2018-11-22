@@ -25,6 +25,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     });
 
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
+      var config = configService.getSync();
       if (!$scope.homeTip) {
         storageService.getHomeTipAccepted(function(error, value) {
           $scope.homeTip = (value == 'accepted') ? false : true;
@@ -97,17 +98,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.showRateCard.value = false;
         });
       };
-    });
 
-    $scope.$on("$ionicView.enter", function(event, data) {
-      
-      var config = configService.getSync();
-      updateAllWallets();
-
-      addressbookService.list(function(err, ab) {
-        if (err) $log.error(err);
-        $scope.addressbook = ab || {};
-      });
 
       $scope.aursStatusPending = true;
       $scope.hasAursWallet = false;
@@ -120,7 +111,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.linkedAursWallet = null;
       $scope.linkedBtcWallet = null;
       $scope.linkedAursWalletId = null;
-      $scope.linkedBtcWalletid = null;      
+      $scope.linkedBtcWalletid = null;
       for(var i in $scope.wallets) {
         if($scope.wallets[i].credentials) { 
           var thisxpub = lodash.pluck($scope.wallets[i].credentials.publicKeyRing, 'xPubKey').pop()
@@ -135,6 +126,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
           if($scope.wallets[i].network === 'aureus') {
             $scope.hasAursWallet = true
+            $log.log('has aurs wallet')
             if(thisxpub === config.wallet.linkedAursWallet) {
               // $log.warn("AURS", $scope.wallets[i].credentials.publicKeyRing)
               $scope.isAursLinked = true;
@@ -144,78 +136,95 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
         }
       }
-      if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
-      
+      if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }      
+    });
 
+    $scope.$on("$ionicView.enter", function(event, data) {
+      
+      var config = configService.getSync();
+      updateAllWallets();
+
+      addressbookService.list(function(err, ab) {
+        if (err) $log.error(err);
+        $scope.addressbook = ab || {};
+      });
+
+      
       $scope.getAursPoll = function() {
 
+        $scope.$apply(function() {
 
+          var deviceId = 1;
+          // try {
+          //   if(device !== undefined && device.uuid) {
+          //     deviceId = device.uuid
+          //   }
+          // } catch(e) {
 
-        var deviceId = null;
-        try {
-              deviceId = device.uuid
-        } catch(e) {
+          // }
 
-        }
+          $log.warn("getting verify info")
+          var URL = 'https://seed.aureus.live/api/verification/status/'+deviceId
+          $http({
+            method: 'GET',
+            url: URL
+          }).then(function(result) {
+            if(!result.data) {
 
-        // $log.warn("is  link :" + $scope.isLinked)
-        var URL = 'https://seed.aureus.live/api/verification/status/'+deviceId
-        $http({
-          method: 'GET',
-          url: URL
-        }).then(function(result) {
-          if(!result.data) {
-            $scope.uploadedVerification = false;
-            $scope.isLinked = false;
-            $scope.isBtcLinked = false;
-            $scope.isAursLinked = false;
-            $scope.isVerified = false;
-            $scope.linkedAursWallet = null;
-            $scope.linkedBtcWallet = null;
-            $scope.linkedAursWalletId = null;
-            $scope.linkedBtcWalletid = null; 
-            $scope.aursStatusPending = false;
-            return;    
-          }
-          // $log.info(result.data)
-          $scope.isVerified = result.data.isVerified  
-          $scope.note = result.data.note    
-          $scope.noteMisc = result.data.noteMisc   
-          $scope.noteDividend = result.data.noteDividend
-          $scope.aursStatusPending = false; 
-          if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
-            $log.warn("AURS Wallet not linked after render from server")
-            $scope.isAursLinked = false
-            $scope.isLinked = false;
-          }
-          if(result.data.btcWalletXpub !== $scope.linkedBtcWallet) {
-            $log.warn("BTC Wallet not linked after render from server")
-            $scope.isBtcLinked = false
-            $scope.isLinked = false;
-          }
-          if($scope.isVerified === "true") {
-            var opts = {
-              wallet: {
-                isVerified: true
-              }
-            };
-            configService.set(opts, function(err) {
-              if (err) $log.debug(err);
-            });     
-          } else {
-            var opts = {
-              wallet: {
-                isVerified: false
-              }
-            };
-            configService.set(opts, function(err) {
-              if (err) $log.debug(err);
-            });             
-          }
-        }, function(err) {
-        });        
+              $log.warn("no verify data")
+              $scope.uploadedVerification = false;
+              $scope.isLinked = false;
+              $scope.isBtcLinked = false;
+              $scope.isAursLinked = false;
+              $scope.isVerified = false;
+              $scope.linkedAursWallet = null;
+              $scope.linkedBtcWallet = null;
+              $scope.linkedAursWalletId = null;
+              $scope.linkedBtcWalletid = null; 
+              $scope.aursStatusPending = false;
+              return;
+            }
+            $scope.isVerified = result.data.isVerified  
+            $scope.note = result.data.note    
+            $scope.noteMisc = result.data.noteMisc   
+            $scope.noteDividend = result.data.noteDividend
+            $scope.aursStatusPending = false; 
+            if(result.data.aursWalletXpub !== $scope.linkedAursWallet) {
+              $log.warn("AURS Wallet not linked after render from server")
+              $scope.isAursLinked = false
+              $scope.isLinked = false;
+            }
+            if(result.data.btcWalletXpub !== $scope.linkedBtcWallet) {
+              $log.warn("BTC Wallet not linked after render from server")
+              $scope.isBtcLinked = false
+              $scope.isLinked = false;
+            }
+            $log.info($scope.uploadedVerification, result.data.isVerified, result.data.noteMisc,result.data.note, $scope.isLinked)
 
+            if($scope.isVerified === "true") {
+              var opts = {
+                wallet: {
+                  isVerified: true
+                }
+              };
+              configService.set(opts, function(err) {
+                if (err) $log.debug(err);
+              });     
+            } else {
+              var opts = {
+                wallet: {
+                  isVerified: false
+                }
+              };
+              configService.set(opts, function(err) {
+                if (err) $log.debug(err);
+              });             
+            }
+          }, function(err) {
+          });        
+        })        
       }
+      $log.log($scope.hasAursWallet)
       if($scope.hasAursWallet) {
         if($scope.aurspoll) {
           clearInterval($scope.aurspoll)

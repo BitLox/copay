@@ -154,14 +154,14 @@ angular.module('copayApp.controllers').controller('tabHomeController',
 
         $scope.$apply(function() {
 
-          var deviceId = 1;
-          // try {
-          //   if(device !== undefined && device.uuid) {
-          //     deviceId = device.uuid
-          //   }
-          // } catch(e) {
-
-          // }
+          // var deviceId = 1;
+          try {
+            if(device !== undefined && device.uuid) {
+              deviceId = device.uuid
+            }
+          } catch(e) {
+            $log.error(e)
+          }
 
           // $log.warn("getting verify info")
           var URL = 'https://seed.aureus.live/api/verification/status/'+deviceId

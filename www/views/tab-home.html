@@ -167,14 +167,15 @@
     </div>
 
     <div class="list card" ng-if="!aursStatusPending && hasAursWallet && hasBitcoinWallet && (!uploadedVerification || !isLinked)">
-      <span class="item item-heading" ng-if="uploadedVerification && !isLinked">
-        <span>AURS Dividends ON HOLD. Please re-register or contact support.</span>
-      </span>      
+   
       <a ui-sref="tabs.link-aurs" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
        </i>
-        <span style="text-decoration: none" translate>Register AURS Wallet</span>
+        <span ng-if="uploadedVerification && !isLinked">
+          ERROR: Re-Register AURS Wallet
+        </span>          
+        <span ng-if="!uploadedVerification && !isLinked" style="text-decoration: none" translate>Register AURS Wallet</span>
       </a>
     </div>
 

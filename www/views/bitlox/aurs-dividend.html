@@ -36,9 +36,27 @@
           <input type="text"
           placeholder="{{'John Doe'|translate}}"
           ng-model="formA.name"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>  
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus Central Username</span>
+          <input type="text" autocapitalize="off" autocorrect="off"
+          placeholder="{{'user123'|translate}}"
+          ng-model="formA.aursCentralUsername"
+          autocorrect="off" autocomplete="off" autocapitalize="off">
+        </label> 
+
+        <div class="item item-divider"></div>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label" translate>Aureus CC Username</span>
+          <input type="text"
+          placeholder="{{'user123'|translate}}"
+          ng-model="formA.aursCCUsername"
+          autocorrect="off" autocomplete="off" autocapitalize="off">
+        </label> 
 
         <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
@@ -46,7 +64,7 @@
           <input type="tel"
           placeholder="{{'+60161234567'|translate}}"
           ng-model="formA.phone"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -56,7 +74,7 @@
           <input type="tel"
           placeholder="{{'+60161234567'|translate}}"
           ng-model="formA.phone2"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -66,7 +84,7 @@
           <input type="email"
           placeholder="{{'user@yahoo.com'|translate}}"
           ng-model="formA.email"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label> 
 
@@ -76,7 +94,7 @@
           <input type="text"
           placeholder="{{'5520231923'|translate}}"
           ng-model="formA.idNumber"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -86,7 +104,7 @@
           <input type="text"
           placeholder="{{'22/12/1984'|translate}}"
           ng-model="formA.dob"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -96,7 +114,7 @@
           <input type="text"
           placeholder="{{'123 Jalan St.'|translate}}"
           ng-model="formA.address1"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -106,7 +124,7 @@
           <input type="text"
           placeholder="{{'Suite 200'|translate}}"
           ng-model="formA.address2"
-          autocorrect="off" autocomplete="off">
+          autocorrect="off" autocomplete="off" autocapitalize="off">
         </label>
 
         <div class="item item-divider"></div>
@@ -115,7 +133,7 @@
           <input type="text"
           placeholder="{{'Los Angeles'|translate}}"
           ng-model="formA.city"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -125,7 +143,7 @@
           <input type="text"
           placeholder="{{'California'|translate}}"
           ng-model="formA.state"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -136,7 +154,7 @@
           <input type="text"
           placeholder="{{'United States'|translate}}"
           ng-model="formA.country"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -146,7 +164,7 @@
           <input type="text"
           placeholder="{{'Male/Female'|translate}}"
           ng-model="formA.gender"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
 
@@ -156,27 +174,9 @@
           <input type="text"
           placeholder="{{'Married/Single/Divorced'|translate}}"
           ng-model="formA.maritalStatus"
-          autocorrect="off" autocomplete="off"
+          autocorrect="off" autocomplete="off" autocapitalize="off"
           ng-required="true">
         </label>
-
-        <div class="item item-divider"></div>
-        <label class="item item-input item-stacked-label">
-          <span class="input-label" translate>Aureus Central Username</span>
-          <input type="text"
-          placeholder="{{'user123'|translate}}"
-          ng-model="formA.aursCentralUsername"
-          autocorrect="off" autocomplete="off">
-        </label> 
-
-        <div class="item item-divider"></div>
-        <label class="item item-input item-stacked-label">
-          <span class="input-label" translate>Aureus CC Username</span>
-          <input type="text"
-          placeholder="{{'user123'|translate}}"
-          ng-model="formA.aursCCUsername"
-          autocorrect="off" autocomplete="off">
-        </label> 
 
         <div class="item item-divider"></div>
         <label class="item item-input item-stacked-label">
@@ -184,7 +184,7 @@
           <input type="number"
           placeholder="{{'0'|translate}}"
           ng-model="formA.aursCentralBalance"
-          autocorrect="off" autocomplete="off">
+          autocorrect="off" autocomplete="off" autocapitalize="off">
         </label> 
 
         <div class="item item-divider"></div>
@@ -193,7 +193,7 @@
           <input type="number"
           placeholder="{{'0'|translate}}"
           ng-model="formA.aursCCBalance"
-          autocorrect="off" autocomplete="off">
+          autocorrect="off" autocomplete="off" autocapitalize="off">
         </label>  
 
         <div class="item item-divider"></div>
@@ -202,7 +202,7 @@
           <input type="number"
           placeholder="{{'0'|translate}}"
           ng-model="formA.btcCCBalance"
-          autocorrect="off" autocomplete="off">
+          autocorrect="off" autocomplete="off" autocapitalize="off">
         </label>                       
       </div>
       <div class="list settings-list settings-input-group" ng-hide="showInfoOnly">

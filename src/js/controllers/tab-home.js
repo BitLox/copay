@@ -49,11 +49,6 @@ angular.module('copayApp.controllers').controller('tabHomeController',
 
       $scope.defaults = configService.getDefaults();
       $scope.wallets = profileService.getWallets();
-      $scope.usedNetworks = $scope.wallets.map(function(wallet) {
-        return wallet.network;
-      }).filter(function(value, index, self) {
-        return self.indexOf(value) === index;
-      });
 
       for(var w=0;w<$scope.wallets.length;w++) {
           $log.log($scope.wallets[w].credentials, $scope.wallets[w])
@@ -66,8 +61,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $log.warn("AURS WALLET UPGRADED")
           })
         }
-      }       
-
+      }   
+      $scope.getUsedNetworks()
       $scope.setRates();
 
       profileService.getOrderedWallets(function(orderedWallets) {
@@ -149,8 +144,26 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
         }
       }
-      if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }      
+      if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
+      // if(!$scope.hasBitcoinWallet) {
+      //   var opts = {};
+      //   opts.m = 1;
+      //   opts.n = 1;
+      //   opts.networkName = 'livenet'
+      //   profileService.createWallet(opts, function() {
+      //     $scope.getUsedNetworks()
+      //     $scope.setRates()
+      //   });
+      // }    
     });
+
+    $scope.getUsedNetworks = function() {
+      $scope.usedNetworks = $scope.wallets.map(function(wallet) {
+        return wallet.network;
+      }).filter(function(value, index, self) {
+        return self.indexOf(value) === index;
+      });       
+    }
 
     $scope.$on("$ionicView.enter", function(event, data) {
       

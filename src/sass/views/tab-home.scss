@@ -20,9 +20,12 @@
     background-image: url("../img/mercado-libre/icon-ml.svg");
     height: 27px;
   }
+  .item-wallet-list {
+    min-height: 79px;
+  }
   .bg {
     &.wallet {
-      padding: .25rem
+      padding: .25rem;
     }
   }
   .card {

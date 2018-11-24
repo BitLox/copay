@@ -169,7 +169,7 @@ angular.module('copayApp.controllers').controller('createController',
         networkName: networkName,
         bwsurl: $scope.formData.bwsurl,
         singleAddress: $scope.formData.singleAddressEnabled,
-        walletPrivKey: $scope.formData._walletPrivKey, // Only for testing
+        // walletPrivKey: $scope.formData._walletPrivKey, // Only for testing
       };
 
       var setSeed = $scope.formData.seedSource.id == 'set';

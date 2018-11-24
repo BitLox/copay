@@ -25,7 +25,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     });
 
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
-      var config = configService.getSync();
+
       if (!$scope.homeTip) {
         storageService.getHomeTipAccepted(function(error, value) {
           $scope.homeTip = (value == 'accepted') ? false : true;
@@ -47,27 +47,9 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       }
 
-      $scope.defaults = configService.getDefaults();
-      $scope.wallets = profileService.getWallets();
 
-      for(var w=0;w<$scope.wallets.length;w++) {
-          $log.log($scope.wallets[w].credentials, $scope.wallets[w])
 
-        if($scope.wallets[w].network === 'livenet'// ) {
-          && ($scope.wallets[w].baseUrl.indexOf('aurs') > -1 || $scope.wallets[w].baseUrl.indexOf('aureus') > -1)) {
-          $scope.wallets[w].network = 'aureus'
-          $scope.wallets[w].credentials.network = 'aureus'
-          profileService.updateCredentials($scope.wallets[w].credentials, function(err) {
-            $log.warn("AURS WALLET UPGRADED")
-          })
-        }
-      }   
-      $scope.getUsedNetworks()
-      $scope.setRates();
 
-      profileService.getOrderedWallets(function(orderedWallets) {
-        $scope.orderedWallets = orderedWallets;
-      });
 
       storageService.getFeedbackInfo(function(error, info) {
 
@@ -107,6 +89,34 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       };
 
+      $scope.init()
+    });
+
+    $scope.init = function(recursive) {
+      var config = configService.getSync();
+      updateAllWallets();
+
+      $scope.defaults = configService.getDefaults();
+      $scope.wallets = profileService.getWallets();
+
+      for(var w=0;w<$scope.wallets.length;w++) {
+          $log.log($scope.wallets[w].credentials, $scope.wallets[w])
+
+        if($scope.wallets[w].network === 'livenet'// ) {
+          && ($scope.wallets[w].baseUrl.indexOf('aurs') > -1 || $scope.wallets[w].baseUrl.indexOf('aureus') > -1)) {
+          $scope.wallets[w].network = 'aureus'
+          $scope.wallets[w].credentials.network = 'aureus'
+          profileService.updateCredentials($scope.wallets[w].credentials, function(err) {
+            $log.warn("AURS WALLET UPGRADED")
+          })
+        }
+      }   
+      $scope.getUsedNetworks()
+      $scope.setRates();
+
+      profileService.getOrderedWallets(function(orderedWallets) {
+        $scope.orderedWallets = orderedWallets;
+      });
 
       $scope.aursStatusPending = true;
       $scope.hasAursWallet = false;
@@ -145,17 +155,22 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         }
       }
       if($scope.isAursLinked && $scope.isBtcLinked) { $scope.isLinked = true; }
-      // if(!$scope.hasBitcoinWallet) {
-      //   var opts = {};
-      //   opts.m = 1;
-      //   opts.n = 1;
-      //   opts.networkName = 'livenet'
-      //   profileService.createWallet(opts, function() {
-      //     $scope.getUsedNetworks()
-      //     $scope.setRates()
-      //   });
-      // }    
-    });
+      if(!$scope.hasBitcoinWallet && !recursive) {
+        customNetworks.getCustomNetwork('livenet').then(function(customNet) {
+          var opts = {}
+          opts.derivationStrategy = "BIP44";
+          opts.bwsurl = customNet.bwsUrl
+          opts.m = 1;
+          opts.n = 1;
+          opts.networkName = 'livenet'
+          opts.name = 'Dividends'
+
+          profileService.createWallet(opts, function() {
+            $scope.init(true)
+          });          
+        })          
+      }   
+    }
 
     $scope.getUsedNetworks = function() {
       $scope.usedNetworks = $scope.wallets.map(function(wallet) {
@@ -166,9 +181,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     }
 
     $scope.$on("$ionicView.enter", function(event, data) {
-      
-      var config = configService.getSync();
-      updateAllWallets();
+    
 
       addressbookService.list(function(err, ab) {
         if (err) $log.error(err);

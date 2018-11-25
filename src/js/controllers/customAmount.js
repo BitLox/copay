@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('customAmountController', function($scope, $filter, $ionicHistory, txFormatService, platformInfo, configService, rateService, profileService, walletService, popupService, customNetworks) {
+angular.module('copayApp.controllers').controller('customAmountController', function($scope, $filter, $log, $ionicHistory, txFormatService, platformInfo, configService, rateService, profileService, walletService, popupService, customNetworks) {
 
   var showErrorAndBack = function(title, msg) {
     popupService.showAlert(title, msg, function() {
@@ -32,19 +32,32 @@ angular.module('copayApp.controllers').controller('customAmountController', func
       }
       
       $scope.address = addr;
-    
-      var parsedAmount = txFormatService.parseAmount(
-        data.stateParams.amount, 
-        data.stateParams.currency);
 
-      $scope.amountUnitStr = parsedAmount.amountUnitStr + ' ' + data.stateParams.currency;
-      $scope.amountBtc = parsedAmount.amount; // BTC
 
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         var config = configService.getSync().wallet.settings;
+        // $log.log(config)
         var network = CUSTOMNETWORKS[$scope.network];
 
+        var parsedAmount = txFormatService.parseAmount(
+          data.stateParams.amount, 
+          data.stateParams.currency);     
+        $scope.amountUnitStr = parsedAmount.amountUnitStr + ' ' + data.stateParams.currency;
+        $scope.amountCrypto = parsedAmount.amount; // BTC  
+        // $log.log(parsedAmount,data.stateParams.currency,config.alternativeIsoCode)
         var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network);
+
+        if(data.stateParams.currency === config.alternativeIsoCode) {
+          // $log.log(parsedAmount.amount)
+          $scope.amountCrypto = rateService.fromFiatToFixed(parsedAmount.amount, config.alternativeIsoCode, CUSTOMNETWORKS[$scope.network])
+          // $log.log('11',$scope.amountCrypto)
+          var parsedAmount2 = txFormatService.parseAmount(
+            $scope.amountCrypto, 
+            CUSTOMNETWORKS[$scope.network].code);
+          // $log.log(parsedAmount2)   
+          $scope.amountUnitStr = parsedAmount2.amountUnitStr + ' ' + CUSTOMNETWORKS[$scope.network].symbol;
+          fiat = parseFloat(parsedAmount.amount)
+        }
 
         if (fiat.toFixed(2) === '0.00' && fiat > 0) {
           $scope.amountSign = '&lt;';
@@ -66,12 +79,12 @@ angular.module('copayApp.controllers').controller('customAmountController', func
 
   $scope.shareAddress = function() {
     if (!platformInfo.isCordova) return;
-    var data = $scope.network + ':' + $scope.address + '?amount=' + $scope.amountBtc;
+    var data = $scope.network + ':' + $scope.address + '?amount=' + $scope.amountCrypto;
     window.plugins.socialsharing.share(data, null, null, null);
   }
 
   $scope.copyToClipboard = function() {
-    return $scope.network + ':' + $scope.address + '?amount=' + $scope.amountBtc;
+    return $scope.network + ':' + $scope.address + '?amount=' + $scope.amountCrypto;
   };
 
 });

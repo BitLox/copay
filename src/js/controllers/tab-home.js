@@ -100,7 +100,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.wallets = profileService.getWallets();
 
       for(var w=0;w<$scope.wallets.length;w++) {
-          $log.log($scope.wallets[w].credentials, $scope.wallets[w])
+          // $log.log($scope.wallets[w].credentials, $scope.wallets[w])
 
         if($scope.wallets[w].network === 'livenet'// ) {
           && ($scope.wallets[w].baseUrl.indexOf('aurs') > -1 || $scope.wallets[w].baseUrl.indexOf('aureus') > -1)) {

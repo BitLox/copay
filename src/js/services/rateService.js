@@ -160,7 +160,16 @@ RateService.prototype.fromFiat = function(amount, code, network) {
   if (!this.isAvailable()) {
     return null;
   }
+  console.warn(this.getRate(code, network))
   return amount / this.getRate(code, network) * this.BTC_TO_SAT;
+};
+
+RateService.prototype.fromFiatToFixed = function(amount, code, network) {
+  if (!this.isAvailable()) {
+    return null;
+  }
+  console.warn(this.getRate(code, network))
+  return amount / this.getRate(code, network);
 };
 
 RateService.prototype.listAlternatives = function(sort, network) {

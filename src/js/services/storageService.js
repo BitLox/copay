@@ -382,6 +382,24 @@ angular.module('copayApp.services')
       storage.remove('coinbaseTxs-' + network, cb);
     };
 
+
+    root.setAlternativesCache = function(network, data, cb) {
+      storage.set('alternativesCache-' + network, data, cb);
+    };
+
+    root.getAlternativesCache = function(network, cb) {
+      storage.get('alternativesCache-' + network, cb);
+    };
+
+    root.setRatesCache = function(network, data, cb) {
+      storage.set('ratesCache-' + network, data, cb);
+    };
+
+    root.getRatesCache = function(network, cb) {
+      storage.get('ratesCache-' + network, cb);
+    };
+
+
     root.setBalanceCache = function(cardId, data, cb) {
       storage.set('balanceCache-' + cardId, data, cb);
     };

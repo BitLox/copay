@@ -45,7 +45,7 @@
   "downloadUrl": "https://bitlox.io",
   "rateAppUrls": {
     "ios": "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=111111111&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8",
-    "android": "https://play.google.com/store/apps/details?id=org.aureus.wallet",
+    "android": "https://play.google.com/store/apps/details?id=cc.aureus.wallet",
     "wp": ""
   },
   "appDescription": "Aureus Wallet",
@@ -55,8 +55,8 @@
   "windowsAppId": "804636ee-b017-4cad-8719-e58ac97ffa5c",
   "pushSenderId": "1036948132229",
   "description": "A Secure Aureus Wallet",
-  "version": "3.1.5",
-  "androidVersion": "315000",
+  "version": "4.0.0",
+  "androidVersion": "400000",
   "_extraCSS": null,
   "_enabledExtensions": {
     "coinbase": false,

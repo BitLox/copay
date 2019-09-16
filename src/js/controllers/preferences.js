@@ -86,10 +86,9 @@ angular.module('copayApp.controllers').controller('preferencesController',
           } else {
             $scope.touchIdType = 'fingerprint'
           }
-          $scope.apply()
-          // $timeout(function() {
-          //
-          // })
+          $timeout(function() {
+            $scope.$apply()
+          })
       })
       if (!wallet)
         return $ionicHistory.goBack();

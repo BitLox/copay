@@ -115,7 +115,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     var _symbol = '≈';
 
     var val = function() {
-      var fiat = rateService.toFiat(satoshis, config.alternativeIsoCode, network);
+      var fiat = rateService.toFiat(satoshis, config.alternativeIsoCode, network) || 0;
 
       if (fiat.toFixed(2) === '0.00' && fiat > 0) {
         _symbol = '<';

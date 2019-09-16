@@ -53,7 +53,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(CUSTOMNETWORKS[$scope.network]) {
         $scope.unitName = CUSTOMNETWORKS[$scope.network].symbol;
-      }      
+      }
     });
 
     if (!$scope.isRatesCalculator && !$scope.nextStep && !data.stateParams.toAddress) {
@@ -243,7 +243,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
 
   function toFiat(val) {
     var network = customNetworks.getStatic()[$scope.network];
-    var fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
+    var fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network) || 0;
 
     if (fiat.toFixed(2) === '0.00' && fiat > 0) {
       $scope.amountSign = '&lt;';

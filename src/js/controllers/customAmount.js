@@ -15,7 +15,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
       showErrorAndBack('Error', 'No wallet selected');
       return;
     }
-      
+
     $scope.showShareButton = platformInfo.isCordova ? (platformInfo.isIOS ? 'iOS' : 'Android') : null;
 
     $scope.wallet = profileService.getWallet(walletId);
@@ -30,7 +30,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
         showErrorAndBack('Error', 'Could not get the address');
         return;
       }
-      
+
       $scope.address = addr;
 
 
@@ -40,21 +40,21 @@ angular.module('copayApp.controllers').controller('customAmountController', func
         var network = CUSTOMNETWORKS[$scope.network];
 
         var parsedAmount = txFormatService.parseAmount(
-          data.stateParams.amount, 
-          data.stateParams.currency);     
+          data.stateParams.amount,
+          data.stateParams.currency);
         $scope.amountUnitStr = parsedAmount.amountUnitStr + ' ' + data.stateParams.currency;
-        $scope.amountCrypto = parsedAmount.amount; // BTC  
+        $scope.amountCrypto = parsedAmount.amount; // BTC
         // $log.log(parsedAmount,data.stateParams.currency,config.alternativeIsoCode)
-        var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network);
+        var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network) || 0;
 
         if(data.stateParams.currency === config.alternativeIsoCode) {
           // $log.log(parsedAmount.amount)
           $scope.amountCrypto = rateService.fromFiatToFixed(parsedAmount.amount, config.alternativeIsoCode, CUSTOMNETWORKS[$scope.network])
           // $log.log('11',$scope.amountCrypto)
           var parsedAmount2 = txFormatService.parseAmount(
-            $scope.amountCrypto, 
+            $scope.amountCrypto,
             CUSTOMNETWORKS[$scope.network].code);
-          // $log.log(parsedAmount2)   
+          // $log.log(parsedAmount2)
           $scope.amountUnitStr = parsedAmount2.amountUnitStr + ' ' + CUSTOMNETWORKS[$scope.network].symbol;
           fiat = parseFloat(parsedAmount.amount)
         }

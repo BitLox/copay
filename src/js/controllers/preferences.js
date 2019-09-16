@@ -87,7 +87,7 @@ angular.module('copayApp.controllers').controller('preferencesController',
             $scope.touchIdType = 'fingerprint'
           }
           $timeout(function() {
-            $scope.apply()
+            $scope.$apply()
           })
       })
       if (!wallet)

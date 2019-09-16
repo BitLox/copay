@@ -184,6 +184,7 @@
 
             opts.network = 'livenet'
             opts.bwsurl = 'https://bws.bitlox.com/bws/api'
+            opts.apiurl = 'https://bitlox.io/api'
 
             $log.debug("START IMPORTING")
             profileService.createWallet(opts, function(err, walletId) {
@@ -456,12 +457,12 @@
                   return false;
                 }
               }]
-            });    
+            });
           } else {
               $scope.showWordIndexes = true
               $scope.newWallet.isRestore = true;
               $scope.hideMnemonicModal();
-              $scope.createWallet();       
+              $scope.createWallet();
           }
         };
 

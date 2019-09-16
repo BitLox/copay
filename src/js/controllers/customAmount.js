@@ -15,7 +15,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
       showErrorAndBack('Error', 'No wallet selected');
       return;
     }
-      
+
     $scope.showShareButton = platformInfo.isCordova ? (platformInfo.isIOS ? 'iOS' : 'Android') : null;
 
     $scope.wallet = profileService.getWallet(walletId);
@@ -30,11 +30,11 @@ angular.module('copayApp.controllers').controller('customAmountController', func
         showErrorAndBack('Error', 'Could not get the address');
         return;
       }
-      
+
       $scope.address = addr;
-    
+
       var parsedAmount = txFormatService.parseAmount(
-        data.stateParams.amount, 
+        data.stateParams.amount,
         data.stateParams.currency);
 
       $scope.amountUnitStr = parsedAmount.amountUnitStr + ' ' + data.stateParams.currency;
@@ -44,7 +44,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
         var config = configService.getSync().wallet.settings;
         var network = CUSTOMNETWORKS[$scope.network];
 
-        var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network);
+        var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network) || 0;
 
         if (fiat.toFixed(2) === '0.00' && fiat > 0) {
           $scope.amountSign = '&lt;';

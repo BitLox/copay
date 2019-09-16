@@ -24,6 +24,7 @@ this.customNetworks = {
     networkMagic: 0xf9beb4d9,
     port: 8333,
     bwsUrl: 'https://bws.bitlox.com/bws/api/',
+    apiUrl: 'https://bitlox.io/api/',
     explorer: 'https://bitlox.io/',
     dnsSeeds: [
       'seed.bitcoin.sipa.be',
@@ -181,7 +182,7 @@ this.getCustomNetwork = function(customParam) {
               "port": "9697",
               "networkMagic": 0x6ee58c2a,
               "explorer": "https://explorer.aureus.live/"
-            }        
+            }
         }
         if(networkName === 'deuscoin') {
           var res = self.customNetworks.deuscoin = {

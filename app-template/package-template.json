@@ -59,8 +59,8 @@
     "bitauth": "^0.2.1",
     "bitcore-wallet-client": "git://github.com/bitlox/bitcore-wallet-client.git#customnet",
     "bower": "^1.7.9",
-    "cordova-ios": "4.5.4",
-    "cordova-android": "6.4.0",
+    "cordova-ios": "5.0.1",
+    "cordova-android": "8.1.0",
     "cordova-custom-config": "^3.0.5",
     "cordova-plugin-qrscanner": "^2.5.0",
     "cordova.plugins.diagnostic": "~3.9.2",
@@ -137,5 +137,3 @@
   },
   "pre-commit": "unstage-package"
 }
-
-

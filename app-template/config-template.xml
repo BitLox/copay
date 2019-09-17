@@ -36,6 +36,8 @@
     <preference name="FadeSplashScreenDuration" value="200" />
     <preference name="SplashMaintainAspectRatio" value="true" />
 
+      <preference name="UseSwiftLanguageVersion" value="5" />
+
     <!-- Android Version: KitKat 4.4 (API Level 19) or higher -->
 <!--
     <preference name="android-minSdkVersion" value="19" />
@@ -81,6 +83,8 @@
     <!-- <plugin name="cordova-plugin-fcm" spec="https://github.com/cmgustavo/cordova-plugin-fcm.git" /> -->
     <plugin name="cordova-plugin-ble" spec="2.0.1" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
+
+    <plugin name="cordova-plugin-add-swift-support" version="1.7.2"/>
     <!-- <plugin name="cordova-plugin-wkwebview-engine" spec="1.1.4" /> -->
     <!-- Supported Platforms -->
     <engine name="ios" spec="4.5.5" />
@@ -91,8 +95,6 @@
 
     <!-- Platform Specific Settings -->
     <platform name="ios">
-      <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
-      <preference name="UseSwiftLanguageVersion" value="5" />
       <config-file platform="ios" target="*-Info.plist" parent="UIStatusBarHidden"><true/></config-file>
       <config-file platform="ios" target="*-Info.plist" parent="UIViewControllerBasedStatusBarAppearance"><false/></config-file>
       <config-file target="*-Info.plist" parent="ITSAppUsesNonExemptEncryption"><false/></config-file>

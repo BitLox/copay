@@ -49,7 +49,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
 
         if(data.stateParams.currency === config.alternativeIsoCode) {
           // $log.log(parsedAmount.amount)
-          $scope.amountCrypto = rateService.fromFiatToFixed(parsedAmount.amount, config.alternativeIsoCode, CUSTOMNETWORKS[$scope.network])
+          $scope.amountCrypto = rateService.fromFiatToFixed(parsedAmount.amount, config.alternativeIsoCode, CUSTOMNETWORKS[$scope.network]).toFixed(config.unitDecimals)
           // $log.log('11',$scope.amountCrypto)
           var parsedAmount2 = txFormatService.parseAmount(
             $scope.amountCrypto,
